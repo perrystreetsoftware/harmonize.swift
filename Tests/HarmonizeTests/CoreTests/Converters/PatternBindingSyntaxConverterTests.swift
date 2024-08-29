@@ -56,9 +56,26 @@ final class PatternBindingSyntaxConverterTests: XCTestCase {
         }
     }
     
-    private func test(f: (ConvertersVisitor) -> Void) {
+    func testCanParsePatternBindingAccessors() throws {
+        test(accessors) {
+            XCTAssertEqual(
+                $0.accessors,
+                [
+                    SwiftAccessor(modifier: .getter, body: "lcszc"),
+                    SwiftAccessor(modifier: .get),
+                    SwiftAccessor(modifier: .set),
+                    SwiftAccessor(modifier: .get, body: "return 42"),
+                    SwiftAccessor(modifier: .set, body: "settable = newValue"),
+                    SwiftAccessor(modifier: .willSet, body: ""),
+                    SwiftAccessor(modifier: .didSet, body: ""),
+                ]
+            )
+        }
+    }
+    
+    private func test(_ source: String = sourceCode, f: (ConvertersVisitor) -> Void) {
         let visitor = ConvertersVisitor(viewMode: .sourceAccurate)
-        let sourceFile = Parser.parse(source: sourceCode)
+        let sourceFile = Parser.parse(source: source)
         visitor.walk(sourceFile)
         f(visitor)
     }
@@ -67,4 +84,30 @@ final class PatternBindingSyntaxConverterTests: XCTestCase {
 private var sourceCode = """
 var name: String = "John", age: Int = 27, lastName: String = "Doe"
 var optional: String? = nil
+"""
+
+private var accessors = """
+var name: String {
+  "lcszc"
+}
+
+public protocol Proto {
+  var property: String { get set }
+}
+
+var settable: Int = 0
+
+var example: Int {
+    get { return 42 }
+    set { settable = newValue }
+}
+
+var anotherExample: Int = 0 {
+    willSet {
+        
+    }
+
+    didSet {
+    }
+}
 """

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SwiftAccessor: SwiftDeclaration {
+public struct SwiftAccessor: Equatable {
     public enum Modifier: String, CaseIterable, Equatable {
         case getter = "getter"
         case get = "get"
@@ -20,15 +20,12 @@ public struct SwiftAccessor: SwiftDeclaration {
         }
     }
     
-    public let name: String
-    
-    public let text: String
-    
     public let modifier: Modifier
     
-    public let body: String
+    public let body: String?
     
-    public var parent: SwiftDeclaration?
-    
-    public var children = [SwiftDeclaration]()
+    public init(modifier: Modifier, body: String? = nil) {
+        self.modifier = modifier
+        self.body = body
+    }
 }

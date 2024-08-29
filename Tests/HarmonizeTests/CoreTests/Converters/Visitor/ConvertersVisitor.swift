@@ -18,6 +18,7 @@ class ConvertersVisitor: SyntaxVisitor {
     var types = [SwiftTypeAnnotation]()
     var identifiers = [SwiftIdentifier]()
     var initializers = [SwiftInitializerClause]()
+    var accessors = [SwiftAccessor]()
     
     override func visit(_ node: AttributeListSyntax) -> SyntaxVisitorContinueKind {
         attributes.append(contentsOf: attributeConverter.convert(node))
@@ -34,6 +35,7 @@ class ConvertersVisitor: SyntaxVisitor {
         identifiers.append(contentsOf: converter.identifiers)
         types.append(contentsOf: converter.types)
         initializers.append(contentsOf: converter.initializers)
+        accessors.append(contentsOf: converter.accessors)
         return .skipChildren
     }
 }
