@@ -8,15 +8,19 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
     
     public let sourceFile: SwiftFile
     
-    public init(sourceFile: SwiftFile) {
-        self.sourceFile = sourceFile
-        super.init(viewMode: .fixedUp)
+    public var declarations: [SwiftDeclaration] = []
+    
+    public var rootDeclarations: [SwiftDeclaration] {
+        rootNode.declarations
     }
     
-    public func declarations() throws -> [SwiftDeclaration] {
+    public init(sourceFile: SwiftFile) throws {
+        self.sourceFile = sourceFile
+        super.init(viewMode: .fixedUp)
+        
         let source = try Parser.parse(source: String(contentsOf: sourceFile.filePath))
         walk(source)
-        return rootNode.declarations
+        declarations.append(contentsOf: rootDeclarations)
     }
     
     public override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
@@ -75,14 +79,6 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
         endNodeWithNestedDeclarations { $0.create(node) }
     }
     
-    public override func visit(_ node: AccessorBlockSyntax) -> SyntaxVisitorContinueKind {
-        startNode()
-    }
-    
-    public override func visitPost(_ node: AccessorBlockSyntax) {
-        endNodeWithNestedDeclarations { $0.create(node) }
-    }
-    
     private func startNode() -> SyntaxVisitorContinueKind {
         rootNode.start()
         return .visitChildren
@@ -90,14 +86,22 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
     
     private func endNode(build: (SwiftDeclarationFactory) -> SwiftDeclaration) {
         rootNode.end(build: {
-            build(SwiftDeclarationFactory(file: sourceFile, children: $0))
+            let declaration = build(SwiftDeclarationFactory(file: sourceFile, children: $0))
+            appendChildrenToDeclarations(children: declaration.children)
+            return declaration
         })
     }
     
     private func endNodeWithNestedDeclarations(buildMany: (SwiftDeclarationFactory) -> [SwiftDeclaration]) {
         rootNode.end(buildMany: {
-            buildMany(SwiftDeclarationFactory(file: sourceFile, children: $0))
+            let declarations = buildMany(SwiftDeclarationFactory(file: sourceFile, children: $0))
+            appendChildrenToDeclarations(children: declarations.flatMap { $0.children })
+            return declarations
         })
+    }
+    
+    private func appendChildrenToDeclarations(children: [SwiftDeclaration]) {
+        self.declarations.append(contentsOf: children)
     }
 }
 

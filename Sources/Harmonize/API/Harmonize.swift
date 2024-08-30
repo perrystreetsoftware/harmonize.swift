@@ -3,80 +3,43 @@ import Foundation
 public struct Harmonize {
     private var files: [SwiftFile] = []
     private let projectPath: URL
+    private var declarations: [SwiftDeclaration] = []
+    private var rootDeclarations: [SwiftDeclaration] = []
     
     public init(projectPath: URL) {
         self.projectPath = projectPath
         self.files = findFiles()
+        
+        self.declarations = files.flatMap { $0.declarations }
+        self.rootDeclarations = files.flatMap { $0.rootDeclarations }
     }
     
-    public func declarations() -> [SwiftDeclaration] {
-        files.flatMap { $0.declarations }
+    public func declarations(includeNested: Bool = true) -> [SwiftDeclaration] {
+        includeNested ? declarations : rootDeclarations
     }
     
     public func classes(includeNested: Bool = true) -> [SwiftClass] {
-        let classes = declarations().as(SwiftClass.self)
-        
-        if !includeNested {
-            return classes
-        }
-        
-        return classes.flatMap(appendingDeclarationChildren)
+        declarations(includeNested: includeNested).as(SwiftClass.self)
     }
     
     public func structs(includeNested: Bool = true) -> [SwiftStruct] {
-        let structs = declarations().as(SwiftStruct.self)
-        
-        if !includeNested {
-            return structs
-        }
-        
-        return structs.flatMap(appendingDeclarationChildren)
+        declarations(includeNested: includeNested).as(SwiftStruct.self)
     }
     
     public func protocols(includeNested: Bool = true) -> [SwiftProtocol] {
-        let protocols = declarations().as(SwiftProtocol.self)
-        
-        if !includeNested {
-            return protocols
-        }
-        
-        let classesProtocols = classes().flatMap { $0.children.as(SwiftProtocol.self) }
-        let structsProtocols = structs().flatMap { $0.children.as(SwiftProtocol.self) }
-        
-        return protocols + classesProtocols + structsProtocols
+        declarations(includeNested: includeNested).as(SwiftProtocol.self)
     }
     
     public func properties(includeNested: Bool = true) -> [SwiftProperty] {
-        let properties = declarations().as(SwiftProperty.self)
-        
-        if !includeNested {
-            return properties
-        }
-        
-        let symbols: [PropertiesProviding] = classes() + structs() + protocols()
-        
-        return properties + symbols.flatMap { $0.properties }
+        declarations(includeNested: includeNested).as(SwiftProperty.self)
     }
     
     public func functions(includeNested: Bool = true) -> [SwiftFunction] {
-        let functions = declarations().as(SwiftFunction.self)
-        
-        if !includeNested {
-            return functions
-        }
-        
-        let symbols: [FunctionsProviding] = [] // TODO
-        
-        return functions.flatMap(appendingDeclarationChildren) + symbols.flatMap { $0.functions }
+        declarations(includeNested: includeNested).as(SwiftFunction.self)
     }
     
-    private func appendingDeclarationChildren<T>(
-        from declaration: T
-    ) -> [T] where T: SwiftDeclaration {
-        var declarations: [T] = []
-        declarations.append(declaration)
-        declarations.append(contentsOf: declaration.children.as(T.self))
-        return declarations
+    public func initializers() -> [SwiftInitializer] {
+        declarations().as(SwiftInitializer.self)
     }
     
     private func findFiles() -> [SwiftFile] {

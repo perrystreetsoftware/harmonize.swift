@@ -15,7 +15,6 @@ public class HarmonizeUtils {
         let thisFile = URL(fileURLWithPath: #file)
         let projectRoot = thisFile
           .deletingLastPathComponent()
-          .appending(path: "CodeSample")
         
         self.projectRoot = projectRoot
     }

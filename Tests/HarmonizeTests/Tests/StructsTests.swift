@@ -2,9 +2,9 @@ import Foundation
 import Harmonize
 import XCTest
 
-final class HarmonizeStructsTests: XCTestCase {
+final class StructsTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("StructsFixture").harmonize()
+        HarmonizeUtils().appendingPath("Fixtures/Structs").harmonize()
     }
     
     func testAssertCanParseStructsIncludingNested() throws {
@@ -12,7 +12,7 @@ final class HarmonizeStructsTests: XCTestCase {
         let structsNames = structs.map { $0.name }
         
         XCTAssertEqual(structs.count, 3)
-        XCTAssertEqual(structsNames, ["MyStruct", "MyStructItem", "AttributedStruct"])
+        XCTAssertEqual(structsNames, ["MyStructItem", "MyStruct", "AttributedStruct"])
     }
     
     func testAssertCanParseNestedClasses() throws {
@@ -44,8 +44,8 @@ final class HarmonizeStructsTests: XCTestCase {
         let names = properties.flatMap { $0.map { $0.name } }
         let types = properties.flatMap { $0.map { $0.typeAnnotation }}
         
-        XCTAssertEqual(names, ["property1", "property2", "property3", "items", "prop1", "prop2"])
-        XCTAssertEqual(types, ["String", "Int", "Bool", "[MyStructItem]", "String", "String"])
+        XCTAssertEqual(names, ["prop1", "prop2", "property1", "property2", "property3", "items"])
+        XCTAssertEqual(types, ["String", "String", "String", "Int", "Bool", "[MyStructItem]"])
     }
     
     func testAssertCanParseStructsAttributes() throws {

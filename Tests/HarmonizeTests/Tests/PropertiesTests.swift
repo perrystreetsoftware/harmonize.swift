@@ -2,9 +2,9 @@ import Foundation
 import Harmonize
 import XCTest
 
-final class HarmonizePropertiesTests: XCTestCase {
+final class PropertiesTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("PropertiesFixture").harmonize()
+        HarmonizeUtils().appendingPath("Fixtures/Properties").harmonize()
     }
     
     private var topLevelProperties: [SwiftProperty] {
@@ -163,15 +163,15 @@ final class HarmonizePropertiesTests: XCTestCase {
     
     func testAssertCanParsePropertiesAccessorsText() throws {
         let properties = harmonize.properties()
-        let accessors = properties.flatMap { $0.accessors }.map { $0.text }
+        let accessors = properties.flatMap { $0.accessors }.map { $0.body }
         
         XCTAssertEqual(accessors.count, 3)
         XCTAssertEqual(
             accessors,
             [
-                "{ 9 }",
-                "{ return example12 }",
-                "{ example12 = newValue }"
+                "9",
+                "return example12",
+                "example12 = newValue"
             ]
         )
     }

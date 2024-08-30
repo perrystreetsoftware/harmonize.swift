@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  ProtocolsTests.swift
+//
 //
 //  Created by Stelios Frantzeskakis on 23/8/24.
 //
@@ -9,9 +9,9 @@ import Foundation
 import Harmonize
 import XCTest
 
-final class HarmonizeProtocolTests: XCTestCase {
+final class ProtocolTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("ProtocolsFixture").harmonize()
+        HarmonizeUtils().appendingPath("Fixtures/Protocols").harmonize()
     }
     
     func testAssertCanParseProtocols() throws {
@@ -27,7 +27,7 @@ final class HarmonizeProtocolTests: XCTestCase {
         let properties = protocols.flatMap { $0.properties }
         
         XCTAssertEqual(properties.count, 3)
-        XCTAssertEqual(properties.map { $0.name }, ["property", "name", "name"])
+        XCTAssertEqual(properties.map { $0.name }, ["name", "name", "property"])
     }
     
     func testAssertCanParseNestedProtocols() throws {

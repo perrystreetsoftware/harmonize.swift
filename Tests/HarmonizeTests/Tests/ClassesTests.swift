@@ -2,9 +2,9 @@ import Foundation
 import Harmonize
 import XCTest
 
-final class HarmonizeClassesTests: XCTestCase {
+final class ClassesTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("ClassesFixture").harmonize()
+        HarmonizeUtils().appendingPath("Fixtures/Classes").harmonize()
     }
     
     func testAssertCanParseClassesIncludingNested() throws {
@@ -12,7 +12,7 @@ final class HarmonizeClassesTests: XCTestCase {
         let classesNames = classes.map { $0.name }
         
         XCTAssertEqual(classes.count, 3)
-        XCTAssertEqual(classesNames, ["MyFile", "StateSample", "MyClass2"])
+        XCTAssertEqual(classesNames, ["StateSample", "MyFile", "MyClass2"])
     }
     
     func testAssertCanParseNestedClasses() throws {

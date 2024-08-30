@@ -12,7 +12,8 @@ public struct SwiftInitializer: SwiftDeclaration,
                                 AttributesProviding,
                                 ParametersProviding,
                                 InitializersProviding,
-                                FunctionsProviding {
+                                FunctionsProviding,
+                                PropertiesProviding {
     public var name: String
     
     public var text: String
@@ -21,13 +22,9 @@ public struct SwiftInitializer: SwiftDeclaration,
     
     public var children: [SwiftDeclaration]
     
-    public var modifiers: [SwiftModifier] {
-        children.as(SwiftModifier.self)
-    }
+    public var modifiers: [SwiftModifier]
 
-    public var attributes: [SwiftAttribute] {
-        children.as(SwiftAttribute.self)
-    }
+    public var attributes: [SwiftAttribute]
     
     public var parameters: [SwiftParameter] {
         children.as(SwiftParameter.self)
@@ -39,6 +36,10 @@ public struct SwiftInitializer: SwiftDeclaration,
     
     public var functions: [SwiftFunction] {
         children.as(SwiftFunction.self)
+    }
+    
+    public var properties: [SwiftProperty] {
+        children.as(SwiftProperty.self)
     }
     
     public var body: String?

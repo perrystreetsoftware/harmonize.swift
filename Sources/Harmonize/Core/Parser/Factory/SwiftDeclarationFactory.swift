@@ -107,12 +107,11 @@ class SwiftDeclarationFactory {
     
     func create(_ node: VariableDeclSyntax) -> [SwiftProperty] {
         let patternBindingSyntaxConverter = PatternBindingSyntaxConverter(bindings: node.bindings)
-        
-        let accessors = children.as(SwiftAccessor.self)
-        
+                
         let identifiers = patternBindingSyntaxConverter.identifiers
         let annotations = patternBindingSyntaxConverter.types
         let initializers = patternBindingSyntaxConverter.initializers
+        let accessors = patternBindingSyntaxConverter.accessors
         
         let modifiers = declModifierSyntaxConverter.convert(node.modifiers)
         let attributes = attributeSyntaxConverter.convert(node.attributes)
@@ -160,39 +159,16 @@ class SwiftDeclarationFactory {
         return `protocol`
     }
     
-    func create(_ node: AccessorBlockSyntax) -> [SwiftAccessor] {
-        return switch node.accessors {
-        case .accessors(let accessors):
-            accessors.compactMap {
-                guard let modifier = SwiftAccessor.Modifier.from(identifier: $0.accessorSpecifier.text)
-                else { return nil }
-                
-                return SwiftAccessor(
-                    name: modifier.rawValue,
-                    text: $0.body?.trimmedDescription ?? "",
-                    modifier: modifier,
-                    body: $0.body?.statements.trimmedDescription ?? ""
-                )
-            }
-        case .getter(let code):
-            [
-                SwiftAccessor(
-                    name: SwiftAccessor.Modifier.getter.rawValue,
-                    text: node.trimmedDescription,
-                    modifier: .getter,
-                    body: code.trimmedDescription
-                )
-            ]
-        @unknown default:
-            []
-        }
-    }
-    
     func create(_ node: InitializerDeclSyntax) -> SwiftInitializer {
+        let modifiers = declModifierSyntaxConverter.convert(node.modifiers)
+        let attributes = attributeSyntaxConverter.convert(node.attributes)
+        
         var `init` = SwiftInitializer(
             name: node.trimmedDescription,
             text: node.trimmedDescription,
             children: [],
+            modifiers: modifiers,
+            attributes: attributes,
             body: node.body?.statements.trimmedDescription
         )
                 

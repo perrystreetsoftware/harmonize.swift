@@ -2,9 +2,9 @@ import Foundation
 import Harmonize
 import XCTest
 
-final class HarmonizeFunctionsTests: XCTestCase {
+final class FunctionsTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("FunctionsFixture").harmonize()
+        HarmonizeUtils().appendingPath("Fixtures/Functions").harmonize()
     }
     
     func testAssertCanParseTopLevelFunctionsOnly() throws {
@@ -41,9 +41,9 @@ final class HarmonizeFunctionsTests: XCTestCase {
         XCTAssertEqual(
             functionNames,
             [
+                "nestedFunction",
                 "noArgLabelsFunction",
                 "argLabelsFunction",
-                "nestedFunction",
                 "customArgLabelsFunction",
                 "mixedLabeledArgsFunction",
                 "variadic",
@@ -67,9 +67,9 @@ final class HarmonizeFunctionsTests: XCTestCase {
         XCTAssertEqual(
             returnClauses,
             [
-                .absent,
-                .absent,
                 .type("String"),
+                .absent,
+                .absent,
                 .absent,
                 .absent,
                 .absent,
