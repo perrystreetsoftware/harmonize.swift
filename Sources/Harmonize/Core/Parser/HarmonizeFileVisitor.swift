@@ -8,9 +8,9 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
     
     public let sourceFile: SwiftFile
     
-    public var declarations: [SwiftDeclaration] = []
+    public var declarations: [Declaration] = []
     
-    public var rootDeclarations: [SwiftDeclaration] {
+    public var rootDeclarations: [Declaration] {
         rootNode.declarations
     }
     
@@ -84,23 +84,23 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
         return .visitChildren
     }
     
-    private func endNode(build: (SwiftDeclarationFactory) -> SwiftDeclaration) {
+    private func endNode(build: (DeclarationFactory) -> Declaration) {
         rootNode.end(build: {
-            let declaration = build(SwiftDeclarationFactory(file: sourceFile, children: $0))
+            let declaration = build(DeclarationFactory(file: sourceFile, children: $0))
             appendChildrenToDeclarations(children: declaration.children)
             return declaration
         })
     }
     
-    private func endNodeWithNestedDeclarations(buildMany: (SwiftDeclarationFactory) -> [SwiftDeclaration]) {
+    private func endNodeWithNestedDeclarations(buildMany: (DeclarationFactory) -> [Declaration]) {
         rootNode.end(buildMany: {
-            let declarations = buildMany(SwiftDeclarationFactory(file: sourceFile, children: $0))
+            let declarations = buildMany(DeclarationFactory(file: sourceFile, children: $0))
             appendChildrenToDeclarations(children: declarations.flatMap { $0.children })
             return declarations
         })
     }
     
-    private func appendChildrenToDeclarations(children: [SwiftDeclaration]) {
+    private func appendChildrenToDeclarations(children: [Declaration]) {
         self.declarations.append(contentsOf: children)
     }
 }
@@ -110,7 +110,7 @@ fileprivate extension Node {
         self = .nested(node: self, declarations: [])
     }
 
-    mutating func end(build: (_ children: [SwiftDeclaration]) -> SwiftDeclaration) {
+    mutating func end(build: (_ children: [Declaration]) -> Declaration) {
         let declaration = build(declarations)
 
         switch self {
@@ -126,12 +126,12 @@ fileprivate extension Node {
     }
     
     /// Ends a node while building an array of declarations usually flattened from a given declarations.
-    /// For example, it's usefol to inline SwiftProperty into an array of SwiftProperty when detected that it has multiple definitions and is considered as a single property by Swift Syntax.
+    /// For example, it's usefol to inline Property into an array of Property when detected that it has multiple definitions and is considered as a single property by Swift Syntax.
     ///
-    /// For instance, `var a, b, c, d: Long = 1` is transformed into an array of SwiftProperty instead of a single SwiftProperty.
+    /// For instance, `var a, b, c, d: Long = 1` is transformed into an array of Property instead of a single Property.
     ///
     /// Inline declarations will always have the top-most symbol as their parent.
-    mutating func end(buildMany: (_ children: [SwiftDeclaration]) -> [SwiftDeclaration]) {
+    mutating func end(buildMany: (_ children: [Declaration]) -> [Declaration]) {
         let newDeclarations = buildMany(declarations)
 
         switch self {

@@ -9,5 +9,5 @@ import Foundation
 
 public protocol AttributesProviding {
     /// All attributes this declaration has.
-    var attributes: [SwiftAttribute] { get }
+    var attributes: [Attribute] { get }
 }

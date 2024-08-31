@@ -12,10 +12,10 @@ class PatternBindingSyntaxConverter {
     private let initializerConverter: InitializerClauseSyntaxConverter = InitializerClauseSyntaxConverter()
     private let bindings: PatternBindingListSyntax
     
-    private(set) var identifiers: [SwiftIdentifier] = []
-    private(set) var types: [SwiftTypeAnnotation] = []
-    private(set) var initializers: [SwiftInitializerClause] = []
-    private(set) var accessors: [SwiftAccessor] = []
+    private(set) var identifiers: [Identifier] = []
+    private(set) var types: [TypeAnnotation] = []
+    private(set) var initializers: [InitializerClause] = []
+    private(set) var accessors: [Accessor] = []
     
     init(bindings: PatternBindingListSyntax) {
         self.bindings = bindings
@@ -34,39 +34,39 @@ class PatternBindingSyntaxConverter {
         }
     }
     
-    private func getIdentifier(for pattern: PatternSyntax) -> SwiftIdentifier {
-        return SwiftIdentifier(name: pattern.trimmedDescription)
+    private func getIdentifier(for pattern: PatternSyntax) -> Identifier {
+        return Identifier(name: pattern.trimmedDescription)
     }
     
-    private func getInitializer(for initializer: InitializerClauseSyntax?) -> SwiftInitializerClause? {
+    private func getInitializer(for initializer: InitializerClauseSyntax?) -> InitializerClause? {
         initializerConverter.convert(initializer)
     }
     
-    private func getTypeAnnotation(for annotation: TypeAnnotationSyntax?) -> SwiftTypeAnnotation? {
+    private func getTypeAnnotation(for annotation: TypeAnnotationSyntax?) -> TypeAnnotation? {
         guard let annotation = annotation else { return nil }
-        return SwiftTypeAnnotation(
+        return TypeAnnotation(
             name: annotation.type.trimmedDescription,
             isOptional: annotation.type.is(OptionalTypeSyntax.self)
         )
     }
     
-    private func getAccessors(for node: AccessorBlockSyntax?) -> [SwiftAccessor] {
+    private func getAccessors(for node: AccessorBlockSyntax?) -> [Accessor] {
         guard let node = node else { return [] }
         
         return switch node.accessors {
         case .accessors(let accessors):
             accessors.compactMap {
-                guard let modifier = SwiftAccessor.Modifier.from(identifier: $0.accessorSpecifier.text)
+                guard let modifier = Accessor.Modifier.from(identifier: $0.accessorSpecifier.text)
                 else { return nil }
                 
-                return SwiftAccessor(
+                return Accessor(
                     modifier: modifier,
                     body: getCodeBlockStatementsAsString(statements: $0.body?.statements)
                 )
             }
         case .getter(let codeBlock):
             [
-                SwiftAccessor(
+                Accessor(
                     modifier: .getter,
                     body: getCodeBlockStatementsAsString(statements: codeBlock)
                 )

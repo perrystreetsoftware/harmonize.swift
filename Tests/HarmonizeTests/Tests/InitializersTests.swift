@@ -54,7 +54,7 @@ final class InitializersTests: XCTestCase {
         let property = initializers.flatMap { $0.properties }
             .first
         
-        XCTAssertEqual(property?.name, "foo")
+        XCTAssertEqual(property?.name, "_")
         XCTAssertEqual(property?.isInferredType, true)
         XCTAssertEqual(property?.initializer, "bar")
     }

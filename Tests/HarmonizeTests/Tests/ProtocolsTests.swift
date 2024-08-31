@@ -69,7 +69,7 @@ final class ProtocolTests: XCTestCase {
         XCTAssertTrue(function.parameters.isEmpty)
     }
     
-    private func protocolByName(_ name: String) -> SwiftProtocol {
+    private func protocolByName(_ name: String) -> ProtocolDeclaration {
         harmonize.protocols().first { $0.name == name }!
     }
 }

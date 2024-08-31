@@ -10,10 +10,10 @@ final class PatternBindingSyntaxConverterTests: XCTestCase {
             XCTAssertEqual(
                 $0.identifiers,
                 [
-                    SwiftIdentifier(name: "name"),
-                    SwiftIdentifier(name: "age"),
-                    SwiftIdentifier(name: "lastName"),
-                    SwiftIdentifier(name: "optional")
+                    Identifier(name: "name"),
+                    Identifier(name: "age"),
+                    Identifier(name: "lastName"),
+                    Identifier(name: "optional")
                 ]
             )
         }
@@ -24,10 +24,10 @@ final class PatternBindingSyntaxConverterTests: XCTestCase {
             XCTAssertEqual(
                 $0.types,
                 [
-                    SwiftTypeAnnotation(name: "String", isOptional: false),
-                    SwiftTypeAnnotation(name: "Int", isOptional: false),
-                    SwiftTypeAnnotation(name: "String", isOptional: false),
-                    SwiftTypeAnnotation(name: "String?", isOptional: true)
+                    TypeAnnotation(name: "String", isOptional: false),
+                    TypeAnnotation(name: "Int", isOptional: false),
+                    TypeAnnotation(name: "String", isOptional: false),
+                    TypeAnnotation(name: "String?", isOptional: true)
                 ]
             )
         }
@@ -38,10 +38,10 @@ final class PatternBindingSyntaxConverterTests: XCTestCase {
             XCTAssertEqual(
                 $0.initializers,
                 [
-                    SwiftInitializerClause(value: "John"),
-                    SwiftInitializerClause(value: "27"),
-                    SwiftInitializerClause(value: "Doe"),
-                    SwiftInitializerClause(value: "nil")
+                    InitializerClause(value: "John"),
+                    InitializerClause(value: "27"),
+                    InitializerClause(value: "Doe"),
+                    InitializerClause(value: "nil")
                 ]
             )
         }
@@ -51,7 +51,7 @@ final class PatternBindingSyntaxConverterTests: XCTestCase {
         test {
             XCTAssertEqual(
                 $0.types.last!,
-                SwiftTypeAnnotation(name: "String?", isOptional: true)
+                TypeAnnotation(name: "String?", isOptional: true)
             )
         }
     }
@@ -61,13 +61,13 @@ final class PatternBindingSyntaxConverterTests: XCTestCase {
             XCTAssertEqual(
                 $0.accessors,
                 [
-                    SwiftAccessor(modifier: .getter, body: "lcszc"),
-                    SwiftAccessor(modifier: .get),
-                    SwiftAccessor(modifier: .set),
-                    SwiftAccessor(modifier: .get, body: "return 42"),
-                    SwiftAccessor(modifier: .set, body: "settable = newValue"),
-                    SwiftAccessor(modifier: .willSet, body: ""),
-                    SwiftAccessor(modifier: .didSet, body: ""),
+                    Accessor(modifier: .getter, body: "lcszc"),
+                    Accessor(modifier: .get),
+                    Accessor(modifier: .set),
+                    Accessor(modifier: .get, body: "return 42"),
+                    Accessor(modifier: .set, body: "settable = newValue"),
+                    Accessor(modifier: .willSet, body: ""),
+                    Accessor(modifier: .didSet, body: ""),
                 ]
             )
         }

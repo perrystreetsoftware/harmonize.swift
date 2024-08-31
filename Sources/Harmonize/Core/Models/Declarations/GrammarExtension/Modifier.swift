@@ -1,5 +1,5 @@
 //
-//  SwiftModifier.swift
+//  Modifier.swift
 //
 //
 //  Created by Lucas Cavalcante on 8/23/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SwiftModifier: String, CaseIterable, Equatable {
+public enum Modifier: String, CaseIterable, Equatable {
     case borrowing = "borrowing"
     case consuming = "consuming"
     case convenience = "convenience"
@@ -37,7 +37,7 @@ public enum SwiftModifier: String, CaseIterable, Equatable {
     case unowned = "unowned"
     case weak = "weak"
     
-    static func from(value: String) -> SwiftModifier? {
+    static func from(value: String) -> Modifier? {
         allCases.first { $0.rawValue == value }
     }
 }

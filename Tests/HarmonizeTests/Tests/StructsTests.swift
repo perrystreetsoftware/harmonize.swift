@@ -68,7 +68,7 @@ final class StructsTests: XCTestCase {
         XCTAssertEqual(function.body, "property2 + 2")
     }
     
-    private func structByName(_ name: String) -> SwiftStruct {
+    private func structByName(_ name: String) -> Struct {
         harmonize.structs().first { $0.name == name }!
     }
 }

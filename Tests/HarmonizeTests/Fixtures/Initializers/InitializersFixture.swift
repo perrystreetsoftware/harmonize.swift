@@ -33,7 +33,7 @@ struct Structure {
     init(property: String) {
         self.property = property
         
-        var foo = "bar"
+        var _ = "bar"
     }
     
     dynamic private init(property: String, value: Int) {

@@ -6,7 +6,7 @@ import SwiftParser
 
 final class AttributeSyntaxConverterTests: XCTestCase {
     private let visitor = ConvertersVisitor(viewMode: .sourceAccurate)
-    private var attributes: [SwiftAttribute] {
+    private var attributes: [Attribute] {
         visitor.attributes
     }
     
@@ -18,7 +18,7 @@ final class AttributeSyntaxConverterTests: XCTestCase {
     func testCanParseSwiftListSyntaxAttributesArguments() throws {
         walk()
         
-        let expectedAttributes: [SwiftAttribute] = [
+        let expectedAttributes: [Attribute] = [
             .declaration(attribute: .testable, arguments: []),
             .declaration(attribute: .attached, arguments: ["memberAttribute"]),
             .declaration(attribute: .freestanding, arguments: ["declaration"]),

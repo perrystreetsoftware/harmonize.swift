@@ -80,7 +80,7 @@ final class ClassesTests: XCTestCase {
         )
     }
     
-    private func classByName(_ name: String) -> SwiftClass {
+    private func classByName(_ name: String) -> Class {
         harmonize.classes().first { $0.name == name }!
     }
 }

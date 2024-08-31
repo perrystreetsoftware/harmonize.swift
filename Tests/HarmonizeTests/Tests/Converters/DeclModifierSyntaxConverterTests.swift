@@ -6,7 +6,7 @@ import SwiftParser
 
 final class DeclModifierSyntaxConverterTests: XCTestCase {
     private let visitor = ConvertersVisitor(viewMode: .sourceAccurate)
-    private var modifiers: [SwiftModifier] {
+    private var modifiers: [Modifier] {
         visitor.modifiers
     }
     

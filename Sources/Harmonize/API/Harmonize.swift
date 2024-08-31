@@ -3,8 +3,8 @@ import Foundation
 public struct Harmonize {
     private var files: [SwiftFile] = []
     private let projectPath: URL
-    private var declarations: [SwiftDeclaration] = []
-    private var rootDeclarations: [SwiftDeclaration] = []
+    private var declarations: [Declaration] = []
+    private var rootDeclarations: [Declaration] = []
     
     public init(projectPath: URL) {
         self.projectPath = projectPath
@@ -14,32 +14,32 @@ public struct Harmonize {
         self.rootDeclarations = files.flatMap { $0.rootDeclarations }
     }
     
-    public func declarations(includeNested: Bool = true) -> [SwiftDeclaration] {
+    public func declarations(includeNested: Bool = true) -> [Declaration] {
         includeNested ? declarations : rootDeclarations
     }
     
-    public func classes(includeNested: Bool = true) -> [SwiftClass] {
-        declarations(includeNested: includeNested).as(SwiftClass.self)
+    public func classes(includeNested: Bool = true) -> [Class] {
+        declarations(includeNested: includeNested).as(Class.self)
     }
     
-    public func structs(includeNested: Bool = true) -> [SwiftStruct] {
-        declarations(includeNested: includeNested).as(SwiftStruct.self)
+    public func structs(includeNested: Bool = true) -> [Struct] {
+        declarations(includeNested: includeNested).as(Struct.self)
     }
     
-    public func protocols(includeNested: Bool = true) -> [SwiftProtocol] {
-        declarations(includeNested: includeNested).as(SwiftProtocol.self)
+    public func protocols(includeNested: Bool = true) -> [ProtocolDeclaration] {
+        declarations(includeNested: includeNested).as(ProtocolDeclaration.self)
     }
     
-    public func properties(includeNested: Bool = true) -> [SwiftProperty] {
-        declarations(includeNested: includeNested).as(SwiftProperty.self)
+    public func properties(includeNested: Bool = true) -> [Property] {
+        declarations(includeNested: includeNested).as(Property.self)
     }
     
-    public func functions(includeNested: Bool = true) -> [SwiftFunction] {
-        declarations(includeNested: includeNested).as(SwiftFunction.self)
+    public func functions(includeNested: Bool = true) -> [Function] {
+        declarations(includeNested: includeNested).as(Function.self)
     }
     
-    public func initializers() -> [SwiftInitializer] {
-        declarations().as(SwiftInitializer.self)
+    public func initializers() -> [Initializer] {
+        declarations().as(Initializer.self)
     }
     
     private func findFiles() -> [SwiftFile] {

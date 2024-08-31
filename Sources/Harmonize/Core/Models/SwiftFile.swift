@@ -7,10 +7,10 @@ public struct SwiftFile {
     public let filePath: URL
     
     /// Top-level declarations found in this file, excluding nested declarations.
-    public var rootDeclarations: [SwiftDeclaration] = []
+    public var rootDeclarations: [Declaration] = []
     
     /// Declarations found in this file, including nested declarations.
-    public var declarations: [SwiftDeclaration] = []
+    public var declarations: [Declaration] = []
     
     init(url: URL) throws {
         self.filePath = url

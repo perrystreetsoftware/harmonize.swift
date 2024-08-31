@@ -9,5 +9,5 @@ import Foundation
 
 public protocol ParametersProviding {
     /// All parameters the declaration has.
-    var parameters: [SwiftParameter] { get }
+    var parameters: [Parameter] { get }
 }

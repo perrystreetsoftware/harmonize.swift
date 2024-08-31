@@ -9,5 +9,5 @@ import Foundation
 
 public protocol FunctionsProviding {
     /// All functions the declaration has.
-    var functions: [SwiftFunction] { get }
+    var functions: [Function] { get }
 }

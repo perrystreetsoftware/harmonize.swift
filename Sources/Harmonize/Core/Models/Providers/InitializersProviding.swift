@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol InitializersProviding {
-    var initializers: [SwiftInitializer] { get }
+    var initializers: [Initializer] { get }
 }

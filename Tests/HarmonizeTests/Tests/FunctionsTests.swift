@@ -183,7 +183,7 @@ final class FunctionsTests: XCTestCase {
         XCTAssertEqual(functionBody, body)
     }
     
-    private func funcByName(_ name: String, includeNested: Bool = true) -> SwiftFunction {
+    private func funcByName(_ name: String, includeNested: Bool = true) -> Function {
         harmonize.functions(includeNested: includeNested).first {
             $0.name == name
         }!

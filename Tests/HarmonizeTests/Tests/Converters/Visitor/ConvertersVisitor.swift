@@ -13,12 +13,12 @@ class ConvertersVisitor: SyntaxVisitor {
     var attributeConverter = AttributeSyntaxConverter()
     var modifierConverter = DeclModifierSyntaxConverter()
 
-    var attributes = [SwiftAttribute]()
-    var modifiers = [SwiftModifier]()
-    var types = [SwiftTypeAnnotation]()
-    var identifiers = [SwiftIdentifier]()
-    var initializers = [SwiftInitializerClause]()
-    var accessors = [SwiftAccessor]()
+    var attributes = [Attribute]()
+    var modifiers = [Modifier]()
+    var types = [TypeAnnotation]()
+    var identifiers = [Identifier]()
+    var initializers = [InitializerClause]()
+    var accessors = [Accessor]()
     
     override func visit(_ node: AttributeListSyntax) -> SyntaxVisitorContinueKind {
         attributes.append(contentsOf: attributeConverter.convert(node))

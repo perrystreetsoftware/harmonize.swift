@@ -7,7 +7,7 @@ final class PropertiesTests: XCTestCase {
         HarmonizeUtils().appendingPath("Fixtures/Properties").harmonize()
     }
     
-    private var topLevelProperties: [SwiftProperty] {
+    private var topLevelProperties: [Property] {
         harmonize.properties(includeNested: false)
     }
     
@@ -114,7 +114,7 @@ final class PropertiesTests: XCTestCase {
         let properties = harmonize.properties().filter { $0.parent?.name == "Properties" }
         let modifiers = properties.map { $0.modifiers }
         
-        let expectedModifiers: [[SwiftModifier]] = [
+        let expectedModifiers: [[Modifier]] = [
             [.private],
             [.public],
             [.internal],
@@ -137,7 +137,7 @@ final class PropertiesTests: XCTestCase {
         let properties = harmonize.properties()
         let attributes = properties.flatMap { $0.attributes }
         
-        let expectedAttributes: [SwiftAttribute] = [
+        let expectedAttributes: [Attribute] = [
             .declaration(attribute: .available, arguments: ["*", "renamed: example11"]),
             .declaration(attribute: .objc, arguments: []),
             .customPropertyWrapper(name: "Published", arguments: []),

@@ -1,5 +1,5 @@
 //
-//  SwiftDeclarationAttribute.swift
+//  DeclarationAttribute.swift
 //
 //
 //  Created by Lucas Cavalcante on 8/24/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SwiftDeclarationAttribute: String, CaseIterable, Equatable {
+public enum DeclarationAttribute: String, CaseIterable, Equatable {
     case attached = "@attached"
     case available = "@available"
     case backDeployed = "@backDeployed"
@@ -35,7 +35,7 @@ public enum SwiftDeclarationAttribute: String, CaseIterable, Equatable {
     case usableFromInline = "@usableFromInline"
     case warnUnqualifiedAccess = "@warn_unqualified_access"
     
-    public static func from(name: String) -> SwiftDeclarationAttribute? {
+    public static func from(name: String) -> DeclarationAttribute? {
         allCases.first { $0.rawValue == name }
     }
 }

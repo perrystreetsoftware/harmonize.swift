@@ -9,5 +9,5 @@ import Foundation
 
 public protocol ModifiersProviding {
     /// An array of all modifiers the declaration is annotated with, such as `public`, `fileprivate` etc.
-    var modifiers: [SwiftModifier] { get }
+    var modifiers: [Modifier] { get }
 }

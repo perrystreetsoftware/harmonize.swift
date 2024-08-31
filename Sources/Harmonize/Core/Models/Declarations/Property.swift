@@ -1,8 +1,8 @@
 import Foundation
 
-public struct SwiftProperty: SwiftDeclaration,
-                             ModifiersProviding,
-                             AttributesProviding {
+public struct Property: Declaration,
+                        ModifiersProviding,
+                        AttributesProviding {
     public enum DeclarationType: String {
         case `let` = "let"
         case `var` = "var"
@@ -20,16 +20,16 @@ public struct SwiftProperty: SwiftDeclaration,
     
     public let text: String
     
-    public var parent: SwiftDeclaration?
+    public var parent: Declaration?
     
-    public var children: [SwiftDeclaration]
+    public var children: [Declaration]
     
-    public var modifiers: [SwiftModifier]
+    public var modifiers: [Modifier]
     
-    public var attributes: [SwiftAttribute]
+    public var attributes: [Attribute]
     
     /// If the variable is computed, the accessors that get (and optionally set) the value.
-    public let accessors: [SwiftAccessor]
+    public let accessors: [Accessor]
     
     /// The underlying type name of this property, such as String, Int, Bool, Array etc.
     public let typeAnnotation: String

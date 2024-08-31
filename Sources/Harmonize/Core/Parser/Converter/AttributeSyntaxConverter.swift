@@ -9,7 +9,7 @@ import Foundation
 import SwiftSyntax
 
 class AttributeSyntaxConverter {
-    func convert(_ node: AttributeListSyntax) -> [SwiftAttribute] {
+    func convert(_ node: AttributeListSyntax) -> [Attribute] {
         return node.compactMap {
             return switch $0 {
             case .attribute(let attribute):
@@ -20,8 +20,8 @@ class AttributeSyntaxConverter {
         }
     }
     
-    func convert(_ node: AttributeSyntax) -> SwiftAttribute? {
-        SwiftAttribute.from(
+    func convert(_ node: AttributeSyntax) -> Attribute? {
+        Attribute.from(
             attributeName: node.attributeName.trimmedDescription,
             arguments: convertAttributeArguments(node.arguments)
         )

@@ -9,7 +9,7 @@ import Foundation
 import SwiftSyntax
 
 class InitializerClauseSyntaxConverter {
-    func convert(_ node: InitializerClauseSyntax?) -> SwiftInitializerClause? {
+    func convert(_ node: InitializerClauseSyntax?) -> InitializerClause? {
         guard let initializer = node else { return nil }
         
         if let initializer = initializer.as(InitializerClauseSyntax.self) {
@@ -19,7 +19,7 @@ class InitializerClauseSyntaxConverter {
                 initializer.value.trimmedDescription
             }
             
-            return SwiftInitializerClause(value: valueString ?? "")
+            return InitializerClause(value: valueString ?? "")
         }
         
         return nil

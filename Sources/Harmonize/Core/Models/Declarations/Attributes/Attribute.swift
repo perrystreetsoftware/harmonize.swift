@@ -1,5 +1,5 @@
 //
-//  SwiftAttribute.swift
+//  Attribute.
 //
 //
 //  Created by Lucas Cavalcante on 8/24/24.
@@ -7,13 +7,13 @@
 
 import Foundation
 
-public enum SwiftAttribute: Equatable {
+public enum Attribute: Equatable {
     // TODO: to make arguments to be typed in a future release.
-    case declaration(attribute: SwiftDeclarationAttribute, arguments: [String])
-    case type(attribute: SwiftTypeAttribute)
+    case declaration(attribute: DeclarationAttribute, arguments: [String])
+    case type(attribute: TypeAttribute)
     case customPropertyWrapper(name: String, arguments: [String])
     
-    public static func from(attributeName: String, arguments: [String] = []) -> SwiftAttribute? {
+    public static func from(attributeName: String, arguments: [String] = []) -> Attribute? {
         let name = "@\(attributeName)"
         
         func isAttributeUnsupported() -> Bool {
@@ -25,13 +25,13 @@ public enum SwiftAttribute: Equatable {
             return nil
         }
         
-        if let declaration = SwiftDeclarationAttribute.from(name: name) {
+        if let declaration = DeclarationAttribute.from(name: name) {
             return .declaration(attribute: declaration, arguments: arguments)
         }
         
         let typeArgument = arguments.first ?? ""
         
-        if let type = SwiftTypeAttribute.from(name: name + typeArgument) {
+        if let type = TypeAttribute.from(name: name + typeArgument) {
             return .type(attribute: type)
         }
         

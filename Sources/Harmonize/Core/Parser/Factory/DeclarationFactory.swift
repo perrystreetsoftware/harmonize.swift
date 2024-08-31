@@ -1,21 +1,21 @@
 import Foundation
 import SwiftSyntax
 
-class SwiftDeclarationFactory {
+class DeclarationFactory {
     private let file: SwiftFile
-    private let children: [SwiftDeclaration]
+    private let children: [Declaration]
     
     private let initializerClauseConverter = InitializerClauseSyntaxConverter()
     private let declModifierSyntaxConverter = DeclModifierSyntaxConverter()
     private let attributeSyntaxConverter = AttributeSyntaxConverter()
     
-    init(file: SwiftFile, children: [SwiftDeclaration]) {
+    init(file: SwiftFile, children: [Declaration]) {
         self.file = file
         self.children = children
     }
     
-    func create(_ node: ClassDeclSyntax) -> SwiftClass {
-        var `class` = SwiftClass(
+    func create(_ node: ClassDeclSyntax) -> Class {
+        var `class` = Class(
             name: node.name.text,
             text: node.trimmedDescription,
             parent: nil,
@@ -32,19 +32,19 @@ class SwiftDeclarationFactory {
         return `class`
     }
     
-    func create(_ node: FunctionDeclSyntax) -> SwiftFunction {
+    func create(_ node: FunctionDeclSyntax) -> Function {
         let modifiers = declModifierSyntaxConverter.convert(node.modifiers)
         
         // TODO: make this type-safe in a future release?
         let genericClause = node.genericParameterClause?.trimmedDescription
         let whereClause = node.genericWhereClause?.trimmedDescription
         
-        var function = SwiftFunction(
+        var function = Function(
             name: node.name.text,
             text: node.trimmedDescription,
             children: [],
             modifiers: modifiers,
-            returnClause: SwiftReturnClause.from(node.signature.returnClause?.type.trimmedDescription),
+            returnClause: ReturnClause.from(node.signature.returnClause?.type.trimmedDescription),
             genericClause: genericClause,
             whereClause: whereClause,
             body: node.body?.statements.map { $0.item.trimmedDescription }.joined(separator: "\n")
@@ -56,7 +56,7 @@ class SwiftDeclarationFactory {
         return function
     }
     
-    func create(_ node: FunctionParameterSyntax) -> SwiftParameter {
+    func create(_ node: FunctionParameterSyntax) -> Parameter {
         let firstName = node.firstName.text
         let secondName = node.secondName?.text
         
@@ -73,7 +73,7 @@ class SwiftDeclarationFactory {
         
         let variadic = node.ellipsis?.text ?? ""
 
-        return SwiftParameter(
+        return Parameter(
             name: secondName ?? firstName,
             text: node.trimmedDescription.replacingOccurrences(of: ",", with: ""),
             children: [],
@@ -87,8 +87,8 @@ class SwiftDeclarationFactory {
         )
     }
     
-    func create(_ node: StructDeclSyntax) -> SwiftStruct {
-        var `struct` = SwiftStruct(
+    func create(_ node: StructDeclSyntax) -> Struct {
+        var `struct` = Struct(
             name: node.name.text,
             text: node.trimmedDescription,
             parent: nil,
@@ -105,7 +105,7 @@ class SwiftDeclarationFactory {
         return `struct`
     }
     
-    func create(_ node: VariableDeclSyntax) -> [SwiftProperty] {
+    func create(_ node: VariableDeclSyntax) -> [Property] {
         let patternBindingSyntaxConverter = PatternBindingSyntaxConverter(bindings: node.bindings)
                 
         let identifiers = patternBindingSyntaxConverter.identifiers
@@ -116,13 +116,13 @@ class SwiftDeclarationFactory {
         let modifiers = declModifierSyntaxConverter.convert(node.modifiers)
         let attributes = attributeSyntaxConverter.convert(node.attributes)
         
-        var variables: [SwiftProperty] = []
+        var variables: [Property] = []
         
         for (index, identifier) in identifiers.enumerated() {
             let annotation = index < annotations.count ? annotations[index] : annotations.last
             let initializer = index < initializers.count ? initializers[index] : nil
             
-            let variable = SwiftProperty(
+            let variable = Property(
                 name: identifier.name,
                 text: node.trimmedDescription,
                 children: children,
@@ -141,8 +141,8 @@ class SwiftDeclarationFactory {
         return variables
     }
     
-    func create(_ node: ProtocolDeclSyntax) -> SwiftProtocol {
-        var `protocol` = SwiftProtocol(
+    func create(_ node: ProtocolDeclSyntax) -> ProtocolDeclaration {
+        var `protocol` = ProtocolDeclaration(
             name: node.name.text,
             text: node.trimmedDescription,
             parent: nil,
@@ -159,11 +159,11 @@ class SwiftDeclarationFactory {
         return `protocol`
     }
     
-    func create(_ node: InitializerDeclSyntax) -> SwiftInitializer {
+    func create(_ node: InitializerDeclSyntax) -> Initializer {
         let modifiers = declModifierSyntaxConverter.convert(node.modifiers)
         let attributes = attributeSyntaxConverter.convert(node.attributes)
         
-        var `init` = SwiftInitializer(
+        var `init` = Initializer(
             name: node.trimmedDescription,
             text: node.trimmedDescription,
             children: [],
@@ -179,7 +179,7 @@ class SwiftDeclarationFactory {
         return `init`
     }
     
-    private func withUpdatedChildrenParent(parent: SwiftDeclaration) -> [SwiftDeclaration] {
+    private func withUpdatedChildrenParent(parent: Declaration) -> [Declaration] {
         children.map {
             var symbol = $0
             symbol.parent = parent

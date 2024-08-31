@@ -1,5 +1,5 @@
 //
-//  SwiftParameter.swift
+//  Parameter.swift
 //
 //
 //  Created by Lucas Cavalcante on 8/26/24.
@@ -7,18 +7,18 @@
 
 import Foundation
 
-public struct SwiftParameter: SwiftDeclaration, AttributesProviding {
+public struct Parameter: Declaration, AttributesProviding {
     public var name: String
     
     public var text: String
     
-    public var parent: SwiftDeclaration?
+    public var parent: Declaration?
     
-    public var children: [SwiftDeclaration]
+    public var children: [Declaration]
     
-    public var modifiers: [SwiftModifier]
+    public var modifiers: [Modifier]
     
-    public var attributes: [SwiftAttribute]
+    public var attributes: [Attribute]
     
     public let label: String
     

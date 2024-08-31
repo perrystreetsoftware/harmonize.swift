@@ -9,10 +9,10 @@ import Foundation
 import SwiftSyntax
 
 class DeclModifierSyntaxConverter {
-    func convert(_ node: DeclModifierListSyntax) -> [SwiftModifier] {
+    func convert(_ node: DeclModifierListSyntax) -> [Modifier] {
         node.compactMap {
             let detail = $0.detail?.trimmedDescription ?? ""
-            return SwiftModifier.from(value: $0.name.text + detail)
+            return Modifier.from(value: $0.name.text + detail)
         }
     }
 }
