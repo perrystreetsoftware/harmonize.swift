@@ -7,7 +7,8 @@
 
 import Foundation
 
-public struct SwiftFunction: SwiftDeclaration, 
+public struct SwiftFunction: SwiftDeclaration,
+                             BodyProviding,
                              ParametersProviding,
                              ModifiersProviding,
                              FunctionsProviding {
@@ -35,5 +36,5 @@ public struct SwiftFunction: SwiftDeclaration,
     
     public let whereClause: String?
     
-    public let body: String
+    public let body: String?
 }

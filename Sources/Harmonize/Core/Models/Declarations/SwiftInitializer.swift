@@ -7,7 +7,8 @@
 
 import Foundation
 
-public struct SwiftInitializer: SwiftDeclaration, 
+public struct SwiftInitializer: SwiftDeclaration,
+                                BodyProviding,
                                 ModifiersProviding,
                                 AttributesProviding,
                                 ParametersProviding,
@@ -42,5 +43,5 @@ public struct SwiftInitializer: SwiftDeclaration,
         children.as(SwiftProperty.self)
     }
     
-    public var body: String?
+    public let body: String?
 }

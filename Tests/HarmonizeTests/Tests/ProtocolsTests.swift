@@ -64,7 +64,7 @@ final class ProtocolTests: XCTestCase {
     func testAssertCanParseProtocolMemberFunctions() throws {
         let function = protocolByName("NetworkRequestable").functions.first!
         XCTAssertEqual(function.name, "someMethod")
-        XCTAssertEqual(function.body, "")
+        XCTAssertEqual(function.body, nil)
         XCTAssertEqual(function.returnClause, .absent)
         XCTAssertTrue(function.parameters.isEmpty)
     }
