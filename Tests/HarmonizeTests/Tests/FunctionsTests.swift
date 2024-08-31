@@ -176,11 +176,9 @@ final class FunctionsTests: XCTestCase {
     func testAssertCanParseFunctionBody() throws {
         let functionBody = funcByName("withReturnClause").body
         let body = """
-        {
-            let cal = "cal"
-            noLabelAtAll(cal)
-            return "return"
-        }
+        let cal = "cal"
+        noLabelAtAll(cal)
+        return "return"
         """
         XCTAssertEqual(functionBody, body)
     }

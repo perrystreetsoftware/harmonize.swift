@@ -29,7 +29,11 @@ class MyFile: NSObject, MyProtocol, @unchecked Sendable {
 class MyClass2: MyProtocol {
     var property: String = "y"
     
-    func first() { "42" }
+    func first() {
+        var _ = 42
+    }
     
-    func second() { "44" }
+    func second() {
+        var _ = 44
+    }
 }

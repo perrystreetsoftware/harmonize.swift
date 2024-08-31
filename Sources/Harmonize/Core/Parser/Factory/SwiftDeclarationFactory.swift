@@ -47,7 +47,7 @@ class SwiftDeclarationFactory {
             returnClause: SwiftReturnClause.from(node.signature.returnClause?.type.trimmedDescription),
             genericClause: genericClause,
             whereClause: whereClause,
-            body: node.body?.trimmedDescription ?? ""
+            body: node.body?.statements.map { $0.item.trimmedDescription }.joined(separator: "\n") ?? ""
         )
         
         let children = withUpdatedChildrenParent(parent: function)

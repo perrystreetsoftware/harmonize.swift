@@ -71,16 +71,11 @@ final class ClassesTests: XCTestCase {
         XCTAssertEqual(classFunctions.count, 2)
         XCTAssertEqual(classFunctions.map { $0.name }, ["first", "second"])
         
-        let expectBody: (String) -> String = { """
-        { "\($0)" }
-        """
-        }
-        
         XCTAssertEqual(
             classFunctions.map { $0.body },
             [
-                expectBody("42"),
-                expectBody("44")
+                "var _ = 42",
+                "var _ = 44"
             ]
         )
     }

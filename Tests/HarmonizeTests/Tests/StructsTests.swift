@@ -64,12 +64,8 @@ final class StructsTests: XCTestCase {
     func testAssertCanParseStructsMemberFunctions() throws {
         let function = structByName("MyStruct").functions.first!
         
-        let body = """
-        { property2 + 2 }
-        """
-        
         XCTAssertEqual(function.name, "someFunction")
-        XCTAssertEqual(function.body, body)
+        XCTAssertEqual(function.body, "property2 + 2")
     }
     
     private func structByName(_ name: String) -> SwiftStruct {
