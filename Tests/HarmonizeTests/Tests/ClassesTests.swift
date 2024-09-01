@@ -44,7 +44,7 @@ final class ClassesTests: XCTestCase {
         let properties = classes.flatMap { $0.properties }
         let names = properties.map { $0.name }
         let parent = properties.map { $0.parent?.name }
-        let values = properties.map { $0.initializer }
+        let values = properties.compactMap { $0.initializerClause }.map { $0.value }
         
         XCTAssertEqual(properties.count, 3)
         XCTAssertEqual(names, ["property", "y", "property"])

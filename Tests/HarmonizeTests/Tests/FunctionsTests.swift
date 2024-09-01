@@ -128,7 +128,8 @@ final class FunctionsTests: XCTestCase {
         
         XCTAssertEqual(variadicArg.name, "args")
         XCTAssertEqual(variadicArg.label, "args")
-        XCTAssertEqual(variadicArg.typeAnnotation, "String...")
+        XCTAssertEqual(variadicArg.typeAnnotation?.name, "String...")
+        XCTAssertEqual(variadicArg.isVariadic, true)
         XCTAssertEqual(noLabelVariadicArg.label, "")
     }
     
@@ -136,7 +137,7 @@ final class FunctionsTests: XCTestCase {
         let unnamedParam = funcByName("noLabelAtAll").parameters.first!
         XCTAssertEqual(unnamedParam.name, "_")
         XCTAssertEqual(unnamedParam.label, "")
-        XCTAssertEqual(unnamedParam.typeAnnotation, "String")
+        XCTAssertEqual(unnamedParam.typeAnnotation?.name, "String")
     }
     
     func testAssertCanParseFunctionParametersWithReturnClause() throws {
@@ -157,7 +158,7 @@ final class FunctionsTests: XCTestCase {
     
     func testAssertCanParseFunctionParametersWithInitializer() throws {
         let param = funcByName("withParametersInitializers").parameters.first!
-        XCTAssertEqual(param.defaultValue, "Value")
+        XCTAssertEqual(param.initializerClause?.value, "Value")
     }
     
     func testAssertCanParseFunctionParametersWithAttributes() throws {

@@ -1,5 +1,5 @@
 //
-//  AttributeSyntaxConverter.swift
+//  AttributeListSyntax+AttributesProviding.swift
 //
 //
 //  Created by Lucas Cavalcante on 8/24/24.
@@ -8,26 +8,28 @@
 import Foundation
 import SwiftSyntax
 
-class AttributeSyntaxConverter {
-    func convert(_ node: AttributeListSyntax) -> [Attribute] {
-        return node.compactMap {
+extension AttributeListSyntax: AttributesProviding {
+    public var attributes: [Attribute] {
+        compactMap {
             return switch $0 {
-            case .attribute(let attribute):
-                convert(attribute)
+            case .attribute(let attributeNode):
+                attributeNode.attribute
             default:
                 nil
             }
         }
     }
-    
-    func convert(_ node: AttributeSyntax) -> Attribute? {
+}
+
+extension AttributeSyntax {
+    var attribute: Attribute? {
         Attribute.from(
-            attributeName: node.attributeName.trimmedDescription,
-            arguments: convertAttributeArguments(node.arguments)
+            attributeName: attributeName.trimmedDescription,
+            arguments: arguments(from: arguments)
         )
     }
     
-    private func convertAttributeArguments(_ args: AttributeSyntax.Arguments?) -> [String] {
+    private func arguments(from args: AttributeSyntax.Arguments?) -> [String] {
         guard let args else { return [] }
         
         return switch args {
@@ -42,7 +44,7 @@ class AttributeSyntaxConverter {
                 return if let comma = $0.trailingComma?.text {
                     $0.trimmedDescription.replacingOccurrences(of: comma, with: "")
                 } else {
-                    convertAvailabilityArguments($0.argument)
+                    availability(from: $0.argument)
                 }
             }
         case .specializeArguments(let values):
@@ -82,7 +84,7 @@ class AttributeSyntaxConverter {
         }
     }
     
-    private func convertAvailabilityArguments(_ arg: AvailabilityArgumentSyntax.Argument) -> String? {
+    private func availability(from arg: AvailabilityArgumentSyntax.Argument) -> String? {
         return switch arg {
         case .token(let token):
             token.text
@@ -93,13 +95,13 @@ class AttributeSyntaxConverter {
                 versionRestriction.platform.text
             }
         case .availabilityLabeledArgument(let labeledArgument):
-            convertAvailabilityLabeledArgument(labeledArgument)
+            availabilityLabeledArgument(from: labeledArgument)
         default:
             nil
         }
     }
     
-    private func convertAvailabilityLabeledArgument(_ arg: AvailabilityLabeledArgumentSyntax) -> String? {
+    private func availabilityLabeledArgument(from arg: AvailabilityLabeledArgumentSyntax) -> String? {
         let value: String? = switch arg.value {
         case .string(let literalStringExpression):
             literalStringExpression.segments.trimmedDescription

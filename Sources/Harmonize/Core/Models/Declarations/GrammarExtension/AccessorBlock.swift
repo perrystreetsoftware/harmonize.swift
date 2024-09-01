@@ -1,5 +1,5 @@
 //
-//  Accessor.swift
+//  AccessorBlock.swift
 //
 //
 //  Created by Lucas Cavalcante on 8/25/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Accessor: Equatable, BodyProviding {
+public struct AccessorBlock: Equatable, BodyProviding {
     public enum Modifier: String, CaseIterable, Equatable {
         case getter = "getter"
         case get = "get"

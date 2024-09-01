@@ -10,10 +10,10 @@ final class PatternBindingSyntaxConverterTests: XCTestCase {
             XCTAssertEqual(
                 $0.identifiers,
                 [
-                    Identifier(name: "name"),
-                    Identifier(name: "age"),
-                    Identifier(name: "lastName"),
-                    Identifier(name: "optional")
+                    "name",
+                    "age",
+                    "lastName",
+                    "optional"
                 ]
             )
         }
@@ -61,13 +61,13 @@ final class PatternBindingSyntaxConverterTests: XCTestCase {
             XCTAssertEqual(
                 $0.accessors,
                 [
-                    Accessor(modifier: .getter, body: "lcszc"),
-                    Accessor(modifier: .get),
-                    Accessor(modifier: .set),
-                    Accessor(modifier: .get, body: "return 42"),
-                    Accessor(modifier: .set, body: "settable = newValue"),
-                    Accessor(modifier: .willSet, body: ""),
-                    Accessor(modifier: .didSet, body: ""),
+                    AccessorBlock(modifier: .getter, body: "lcszc"),
+                    AccessorBlock(modifier: .get),
+                    AccessorBlock(modifier: .set),
+                    AccessorBlock(modifier: .get, body: "return 42"),
+                    AccessorBlock(modifier: .set, body: "settable = newValue"),
+                    AccessorBlock(modifier: .willSet, body: ""),
+                    AccessorBlock(modifier: .didSet, body: ""),
                 ]
             )
         }

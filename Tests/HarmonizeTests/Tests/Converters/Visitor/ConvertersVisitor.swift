@@ -10,32 +10,28 @@ import SwiftSyntax
 @testable import Harmonize
 
 class ConvertersVisitor: SyntaxVisitor {
-    var attributeConverter = AttributeSyntaxConverter()
-    var modifierConverter = DeclModifierSyntaxConverter()
-
     var attributes = [Attribute]()
     var modifiers = [Modifier]()
     var types = [TypeAnnotation]()
-    var identifiers = [Identifier]()
+    var identifiers = [String]()
     var initializers = [InitializerClause]()
-    var accessors = [Accessor]()
+    var accessors = [AccessorBlock]()
     
     override func visit(_ node: AttributeListSyntax) -> SyntaxVisitorContinueKind {
-        attributes.append(contentsOf: attributeConverter.convert(node))
+        attributes.append(contentsOf: node.attributes)
         return .skipChildren
     }
     
     override func visit(_ node: DeclModifierListSyntax) -> SyntaxVisitorContinueKind {
-        modifiers.append(contentsOf: modifierConverter.convert(node))
+        modifiers.append(contentsOf: node.modifiers)
         return .skipChildren
     }
     
     override func visit(_ node: PatternBindingListSyntax) -> SyntaxVisitorContinueKind {
-        let converter = PatternBindingSyntaxConverter(bindings: node)
-        identifiers.append(contentsOf: converter.identifiers)
-        types.append(contentsOf: converter.types)
-        initializers.append(contentsOf: converter.initializers)
-        accessors.append(contentsOf: converter.accessors)
+        identifiers.append(contentsOf: node.names)
+        types.append(contentsOf: node.typeAnnotations)
+        initializers.append(contentsOf: node.initializerClauses)
+        accessors.append(contentsOf: node.accessorBlocks)
         return .skipChildren
     }
 }

@@ -1,5 +1,5 @@
 //
-//  InitializerClauseSyntaxConverter.swift
+//  InitializerClauseSyntax+InitializerClauseProviding.swift
 //
 //
 //  Created by Lucas Cavalcante on 8/26/24.
@@ -8,11 +8,9 @@
 import Foundation
 import SwiftSyntax
 
-class InitializerClauseSyntaxConverter {
-    func convert(_ node: InitializerClauseSyntax?) -> InitializerClause? {
-        guard let initializer = node else { return nil }
-        
-        if let initializer = initializer.as(InitializerClauseSyntax.self) {
+extension InitializerClauseSyntax: InitializerClauseProviding {
+    public var initializerClause: InitializerClause? {
+        if let initializer = self.as(InitializerClauseSyntax.self) {
             let valueString = if let value = initializer.value.as(StringLiteralExprSyntax.self) {
                 value.representedLiteralValue
             } else {

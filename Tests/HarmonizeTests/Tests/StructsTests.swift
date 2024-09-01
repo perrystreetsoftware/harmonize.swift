@@ -42,7 +42,7 @@ final class StructsTests: XCTestCase {
         let properties = structs.map { $0.properties }
         
         let names = properties.flatMap { $0.map { $0.name } }
-        let types = properties.flatMap { $0.map { $0.typeAnnotation }}
+        let types = properties.flatMap { $0.compactMap { $0.typeAnnotation } }.map { $0.name }
         
         XCTAssertEqual(names, ["prop1", "prop2", "property1", "property2", "property3", "items"])
         XCTAssertEqual(types, ["String", "String", "String", "Int", "Bool", "[MyStructItem]"])

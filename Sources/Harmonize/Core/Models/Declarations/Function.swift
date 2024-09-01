@@ -7,34 +7,15 @@
 
 import Foundation
 
-public struct Function: Declaration,
+public protocol Function: Declaration,
+                        FileSourceProviding,
                         BodyProviding,
                         ParametersProviding,
                         ModifiersProviding,
                         FunctionsProviding {
-    public var name: String
+    var returnClause: ReturnClause { get }
     
-    public var text: String
+    var genericClause: String? { get }
     
-    public var parent: Declaration?
-    
-    public var children: [Declaration]
-    
-    public var modifiers: [Modifier]
-    
-    public var functions: [Function] {
-        children.as(Function.self)
-    }
-    
-    public var parameters: [Parameter] {
-        children.as(Parameter.self)
-    }
-    
-    public let returnClause: ReturnClause
-    
-    public let genericClause: String?
-    
-    public let whereClause: String?
-    
-    public let body: String?
+    var whereClause: String? { get }
 }

@@ -21,16 +21,18 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParseTopLevelPropertiesTypes() throws {
-        let types = topLevelProperties.map { $0.declarationType }
+        let constants = topLevelProperties.filter { $0.isConstant }.count
+        let variables = topLevelProperties.filter { $0.isVariable }.count
         
-        XCTAssertEqual(types, [.var, .let, .var, .var, .var])
+        XCTAssertEqual(variables, 4)
+        XCTAssertEqual(constants, 1)
     }
     
     func testAssertCanParseTopLevelPropertiesAnnotations() throws {
-        let annotations = topLevelProperties.map { $0.typeAnnotation }
+        let annotations = topLevelProperties.map { $0.typeAnnotation?.name }
         
         let expectedAnnotations = [
-            "",
+            nil,
             "String",
             "String?",
             "Int",
@@ -41,13 +43,13 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParseTopLevelPropertiesInferredAnnotations() throws {
-        let inferredProperties = topLevelProperties.filter { $0.isInferredType }
+        let inferredProperties = topLevelProperties.filter { $0.isOfInferredType }
         
         XCTAssertEqual(inferredProperties.count, 1)
     }
     
     func testAssertCanParseTopLevelPropertiesPrimitiveValues() throws {
-        let initializers = topLevelProperties.map { $0.initializer }
+        let initializers = topLevelProperties.map { $0.initializerClause }.map { $0?.value }
         
         let expectedValues = [
             "a",
@@ -61,7 +63,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParseTopLevelPropertiesImmutability() throws {
-        let immutableProperties = topLevelProperties.filter { $0.isImmutable }
+        let immutableProperties = topLevelProperties.filter { $0.isConstant }
         
         XCTAssertEqual(immutableProperties.count, 1)
     }
@@ -86,7 +88,7 @@ final class PropertiesTests: XCTestCase {
         let properties = exampleClass.properties
         
         XCTAssert(
-            properties.map { $0.typeAnnotation }.allSatisfy { $0 == "Double" }
+            properties.map { $0.typeAnnotation?.name }.allSatisfy { $0 == "Double" }
         )
     }
     
@@ -95,7 +97,7 @@ final class PropertiesTests: XCTestCase {
         let properties = mainClass.properties
         
         XCTAssertEqual(
-            properties.map { $0.typeAnnotation },
+            properties.map { $0.typeAnnotation?.name },
             ["MyClassType", "MyClassType"]
         )
     }
@@ -105,8 +107,8 @@ final class PropertiesTests: XCTestCase {
         let properties = mainClass.properties
         
         XCTAssertEqual(
-            properties.map { $0.initializer },
-            ["MyClassType(value: 2)", ""]
+            properties.map { $0.initializerClause?.value },
+            ["MyClassType(value: 2)", nil]
         )
     }
     
@@ -152,7 +154,7 @@ final class PropertiesTests: XCTestCase {
     
     func testAssertCanParsePropertiesAccessorsBody() throws {
         let properties = harmonize.properties()
-        let accessors = properties.flatMap { $0.accessors }.map { $0.body }
+        let accessors = properties.flatMap { $0.accessorBlocks }.map { $0.body }
         
         XCTAssertEqual(accessors.count, 3)
         XCTAssertEqual(
@@ -163,7 +165,7 @@ final class PropertiesTests: XCTestCase {
     
     func testAssertCanParsePropertiesAccessorsText() throws {
         let properties = harmonize.properties()
-        let accessors = properties.flatMap { $0.accessors }.map { $0.body }
+        let accessors = properties.flatMap { $0.accessorBlocks }.map { $0.body }
         
         XCTAssertEqual(accessors.count, 3)
         XCTAssertEqual(
@@ -178,7 +180,7 @@ final class PropertiesTests: XCTestCase {
     
     func testAssertCanParsePropertiesAccessorsModifier() throws {
         let properties = harmonize.properties()
-        let accessors = properties.flatMap { $0.accessors }.map { $0.modifier }
+        let accessors = properties.flatMap { $0.accessorBlocks }.map { $0.modifier }
         
         XCTAssertEqual(accessors.count, 3)
         XCTAssertEqual(accessors, [.getter, .get, .set])
