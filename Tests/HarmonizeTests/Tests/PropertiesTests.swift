@@ -140,10 +140,10 @@ final class PropertiesTests: XCTestCase {
         let attributes = properties.flatMap { $0.attributes }
         
         let expectedAttributes: [Attribute] = [
-            .declaration(attribute: .available, arguments: ["*", "renamed: example11"]),
-            .declaration(attribute: .objc, arguments: []),
-            .customPropertyWrapper(name: "Published", arguments: []),
-            .customPropertyWrapper(name: "Published", arguments: [])
+            Attribute(name: "available", annotation: .available, arguments: ["*", "renamed: example11"]),
+            Attribute(name: "objc", annotation: .objc),
+            Attribute(name: "Published", annotation: .published),
+            Attribute(name: "Published", annotation: .published),
         ]
         
         XCTAssertEqual(
@@ -194,8 +194,8 @@ final class PropertiesTests: XCTestCase {
         XCTAssertEqual(
             attributes,
             [
-                .customPropertyWrapper(name: "Published", arguments: []),
-                .customPropertyWrapper(name: "Published", arguments: [])
+                Attribute(name: "Published", annotation: .published),
+                Attribute(name: "Published", annotation: .published)
             ]
         )
     }

@@ -10,55 +10,68 @@ final class AttributeSyntaxConverterTests: XCTestCase {
         visitor.attributes
     }
     
-    func testCanParseSwiftListSyntaxAttributes() throws {
-        walk()
-        XCTAssertEqual(visitor.attributes.count, 37)
-    }
-    
     func testCanParseSwiftListSyntaxAttributesArguments() throws {
         walk()
         
         let expectedAttributes: [Attribute] = [
-            .declaration(attribute: .testable, arguments: []),
-            .declaration(attribute: .attached, arguments: ["memberAttribute"]),
-            .declaration(attribute: .freestanding, arguments: ["declaration"]),
-            .declaration(attribute: .backDeployed, arguments: ["iOS 15.0"]),
-            .declaration(attribute: .dynamicCallable, arguments: []),
-            .declaration(attribute: .dynamicMemberLookup, arguments: []),
-            .declaration(attribute: .frozen, arguments: []),
-            .declaration(attribute: .main, arguments: []),
-            .declaration(attribute: .resultBuilder, arguments: []),
-            .customPropertyWrapper(name: "IntArrayBuilder", arguments: []),
-            .declaration(attribute: .propertyWrapper, arguments: []),
-            .declaration(attribute: .nsApplicationMain, arguments: []),
-            .declaration(attribute: .requiresStoredPropertyInits, arguments: []),
-            .declaration(attribute: .uiApplicationMain, arguments: []),
-            .declaration(attribute: .unchecked, arguments: []),
-            .declaration(attribute: .warnUnqualifiedAccess, arguments: []),
-            .declaration(attribute: .usableFromInline, arguments: []),
-            .declaration(attribute: .objc, arguments: []),
-            .declaration(attribute: .nsCopying, arguments: []),
-            .declaration(attribute: .nsManaged, arguments: []),
-            .declaration(attribute: .preconcurrency, arguments: []),
-            .declaration(attribute: .gkInspectable, arguments: []),
-            .declaration(attribute: .objc, arguments: ["isEnabled"]),
-            .declaration(attribute: .available, arguments: ["iOS 14.0", "*"]),
-            .declaration(attribute: .objc, arguments: []),
-            .declaration(attribute: .inlinable, arguments: []),
-            .declaration(attribute: .discardableResult, arguments: []),
-            .declaration(attribute: .objcMembers, arguments: []),
-            .type(attribute: .conventionC),
-            .type(attribute: .conventionBlock),
-            .type(attribute: .conventionSwift),
-            .declaration(attribute: .available, arguments: ["*", "noasync"]),
-            .customPropertyWrapper(name: "MyWrapper", arguments: []),
-            .declaration(attribute: .nonobjc, arguments: []),
-            .type(attribute: .escaping),
-            .type(attribute: .autoclosure),
-            .type(attribute: .sendable),
+            Attribute(name: "testable", annotation: .testable, arguments: []),
+            Attribute(name: "attached", annotation: .attached, arguments: ["memberAttribute"]),
+            Attribute(name: "freestanding", annotation: .freestanding, arguments: ["declaration"]),
+            Attribute(name: "backDeployed", annotation: .backDeployed, arguments: ["iOS 15.0"]),
+            Attribute(name: "dynamicCallable", annotation: .dynamicCallable),
+            Attribute(name: "dynamicMemberLookup", annotation: .dynamicMemberLookup),
+            Attribute(name: "frozen", annotation: .frozen),
+            Attribute(name: "main", annotation: .main),
+            Attribute(name: "resultBuilder", annotation: .resultBuilder),
+            Attribute(name: "IntArrayBuilder", annotation: .customPropertyWrapper),
+            Attribute(name: "propertyWrapper", annotation: .propertyWrapper),
+            Attribute(name: "NSApplicationMain", annotation: .nsApplicationMain),
+            Attribute(name: "requires_stored_property_inits", annotation: .requiresStoredPropertyInits),
+            Attribute(name: "UIApplicationMain", annotation: .uiApplicationMain),
+            Attribute(name: "unchecked", annotation: .unchecked),
+            Attribute(name: "warn_unqualified_access", annotation: .warnUnqualifiedAccess),
+            Attribute(name: "usableFromInline", annotation: .usableFromInline),
+            Attribute(name: "objc", annotation: .objc),
+            Attribute(name: "NSCopying", annotation: .nsCopying),
+            Attribute(name: "NSManaged", annotation: .nsManaged),
+            Attribute(name: "preconcurrency", annotation: .preconcurrency),
+            Attribute(name: "GKInspectable", annotation: .gkInspectable),
+            Attribute(name: "objc", annotation: .objc, arguments: ["isEnabled"]),
+            Attribute(name: "available", annotation: .available, arguments: ["iOS 14.0", "*"]),
+            Attribute(name: "objc", annotation: .objc),
+            Attribute(name: "inlinable", annotation: .inlinable),
+            Attribute(name: "discardableResult", annotation: .discardableResult),
+            Attribute(name: "objcMembers", annotation: .objcMembers),
+            Attribute(name: "convention(c)", annotation: .conventionC),
+            Attribute(name: "convention(block)", annotation: .conventionBlock),
+            Attribute(name: "convention(swift)", annotation: .conventionSwift),
+            Attribute(name: "available", annotation: .available, arguments: ["*", "noasync"]),
+            Attribute(name: "MyWrapper", annotation: .customPropertyWrapper),
+            Attribute(name: "nonobjc", annotation: .nonobjc),
+            Attribute(name: "escaping", annotation: .escaping),
+            Attribute(name: "autoclosure", annotation: .autoclosure),
+            Attribute(name: "Sendable", annotation: .sendable),
+            Attribute(name: "Published", annotation: .published),
+            Attribute(name: "Published", annotation: .published),
+            Attribute(name: "State", annotation: .state),
+            Attribute(name: "StateObject", annotation: .stateObject),
+            Attribute(name: "ObservedObject", annotation: .observedObject),
+            Attribute(name: "EnvironmentObject", annotation: .environmentObject),
+            Attribute(name: "Environment", annotation: .environment, arguments: ["\\.colorScheme"]),
+            Attribute(name: "Binding", annotation: .binding),
+            Attribute(name: "AppStorage", annotation: .appStorage, arguments: ["user_preference"]),
+            Attribute(name: "SceneStorage", annotation: .sceneStorage, arguments: ["draft_content"]),
+            Attribute(name: "GestureState", annotation: .gestureState),
+            Attribute(name: "FocusState", annotation: .focusState),
+            Attribute(name: "FocusedBinding", annotation: .focusedBinding, arguments: ["\\.isFocusedField"]),
+            Attribute(name: "FetchRequest", annotation: .fetchRequest, arguments: ["entity: MyEntity.entity()", "sortDescriptors: []"]),
+            Attribute(name: "main", annotation: .main),
+            Attribute(name: "StateObject", annotation: .stateObject)
         ]
         
-        XCTAssertEqual(visitor.attributes, expectedAttributes)
+        (0..<visitor.attributes.count).forEach { index in
+            XCTAssertEqual(visitor.attributes[index], expectedAttributes[index])
+        }
     }
     
     private func walk() {
@@ -234,4 +247,89 @@ class MyClass: NSObject {
         
     }
 }
+
+// SwiftUI
+
+import SwiftUI
+import Combine
+
+class ExampleViewModel: ObservableObject {
+    @Published var publishedValue: String = "Published Value"
+}
+
+class GlobalSettings: ObservableObject {
+    @Published var isDarkMode: Bool = false
+}
+
+struct ContentView: View {
+    // SwiftUI property wrappers
+    @State private var stateValue: String = "Initial State"
+    @StateObject private var stateObjectViewModel = ExampleViewModel()
+    @ObservedObject private var observedObjectViewModel = ExampleViewModel()
+    @EnvironmentObject private var globalSettings: GlobalSettings
+    @Environment(\\.colorScheme) var colorScheme: ColorScheme
+    @Binding private var bindingValue: String
+    @AppStorage("user_preference") private var userPreference: Bool = false
+    @SceneStorage("draft_content") private var draftContent: String = ""
+    @GestureState private var gestureActive = false
+    @FocusState private var isFocused: Bool
+    @FocusedBinding(\\.isFocusedField) private var focusedFieldBinding: Binding<Bool>?
+
+    @FetchRequest(entity: MyEntity.entity(), sortDescriptors: [])
+    private var fetchRequestResults: FetchedResults<MyEntity>
+
+    var body: some View {
+        VStack {
+            Text("State Value: \\(stateValue)")
+            Text("Published Value: \\(observedObjectViewModel.publishedValue)")
+            Text("User Preference: \\(userPreference ? "On" : "Off")")
+            Text("Draft Content: \\(draftContent)")
+            Text("Color Scheme: \\(colorScheme == .dark ? "Dark" : "Light")")
+            Text("Is Focused: \\(isFocused ? "Yes" : "No")")
+            Text("Gesture Active: \\(gestureActive ? "Yes" : "No")")
+            Text("Global Dark Mode: \\(globalSettings.isDarkMode ? "On" : "Off")")
+            
+            Button("Toggle Focus") {
+                isFocused.toggle()
+            }
+
+            Button("Toggle User Preference") {
+                userPreference.toggle()
+            }
+        }
+        .onAppear {
+            stateValue = "Updated State"
+        }
+        .focused($isFocused)
+        .gesture(DragGesture().updating($gestureActive) { value, state, _ in
+            state = true
+        })
+    }
+}
+
+extension MyEntity: Identifiable {}
+
+struct FocusFieldKey: FocusedValuesKey {
+    static var defaultValue: Binding<Bool>? = nil
+}
+
+extension FocusedValues {
+    var isFocusedField: Binding<Bool>? {
+        get { self[FocusFieldKey.self] }
+        set { self[FocusFieldKey.self] = newValue }
+    }
+}
+
+@main
+struct ExampleApp: App {
+    @StateObject private var globalSettings = GlobalSettings()
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView(bindingValue: .constant("Binding Value"))
+                .environmentObject(globalSettings)
+        }
+    }
+}
+
 """

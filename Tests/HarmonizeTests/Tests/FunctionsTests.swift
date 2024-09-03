@@ -163,7 +163,7 @@ final class FunctionsTests: XCTestCase {
     
     func testAssertCanParseFunctionParametersWithAttributes() throws {
         let attributedParam = funcByName("withParametersAttributes").parameters.first!
-        XCTAssertEqual(attributedParam.attributes, [.type(attribute: .autoclosure)])
+        XCTAssertEqual(attributedParam.attributes, [Attribute(name: "autoclosure", annotation: .autoclosure)])
     }
     
     func testAssertCanParseFunctionModifiers() throws {

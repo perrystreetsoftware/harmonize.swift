@@ -55,8 +55,8 @@ final class ProtocolTests: XCTestCase {
         XCTAssertEqual(
             attributedProtocols.flatMap { $0.attributes },
             [
-                .declaration(attribute: .objc, arguments: []),
-                .declaration(attribute: .objc, arguments: [])
+                Attribute(name: "objc", annotation: .objc),
+                Attribute(name: "objc", annotation: .objc)
             ]
         )
     }

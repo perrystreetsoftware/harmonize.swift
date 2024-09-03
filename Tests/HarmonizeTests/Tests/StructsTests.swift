@@ -54,10 +54,8 @@ final class StructsTests: XCTestCase {
         
         XCTAssertEqual(attributes.count, 1)
         XCTAssertEqual(
-            attributes,
-            [
-                .declaration(attribute: .dynamicCallable, arguments: [])
-            ]
+            attributes.first,
+            Attribute(name: "dynamicCallable", annotation: .dynamicCallable)
         )
     }
     

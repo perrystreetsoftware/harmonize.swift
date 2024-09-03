@@ -60,8 +60,8 @@ final class ClassesTests: XCTestCase {
         XCTAssertEqual(
             attributes, 
             [
-                .declaration(attribute: .requiresStoredPropertyInits, arguments: []),
-                .declaration(attribute: .objc, arguments: [])
+                Attribute(name: "requires_stored_property_inits", annotation: .requiresStoredPropertyInits),
+                Attribute(name: "objc", annotation: .objc)
             ]
         )
     }

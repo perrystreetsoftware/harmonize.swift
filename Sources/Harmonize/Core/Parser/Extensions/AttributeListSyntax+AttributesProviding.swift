@@ -23,9 +23,17 @@ extension AttributeListSyntax: AttributesProviding {
 
 extension AttributeSyntax {
     var attribute: Attribute? {
-        Attribute.from(
-            attributeName: attributeName.trimmedDescription,
-            arguments: arguments(from: arguments)
+        let name = attributeName.trimmedDescription
+        let arguments = arguments(from: arguments)
+        let typeArgument = name.starts(with: "convention") ? arguments.first : nil
+        
+        guard let annotation = Annotation.from(name: name, typeArgument: typeArgument)
+        else { return nil }
+        
+        return Attribute(
+            name: name + (typeArgument ?? ""),
+            annotation: annotation,
+            arguments: typeArgument != nil ? [] : arguments
         )
     }
     
@@ -34,7 +42,19 @@ extension AttributeSyntax {
         
         return switch args {
         case .argumentList(let values):
-            values.map { "\($0)" }
+            values.map {
+                let expressionAsString = if let literalExpression = $0.expression.as(StringLiteralExprSyntax.self) {
+                    literalExpression.segments.trimmedDescription
+                } else {
+                    $0.expression.trimmedDescription
+                }
+                
+                if let label = $0.label {
+                    return "\(label): \(expressionAsString)"
+                }
+                
+                return expressionAsString
+            }
         case .token(let value):
             [value.text]
         case .string(let value):
@@ -48,7 +68,7 @@ extension AttributeSyntax {
                 }
             }
         case .specializeArguments(let values):
-            values.map { "\($0)" }
+            values.map { "\($0.description)" }
         case .objCName(let values):
             values.map { $0.trimmedDescription }
         case .implementsArguments(let value):

@@ -28,7 +28,7 @@ final class InitializersTests: XCTestCase {
         
         XCTAssertEqual(
             attributes,
-            [.declaration(attribute: .objc, arguments: [])]
+            [Attribute(name: "objc", annotation: .objc)]
         )
     }
     
