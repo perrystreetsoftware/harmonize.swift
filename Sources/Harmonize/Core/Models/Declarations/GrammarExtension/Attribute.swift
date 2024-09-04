@@ -21,58 +21,58 @@ public struct Attribute: Equatable {
     }
 }
 
-public enum Annotation: Equatable {
+public enum Annotation: String, Equatable {
     // declaration-site attributes
-    case attached
-    case available
-    case backDeployed
-    case discardableResult
-    case dynamicCallable
-    case dynamicMemberLookup
-    case freestanding
-    case frozen
-    case gkInspectable
-    case inlinable
-    case main
-    case nonobjc
-    case nsApplicationMain
-    case nsCopying
-    case nsManaged
-    case objc
-    case objcMembers
-    case preconcurrency
-    case propertyWrapper
-    case resultBuilder
-    case requiresStoredPropertyInits
-    case testable
-    case uiApplicationMain
-    case unchecked
-    case usableFromInline
-    case warnUnqualifiedAccess
-    case customPropertyWrapper
+    case attached = "attached"
+    case available = "available"
+    case backDeployed = "backDeployed"
+    case discardableResult = "discardableResult"
+    case dynamicCallable = "dynamicCallable"
+    case dynamicMemberLookup = "dynamicMemberLookup"
+    case freestanding = "freestanding"
+    case frozen = "frozen"
+    case gkInspectable = "GKInspectable"
+    case inlinable = "inlinable"
+    case main = "main"
+    case nonobjc = "nonobjc"
+    case nsApplicationMain = "NSApplicationMain"
+    case nsCopying = "NSCopying"
+    case nsManaged = "NSManaged"
+    case objc = "objc"
+    case objcMembers = "objcMembers"
+    case preconcurrency = "preconcurrency"
+    case propertyWrapper = "propertyWrapper"
+    case resultBuilder = "resultBuilder"
+    case requiresStoredPropertyInits = "requires_stored_property_inits"
+    case testable = "testable"
+    case uiApplicationMain = "UIApplicationMain"
+    case unchecked = "unchecked"
+    case usableFromInline = "usableFromInline"
+    case warnUnqualifiedAccess = "warn_unqualified_access"
+    case customPropertyWrapper = "customPropertyWrapper"
     
     // type-site attributes
-    case autoclosure
-    case conventionC
-    case conventionBlock
-    case conventionSwift
-    case escaping
-    case sendable
+    case autoclosure = "autoclosure"
+    case conventionC = "convention(c)"
+    case conventionBlock = "convention(block)"
+    case conventionSwift = "convention(swift)"
+    case escaping = "escaping"
+    case sendable = "Sendable"
     
     // "custom" property wrapper from Combine/SwiftUI.
-    case appStorage
-    case binding
-    case environment
-    case environmentObject
-    case fetchRequest
-    case focusedBinding
-    case focusState
-    case gestureState
-    case observedObject
-    case sceneStorage
-    case state
-    case stateObject
-    case published
+    case appStorage = "AppStorage"
+    case binding = "Binding"
+    case environment = "Environment"
+    case environmentObject = "EnvironmentObject"
+    case fetchRequest = "FetchRequest"
+    case focusedBinding = "FocusedBinding"
+    case focusState = "FocusState"
+    case gestureState = "GestureState"
+    case observedObject = "ObservedObject"
+    case sceneStorage = "SceneStorage"
+    case state = "State"
+    case stateObject = "StateObject"
+    case published = "Published"
     
     public static func from(name: String, typeArgument: String? = nil) -> Self? {
         let unsupportedAttributes = ["inline", "rethrows"]
@@ -82,58 +82,9 @@ public enum Annotation: Equatable {
         }
         
         if let typeArgument {
-            return annotations[name + typeArgument] ?? .customPropertyWrapper
+            return Self(rawValue: name + typeArgument) ?? .customPropertyWrapper
         }
         
-        return annotations[name] ?? .customPropertyWrapper
+        return Self(rawValue: name) ?? .customPropertyWrapper
     }
 }
-
-fileprivate var annotations: [String: Annotation] = [
-    "attached": .attached,
-    "available": .available,
-    "backDeployed": .backDeployed,
-    "discardableResult": .discardableResult,
-    "dynamicCallable": .dynamicCallable,
-    "dynamicMemberLookup": .dynamicMemberLookup,
-    "freestanding": .freestanding,
-    "frozen": .frozen,
-    "GKInspectable": .gkInspectable,
-    "inlinable": .inlinable,
-    "main": .main,
-    "nonobjc": .nonobjc,
-    "NSApplicationMain": .nsApplicationMain,
-    "NSCopying": .nsCopying,
-    "NSManaged": .nsManaged,
-    "objc": .objc,
-    "objcMembers": .objcMembers,
-    "preconcurrency": .preconcurrency,
-    "propertyWrapper": .propertyWrapper,
-    "resultBuilder": .resultBuilder,
-    "requires_stored_property_inits": .requiresStoredPropertyInits,
-    "testable": .testable,
-    "UIApplicationMain": .uiApplicationMain,
-    "unchecked": .unchecked,
-    "usableFromInline": .usableFromInline,
-    "warn_unqualified_access": .warnUnqualifiedAccess,
-    "customPropertyWrapper": .customPropertyWrapper,
-    "autoclosure": .autoclosure,
-    "convention(c)": .conventionC,
-    "convention(block)": .conventionBlock,
-    "convention(swift)": .conventionSwift,
-    "escaping": .escaping,
-    "Sendable": .sendable,
-    "AppStorage": .appStorage,
-    "Binding": .binding,
-    "Environment": .environment,
-    "EnvironmentObject": .environmentObject,
-    "FetchRequest": .fetchRequest,
-    "FocusedBinding": .focusedBinding,
-    "FocusState": .focusState,
-    "GestureState": .gestureState,
-    "ObservedObject": .observedObject,
-    "SceneStorage": .sceneStorage,
-    "State": .state,
-    "StateObject": .stateObject,
-    "Published": .published
-]
