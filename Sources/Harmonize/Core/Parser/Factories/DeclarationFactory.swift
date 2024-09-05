@@ -48,6 +48,16 @@ class DeclarationFactory {
         return model
     }
     
+    func create(_ node: EnumDeclSyntax) -> Enum {
+        var model = EnumDeclSyntaxModel(node: node, file: file)
+        model.children = withUpdatedChildrenParent(parent: model)
+        return model
+    }
+    
+    func create(_ node: EnumCaseDeclSyntax) -> [EnumCase] {
+        EnumCaseDeclSyntaxModel.create(from: node)
+    }
+    
     private func withUpdatedChildrenParent(parent: Declaration) -> [Declaration] {
         children.map {
             var symbol = $0

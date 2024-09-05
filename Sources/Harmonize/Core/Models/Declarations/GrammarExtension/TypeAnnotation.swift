@@ -5,4 +5,9 @@ public struct TypeAnnotation: Equatable {
     public let name: String
     
     public let isOptional: Bool
+    
+    public init(name: String, isOptional: Bool) {
+        self.name = name
+        self.isOptional = isOptional
+    }
 }

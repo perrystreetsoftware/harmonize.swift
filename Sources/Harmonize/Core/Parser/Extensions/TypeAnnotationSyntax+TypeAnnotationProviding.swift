@@ -10,9 +10,15 @@ import SwiftSyntax
 
 extension TypeAnnotationSyntax: TypeAnnotationProviding {
     public var typeAnnotation: TypeAnnotation? {
+        type.typeAnnotation
+    }
+}
+
+extension TypeSyntax {
+    public var typeAnnotation: TypeAnnotation {
         TypeAnnotation(
-            name: type.trimmedDescription,
-            isOptional: type.is(OptionalTypeSyntax.self)
+            name: trimmedDescription,
+            isOptional: self.is(OptionalTypeSyntax.self)
         )
     }
 }

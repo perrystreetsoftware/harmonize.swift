@@ -10,9 +10,9 @@ import Foundation
 /// TODO: investigate if it's worth it to make `args` to be type-safe.
 
 public struct Attribute: Equatable {
-    let name: String
-    let annotation: Annotation
-    let arguments: [String]
+    public let name: String
+    public let annotation: Annotation
+    public let arguments: [String]
     
     public init(name: String, annotation: Annotation, arguments: [String] = []) {
         self.name = "@\(name)"

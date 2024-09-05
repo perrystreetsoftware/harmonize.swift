@@ -6,4 +6,8 @@ import Foundation
 public struct Identifier: Equatable {
     /// The name of the identifier.
     public let name: String
+    
+    public init(name: String) {
+        self.name = name
+    }
 }

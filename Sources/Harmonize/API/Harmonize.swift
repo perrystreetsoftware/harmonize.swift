@@ -14,24 +14,16 @@ public struct Harmonize {
         self.rootDeclarations = files.flatMap { $0.rootDeclarations }
     }
     
-    public func declarations(includeNested: Bool = true) -> [Declaration] {
-        includeNested ? declarations : rootDeclarations
-    }
-    
     public func classes(includeNested: Bool = true) -> [Class] {
         declarations(includeNested: includeNested).as(Class.self)
     }
     
-    public func structs(includeNested: Bool = true) -> [Struct] {
-        declarations(includeNested: includeNested).as(Struct.self)
+    public func declarations(includeNested: Bool = true) -> [Declaration] {
+        includeNested ? declarations : rootDeclarations
     }
     
-    public func protocols(includeNested: Bool = true) -> [ProtocolDeclaration] {
-        declarations(includeNested: includeNested).as(ProtocolDeclaration.self)
-    }
-    
-    public func properties(includeNested: Bool = true) -> [Property] {
-        declarations(includeNested: includeNested).as(Property.self)
+    public func enums(includeNested: Bool = true) -> [Enum] {
+        declarations(includeNested: includeNested).as(Enum.self)
     }
     
     public func functions(includeNested: Bool = true) -> [Function] {
@@ -40,6 +32,18 @@ public struct Harmonize {
     
     public func initializers() -> [Initializer] {
         declarations().as(Initializer.self)
+    }
+    
+    public func properties(includeNested: Bool = true) -> [Property] {
+        declarations(includeNested: includeNested).as(Property.self)
+    }
+    
+    public func protocols(includeNested: Bool = true) -> [ProtocolDeclaration] {
+        declarations(includeNested: includeNested).as(ProtocolDeclaration.self)
+    }
+    
+    public func structs(includeNested: Bool = true) -> [Struct] {
+        declarations(includeNested: includeNested).as(Struct.self)
     }
     
     private func findFiles() -> [SwiftFile] {

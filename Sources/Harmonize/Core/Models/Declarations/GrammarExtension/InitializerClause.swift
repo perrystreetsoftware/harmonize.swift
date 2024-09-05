@@ -5,4 +5,8 @@ public struct InitializerClause: Equatable {
     ///
     /// For example, in the declaration `var prop = "xyz"`, the `value` is `"xyz"`.
     public let value: String
+    
+    public init(value: String) {
+        self.value = value
+    }
 }
