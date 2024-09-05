@@ -14,9 +14,7 @@ struct VariableDeclSyntaxModel: Property {
     var text: String
     
     var parent: Declaration?
-    
-    var children: [Declaration] = []
-    
+        
     var modifiers: [Modifier]
     
     var attributes: [Attribute]

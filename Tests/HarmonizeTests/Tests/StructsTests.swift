@@ -19,7 +19,9 @@ final class StructsTests: XCTestCase {
         let structs = harmonize.structs()
         let nestedStructs = structs.filter { $0.parent != nil }
         XCTAssertEqual(nestedStructs.count, 1)
-        XCTAssertEqual(nestedStructs.first?.parent?.name, "MyStruct")
+        
+        let parent = nestedStructs.first?.parent as! Struct
+        XCTAssertEqual(parent.name, "MyStruct")
     }
     
     func testAssertCanParseTopLevelStructsOnly() throws {

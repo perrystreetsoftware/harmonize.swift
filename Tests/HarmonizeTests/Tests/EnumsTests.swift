@@ -37,7 +37,7 @@ final class EnumsTests: XCTestCase {
         let enums = harmonize.enums()
         let properties = enums.flatMap { $0.properties }
         let names = properties.map { $0.name }
-        let parent = properties.map { $0.parent?.name }
+        let parent = properties.map { ($0.parent as? Enum)?.name }
         let accessor = properties.first?.accessorBlocks.first
         
         XCTAssertEqual(properties.count, 1)

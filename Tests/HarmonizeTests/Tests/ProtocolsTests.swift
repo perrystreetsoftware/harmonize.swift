@@ -39,14 +39,18 @@ final class ProtocolTests: XCTestCase {
         let nestedProtocol = harmonize.protocols().first { $0.parent != nil }!
         
         XCTAssertEqual(nestedProtocol.name, "NamedDelegate")
-        XCTAssertEqual(nestedProtocol.parent!.name, "NestedProtocolInClass")
+        
+        let parent = nestedProtocol.parent as! Class
+        XCTAssertEqual(parent.name, "NestedProtocolInClass")
     }
     
     func testAssertCanParseNestedStructsProtocols() throws {
         let nestedProtocol = harmonize.protocols().last { $0.parent != nil }!
         
         XCTAssertEqual(nestedProtocol.name, "NamedDelegate")
-        XCTAssertEqual(nestedProtocol.parent!.name, "NestedProtocolInStruct")
+        
+        let parent = nestedProtocol.parent as! Struct
+        XCTAssertEqual(parent.name, "NestedProtocolInStruct")
     }
     
     func testAssertCanParseProtocolsAttributes() throws {

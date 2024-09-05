@@ -14,9 +14,7 @@ struct ParameterSyntaxModel: Parameter {
     var text: String
     
     var parent: Declaration? = nil
-    
-    var children: [Declaration] = []
-    
+        
     var attributes: [Attribute]
     
     var modifiers: [Modifier]

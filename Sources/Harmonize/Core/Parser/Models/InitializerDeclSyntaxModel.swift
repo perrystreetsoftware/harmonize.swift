@@ -9,8 +9,6 @@ import Foundation
 import SwiftSyntax
 
 struct InitializerDeclSyntaxModel: Initializer {
-    var name: String
-    
     var text: String
     
     var parent: Declaration? = nil
@@ -42,7 +40,6 @@ struct InitializerDeclSyntaxModel: Initializer {
     }
     
     init(node: InitializerDeclSyntax, file: SwiftFile) {
-        self.name = node.trimmedDescription
         self.text = node.trimmedDescription
         self.swiftFile = file
         self.attributes = node.attributes.attributes

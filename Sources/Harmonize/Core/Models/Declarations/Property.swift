@@ -1,6 +1,8 @@
 import Foundation
 
 public protocol Property: Declaration,
+                          NamedDeclaration,
+                          ParentDeclarationProviding,
                           ModifiersProviding,
                           AttributesProviding,
                           AccessorBlocksProviding,

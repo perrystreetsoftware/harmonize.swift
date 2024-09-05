@@ -60,9 +60,12 @@ class DeclarationFactory {
     
     private func withUpdatedChildrenParent(parent: Declaration) -> [Declaration] {
         children.map {
-            var symbol = $0
-            symbol.parent = parent
-            return symbol
+            if var symbol = $0 as? Declaration & ParentDeclarationProviding {
+                symbol.parent = parent
+                return symbol
+            }
+            
+            return $0
         }
     }
 }

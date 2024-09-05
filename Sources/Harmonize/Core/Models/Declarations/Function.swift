@@ -8,11 +8,14 @@
 import Foundation
 
 public protocol Function: Declaration,
-                        FileSourceProviding,
-                        BodyProviding,
-                        ParametersProviding,
-                        ModifiersProviding,
-                        FunctionsProviding {
+                          NamedDeclaration,
+                          ParentDeclarationProviding,
+                          ChildrenDeclarationProviding,
+                          FileSourceProviding,
+                          BodyProviding,
+                          ParametersProviding,
+                          ModifiersProviding,
+                          FunctionsProviding {
     var returnClause: ReturnClause { get }
     
     var genericClause: String? { get }

@@ -113,7 +113,9 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParsePropertiesModifiers() throws {
-        let properties = harmonize.properties().filter { $0.parent?.name == "Properties" }
+        let properties = harmonize.properties()
+            .filter { ($0.parent as? Class)?.name == "Properties" }
+        
         let modifiers = properties.map { $0.modifiers }
         
         let expectedModifiers: [[Modifier]] = [
@@ -187,7 +189,9 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParsePropertiesWrapper() throws {
-        let properties = harmonize.properties().filter { $0.parent?.name == "MyViewModel" }
+        let properties = harmonize.properties()
+            .filter { ($0.parent as? Class)?.name == "MyViewModel" }
+        
         let attributes = properties.flatMap { $0.attributes }
         
         XCTAssertEqual(attributes.count, 2)
@@ -201,7 +205,9 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParsePropertiesAccessorsModifiers() throws {
-        let properties = harmonize.properties().filter { $0.parent?.name == "MyViewModel" }
+        let properties = harmonize.properties()
+            .filter { ($0.parent as? Class)?.name == "MyViewModel" }
+        
         let modifiers = properties.flatMap { $0.modifiers }.map { $0}
         
         XCTAssertEqual(modifiers.count, 3)

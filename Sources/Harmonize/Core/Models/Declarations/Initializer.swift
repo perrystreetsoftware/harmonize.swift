@@ -8,6 +8,8 @@
 import Foundation
 
 public protocol Initializer: Declaration,
+                             ParentDeclarationProviding,
+                             ChildrenDeclarationProviding,
                              BodyProviding,
                              ModifiersProviding,
                              AttributesProviding,

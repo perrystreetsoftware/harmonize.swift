@@ -103,7 +103,7 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
     private func endNode(build: (DeclarationFactory) -> Declaration) {
         rootNode.end(build: {
             let declaration = build(DeclarationFactory(file: sourceFile, children: $0))
-            appendChildrenToDeclarations(children: declaration.children)
+            appendingChildrenFrom([declaration])
             return declaration
         })
     }
@@ -111,12 +111,18 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
     private func endNodeWithNestedDeclarations(buildMany: (DeclarationFactory) -> [Declaration]) {
         rootNode.end(buildMany: {
             let declarations = buildMany(DeclarationFactory(file: sourceFile, children: $0))
-            appendChildrenToDeclarations(children: declarations.flatMap { $0.children })
+            appendingChildrenFrom(declarations)
             return declarations
         })
     }
     
     private func appendChildrenToDeclarations(children: [Declaration]) {
+        self.declarations.append(contentsOf: children)
+    }
+    
+    private func appendingChildrenFrom(_ declarations: [Declaration]) {
+        let childrenProviding = declarations as? [ChildrenDeclarationProviding] ?? []
+        let children = childrenProviding.flatMap { $0.children }
         self.declarations.append(contentsOf: children)
     }
 }

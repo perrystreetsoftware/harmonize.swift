@@ -14,9 +14,7 @@ struct EnumCaseDeclSyntaxModel: EnumCase {
     var text: String
     
     var parent: Declaration?
-    
-    var children: [Declaration] = []
-        
+            
     var attributes: [Attribute]
     
     var modifiers: [Modifier]
@@ -33,7 +31,6 @@ struct EnumCaseDeclSyntaxModel: EnumCase {
             EnumCaseDeclSyntaxModel(
                 name: element.name.text,
                 text: element.trimmedDescription,
-                children: [],
                 attributes: attributes,
                 modifiers: modifiers,
                 initializerClause: element.rawValue?.initializerClause,

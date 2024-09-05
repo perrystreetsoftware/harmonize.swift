@@ -8,6 +8,9 @@
 import Foundation
 
 public protocol Enum: Declaration,
+                      NamedDeclaration,
+                      ParentDeclarationProviding,
+                      ChildrenDeclarationProviding,
                       FileSourceProviding,
                       InheritanceProviding,
                       AttributesProviding,

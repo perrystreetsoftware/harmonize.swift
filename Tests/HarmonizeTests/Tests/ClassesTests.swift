@@ -21,7 +21,9 @@ final class ClassesTests: XCTestCase {
         let stateSample = classes.filter { $0.parent != nil }.first
         
         XCTAssertNotNil(stateSample)
-        XCTAssertEqual(stateSample?.parent?.name, "MyFile")
+        
+        let parent = stateSample?.parent as? Class
+        XCTAssertEqual(parent?.name, "MyFile")
     }
     
     func testAssertCanParseTopLevelClassesOnly() throws {
@@ -43,7 +45,7 @@ final class ClassesTests: XCTestCase {
         let classes = harmonize.classes()
         let properties = classes.flatMap { $0.properties }
         let names = properties.map { $0.name }
-        let parent = properties.map { $0.parent?.name }
+        let parent = properties.map { ($0.parent as? Class)?.name }
         let values = properties.compactMap { $0.initializerClause }.map { $0.value }
         
         XCTAssertEqual(properties.count, 3)

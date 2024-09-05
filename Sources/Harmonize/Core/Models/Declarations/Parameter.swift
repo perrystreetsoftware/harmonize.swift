@@ -8,6 +8,8 @@
 import Foundation
 
 public protocol Parameter: Declaration,
+                           NamedDeclaration,
+                           ParentDeclarationProviding,
                            AttributesProviding,
                            InitializerClauseProviding,
                            ModifiersProviding,

@@ -8,6 +8,8 @@
 import Foundation
 
 public protocol EnumCase: Declaration,
+                          NamedDeclaration,
+                          ParentDeclarationProviding,
                           AttributesProviding,
                           ModifiersProviding,
                           InitializerClauseProviding {
