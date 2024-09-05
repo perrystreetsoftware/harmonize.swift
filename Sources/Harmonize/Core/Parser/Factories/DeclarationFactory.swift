@@ -64,6 +64,10 @@ class DeclarationFactory {
         return model
     }
     
+    func create(_ node: ImportDeclSyntax) -> Import {
+        ImportDeclSyntaxModel(node, file)
+    }
+    
     private func withUpdatedChildrenParent(parent: Declaration) -> [Declaration] {
         children.map {
             if var symbol = $0 as? Declaration & ParentDeclarationProviding {

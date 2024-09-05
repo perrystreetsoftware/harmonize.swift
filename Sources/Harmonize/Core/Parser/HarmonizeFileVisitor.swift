@@ -103,6 +103,14 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
         endNode { $0.create(node) }
     }
     
+    public override func visit(_ node: ImportDeclSyntax) -> SyntaxVisitorContinueKind {
+        startNode()
+    }
+    
+    public override func visitPost(_ node: ImportDeclSyntax) {
+        endNode { $0.create(node) }
+    }
+    
     private func startNode() -> SyntaxVisitorContinueKind {
         rootNode.start()
         return .visitChildren

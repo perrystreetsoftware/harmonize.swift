@@ -34,6 +34,10 @@ public struct Harmonize {
         declarations(includeNested: includeNested).as(Function.self)
     }
     
+    public func imports() -> [Import] {
+        declarations(includeNested: false).as(Import.self)
+    }
+    
     public func initializers() -> [Initializer] {
         declarations().as(Initializer.self)
     }

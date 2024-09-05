@@ -15,12 +15,12 @@ final class HarmonizeTests: XCTestCase {
     
     func testAssertCanParseAllDeclarationsIncludingNested() throws {
         let declarations = harmonize.declarations()
-        XCTAssertEqual(declarations.count, 14)
+        XCTAssertEqual(declarations.count, 15)
     }
     
     func testAssertCanParseTopLevelDeclarationsOnly() throws {
         let declarations = harmonize.declarations(includeNested: false)
-        XCTAssertEqual(declarations.count, 4)
+        XCTAssertEqual(declarations.count, 5)
     }
 }
 
