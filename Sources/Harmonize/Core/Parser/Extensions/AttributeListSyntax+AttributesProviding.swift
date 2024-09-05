@@ -99,8 +99,6 @@ extension AttributeSyntax {
             values.map { $0.text }
         case .documentationArguments(let values):
             values.map { $0.label.text }
-        @unknown default:
-            []
         }
     }
     
@@ -116,8 +114,6 @@ extension AttributeSyntax {
             }
         case .availabilityLabeledArgument(let labeledArgument):
             availabilityLabeledArgument(from: labeledArgument)
-        default:
-            nil
         }
     }
     
@@ -127,8 +123,6 @@ extension AttributeSyntax {
             literalStringExpression.segments.trimmedDescription
         case .version(let versionTuple):
             versionTuple.trimmedDescription
-        default:
-            nil
         }
         
         return if let value = value {

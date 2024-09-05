@@ -19,8 +19,6 @@ extension Array: AccessorBlocksProviding where Element == AccessorBlockSyntax {
                 }
             case .getter(let block):
                 return [AccessorBlock(modifier: .getter, body: block.asString())]
-            @unknown default:
-                return []
             }
         }
     }

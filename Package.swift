@@ -14,25 +14,22 @@ let package = Package(
         )
     ],
     dependencies: [
-//        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0"),
-        .package(url: "https://github.com/sjavora/swift-syntax-xcframeworks.git", from: "509.0.2"),
-
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "509.0.0"),
     ],
     targets: [
         .target(
             name: "Harmonize",
             dependencies: [
-//                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-//                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
-                .product(name: "SwiftSyntaxWrapper", package: "swift-syntax-xcframeworks")
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+
             ]
         ),
         .testTarget(
             name: "HarmonizeTests",
             dependencies: [
                 "Harmonize",
-//                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
-                .product(name: "SwiftSyntaxWrapper", package: "swift-syntax-xcframeworks"),
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ]
         )
     ]
