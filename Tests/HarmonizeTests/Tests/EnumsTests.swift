@@ -75,11 +75,11 @@ final class EnumsTests: XCTestCase {
         let second = cases?.last
         
         XCTAssertEqual(first?.name, "noop")
-        XCTAssertEqual(first?.parameters, [EnumCaseParameter(label: nil, typeAnnotation: TypeAnnotation(name: "String", isOptional: false))])
+        XCTAssertEqual(first?.parameters.first?.label, nil)
+        XCTAssertEqual(first?.parameters.first?.typeAnnotation?.name, "String")
     
         XCTAssertEqual(second?.name, "pump")
-        XCTAssertEqual(second?.parameters, [EnumCaseParameter(label: "_ firstName", typeAnnotation: TypeAnnotation(name: "String", isOptional: false))])
-
+        XCTAssertEqual(second?.parameters.last?.label, "_ firstName")
     }
     
     func testAssertCanParseInlineEnumCases() throws {

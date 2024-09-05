@@ -34,16 +34,7 @@ struct EnumCaseDeclSyntaxModel: EnumCase {
                 attributes: attributes,
                 modifiers: modifiers,
                 initializerClause: element.rawValue?.initializerClause,
-                parameters: element.parameterClause?.parameters.map {
-                    let label = [$0.firstName?.text, $0.secondName?.text]
-                        .compactMap { $0 }
-                        .joined(separator: " ")
-                    
-                    return EnumCaseParameter(
-                        label: label.isEmpty ? nil : label,
-                        typeAnnotation: $0.type.typeAnnotation
-                    )
-                } ?? []
+                parameters: element.parameterClause?.parameters.map { $0 } ?? []
             )
         }
     }
