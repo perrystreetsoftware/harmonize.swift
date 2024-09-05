@@ -58,6 +58,12 @@ class DeclarationFactory {
         EnumCaseDeclSyntaxModel.create(from: node)
     }
     
+    func create(_ node: ExtensionDeclSyntax) -> Extension {
+        var model = ExtensionDeclSyntaxModel(node: node, file: file)
+        model.children = withUpdatedChildrenParent(parent: model)
+        return model
+    }
+    
     private func withUpdatedChildrenParent(parent: Declaration) -> [Declaration] {
         children.map {
             if var symbol = $0 as? Declaration & ParentDeclarationProviding {

@@ -26,6 +26,10 @@ public struct Harmonize {
         declarations(includeNested: includeNested).as(Enum.self)
     }
     
+    public func extensions() -> [Extension] {
+        declarations(includeNested: false).as(Extension.self)
+    }
+    
     public func functions(includeNested: Bool = true) -> [Function] {
         declarations(includeNested: includeNested).as(Function.self)
     }

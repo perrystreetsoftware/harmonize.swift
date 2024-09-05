@@ -95,6 +95,14 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
         endNodeWithNestedDeclarations { $0.create(node) }
     }
     
+    public override func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
+        startNode()
+    }
+    
+    public override func visitPost(_ node: ExtensionDeclSyntax) {
+        endNode { $0.create(node) }
+    }
+    
     private func startNode() -> SyntaxVisitorContinueKind {
         rootNode.start()
         return .visitChildren
