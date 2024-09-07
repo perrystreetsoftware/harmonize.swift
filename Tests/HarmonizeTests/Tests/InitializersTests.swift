@@ -4,7 +4,7 @@ import XCTest
 
 final class InitializersTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("Fixtures/Initializers").harmonize()
+        TestUtils.harmonize(atFixtures: "Initializers")
     }
     
     func testAssertCanParseInitializers() throws {

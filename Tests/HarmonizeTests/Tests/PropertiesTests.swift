@@ -4,7 +4,7 @@ import XCTest
 
 final class PropertiesTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("Fixtures/Properties").harmonize()
+        TestUtils.harmonize(atFixtures: "Properties")
     }
     
     private var topLevelProperties: [Property] {

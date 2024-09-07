@@ -4,7 +4,7 @@ import XCTest
 
 final class FunctionsTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("Fixtures/Functions").harmonize()
+        TestUtils.harmonize(atFixtures: "Functions")
     }
     
     func testAssertCanParseTopLevelFunctionsOnly() throws {

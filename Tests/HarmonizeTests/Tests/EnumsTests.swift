@@ -10,7 +10,7 @@ import XCTest
 
 final class EnumsTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("Fixtures/Enums").harmonize()
+        TestUtils.harmonize(atFixtures: "Enums")
     }
     
     func testAssertCanParseNestedEnums() throws {

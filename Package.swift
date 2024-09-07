@@ -15,14 +15,15 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "509.0.0"),
+        .package(url: "https://github.com/jpsim/Yams.git", from: "5.1.3")
     ],
     targets: [
         .target(
             name: "Harmonize",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
-
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                "Yams"
             ]
         ),
         .testTarget(

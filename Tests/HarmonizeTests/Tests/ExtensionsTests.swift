@@ -11,7 +11,7 @@ import XCTest
 
 final class ExtensionsTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("Fixtures/Extensions").harmonize()
+        TestUtils.harmonize(atFixtures: "Extensions")
     }
     
     func testAssertCanParseExtensions() throws {

@@ -11,7 +11,7 @@ import XCTest
 
 final class ImportsTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("Fixtures/Imports").harmonize()
+        TestUtils.harmonize(atFixtures: "Imports")
     }
     
     func testAssertCanParseImports() throws {

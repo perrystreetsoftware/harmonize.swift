@@ -4,7 +4,7 @@ import XCTest
 
 final class ClassesTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("Fixtures/Classes").harmonize()
+        TestUtils.harmonize(atFixtures: "Classes")
     }
     
     func testAssertCanParseClassesIncludingNested() throws {

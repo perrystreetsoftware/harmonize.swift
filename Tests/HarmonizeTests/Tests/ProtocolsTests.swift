@@ -11,7 +11,7 @@ import XCTest
 
 final class ProtocolTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("Fixtures/Protocols").harmonize()
+        TestUtils.harmonize(atFixtures: "Protocols")
     }
     
     func testAssertCanParseProtocols() throws {

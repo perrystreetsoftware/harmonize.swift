@@ -10,7 +10,7 @@ import XCTest
 
 final class HarmonizeTests: XCTestCase {
     private var harmonize: Harmonize {
-        HarmonizeUtils().appendingPath("Fixtures/AnyDeclaration").harmonize()
+        TestUtils.harmonize(atFixtures: "AnyDeclaration")
     }
     
     func testAssertCanParseAllDeclarationsIncludingNested() throws {
