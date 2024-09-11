@@ -12,16 +12,13 @@ import Harmonize
 final class ConfigParserTests: XCTestCase {
     func testAssertCanParseConfig() throws {
         let source = """
-        includes:
-          - Folder
-          - SomeOtherFolder
         excludes:
           - Tests
         """
         
         XCTAssertEqual(
             try Config(source),
-            Config(includePaths: ["Folder", "SomeOtherFolder"], excludePaths: ["Tests"])
+            Config(excludePaths: ["Tests"])
         )
     }
     
@@ -31,20 +28,7 @@ final class ConfigParserTests: XCTestCase {
         
         XCTAssertEqual(
             try Config(source),
-            Config(includePaths: [], excludePaths: [])
-        )
-    }
-    
-    func testAssertCanParseConfigEmptyPaths() throws {
-        let source = """
-        includes:
-          - Folder
-          - SomeOtherFolder
-        """
-        
-        XCTAssertEqual(
-            try Config(source),
-            Config(includePaths: ["Folder", "SomeOtherFolder"], excludePaths: [])
+            Config(excludePaths: [])
         )
     }
 }

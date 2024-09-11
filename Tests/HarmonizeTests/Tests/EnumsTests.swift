@@ -9,12 +9,10 @@ import Harmonize
 import XCTest
 
 final class EnumsTests: XCTestCase {
-    private var harmonize: Harmonize {
-        TestUtils.harmonize(atFixtures: "Enums")
-    }
+    private var harmonize = TestUtils.harmonize(at: "Fixtures/Enums")
     
     func testAssertCanParseNestedEnums() throws {
-        let enums = harmonize.enums().map { $0.name }
+        let enums = harmonize.enums(includeNested: true).map { $0.name }
         
         XCTAssertEqual(enums.count, 3)
         XCTAssertEqual(enums, ["Merch", "Role", "Order"])
@@ -34,7 +32,7 @@ final class EnumsTests: XCTestCase {
     }
     
     func testAssertCanParseEnumsProperties() throws {
-        let enums = harmonize.enums()
+        let enums = harmonize.enums(includeNested: true)
         let properties = enums.flatMap { $0.properties }
         let names = properties.map { $0.name }
         let parent = properties.map { ($0.parent as? Enum)?.name }
@@ -47,7 +45,7 @@ final class EnumsTests: XCTestCase {
     }
     
     func testAssertCanParseEnumsAttributes() throws {
-        let enums = harmonize.enums()
+        let enums = harmonize.enums(includeNested: true)
         let attributes = enums.flatMap { $0.attributes }.map { $0.annotation }
         
         XCTAssertEqual(attributes.count, 1)
@@ -55,14 +53,14 @@ final class EnumsTests: XCTestCase {
     }
     
     func testAssertCanParseEnumsMemberFunctions() throws {
-        let functions = harmonize.enums().flatMap { $0.functions }.map { $0.name }
+        let functions = harmonize.enums(includeNested: true).flatMap { $0.functions }.map { $0.name }
         
         XCTAssertEqual(functions.count, 2)
         XCTAssertEqual(functions, ["merch", "from"])
     }
     
     func testAssertCanParseEnumCases() throws {
-        let cases = harmonize.enums()
+        let cases = harmonize.enums(includeNested: true)
             .flatMap { $0.cases }
             .map { $0.name }
         
@@ -70,7 +68,7 @@ final class EnumsTests: XCTestCase {
     }
     
     func testAssertCanParseEnumCasesParameters() throws {
-        let cases = harmonize.enums().first { $0.name == "Role" }.flatMap { $0.cases }
+        let cases = harmonize.enums(includeNested: true).first { $0.name == "Role" }.flatMap { $0.cases }
         let first = cases?.first
         let second = cases?.last
         
@@ -83,12 +81,12 @@ final class EnumsTests: XCTestCase {
     }
     
     func testAssertCanParseInlineEnumCases() throws {
-        let cases = harmonize.enums().last.flatMap { $0.cases }?.map { $0.name }
+        let cases = harmonize.enums(includeNested: true).last.flatMap { $0.cases }?.map { $0.name }
         XCTAssertEqual(cases, ["a", "b", "c", "d", "e", "f", "g"])
     }
     
     func testAssertCanParseEnumCasesInitializers() throws {
-        let initializers = harmonize.enums().last.flatMap { $0.cases }?.map { $0.initializerClause?.value }
+        let initializers = harmonize.enums(includeNested: true).last.flatMap { $0.cases }?.map { $0.initializerClause?.value }
         XCTAssertEqual(initializers, [nil, nil, nil, "Di", nil, nil, nil])
     }
 }

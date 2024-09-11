@@ -1,5 +1,2 @@
-includes:
-  - Sources
-  - Tests
 excludes:
   - Package.swift

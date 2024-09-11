@@ -10,9 +10,7 @@ import Harmonize
 import XCTest
 
 final class ProtocolTests: XCTestCase {
-    private var harmonize: Harmonize {
-        TestUtils.harmonize(atFixtures: "Protocols")
-    }
+    private var harmonize = TestUtils.harmonize(at: "Fixtures/Protocols")
     
     func testAssertCanParseProtocols() throws {
         let protocols = harmonize.protocols(includeNested: false)
@@ -23,7 +21,7 @@ final class ProtocolTests: XCTestCase {
     }
     
     func testAssertCanParseProtocolsProperties() throws {
-        let protocols = harmonize.protocols()
+        let protocols = harmonize.protocols(includeNested: true)
         let properties = protocols.flatMap { $0.properties }
         
         XCTAssertEqual(properties.count, 3)
@@ -31,12 +29,12 @@ final class ProtocolTests: XCTestCase {
     }
     
     func testAssertCanParseNestedProtocols() throws {
-        let protocols = harmonize.protocols()
+        let protocols = harmonize.protocols(includeNested: true)
         XCTAssertEqual(protocols.count, 7)
     }
     
     func testAssertCanParseNestedClassesProtocols() throws {
-        let nestedProtocol = harmonize.protocols().first { $0.parent != nil }!
+        let nestedProtocol = harmonize.protocols(includeNested: true).first { $0.parent != nil }!
         
         XCTAssertEqual(nestedProtocol.name, "NamedDelegate")
         
@@ -45,7 +43,7 @@ final class ProtocolTests: XCTestCase {
     }
     
     func testAssertCanParseNestedStructsProtocols() throws {
-        let nestedProtocol = harmonize.protocols().last { $0.parent != nil }!
+        let nestedProtocol = harmonize.protocols(includeNested: true).last { $0.parent != nil }!
         
         XCTAssertEqual(nestedProtocol.name, "NamedDelegate")
         
@@ -54,7 +52,7 @@ final class ProtocolTests: XCTestCase {
     }
     
     func testAssertCanParseProtocolsAttributes() throws {
-        let attributedProtocols = harmonize.protocols().filter { !$0.attributes.isEmpty }
+        let attributedProtocols = harmonize.protocols(includeNested: true).filter { !$0.attributes.isEmpty }
         XCTAssertEqual(attributedProtocols.count, 2)
         XCTAssertEqual(
             attributedProtocols.flatMap { $0.attributes },
@@ -66,14 +64,11 @@ final class ProtocolTests: XCTestCase {
     }
     
     func testAssertCanParseProtocolMemberFunctions() throws {
-        let function = protocolByName("NetworkRequestable").functions.first!
+        let function = harmonize.protocols(includeNested: true)
+            .first { $0.name == "NetworkRequestable" }!.functions.first!
         XCTAssertEqual(function.name, "someMethod")
         XCTAssertEqual(function.body, nil)
         XCTAssertEqual(function.returnClause, .absent)
         XCTAssertTrue(function.parameters.isEmpty)
-    }
-    
-    private func protocolByName(_ name: String) -> ProtocolDeclaration {
-        harmonize.protocols().first { $0.name == name }!
     }
 }

@@ -10,10 +10,8 @@ import Harmonize
 import XCTest
 
 final class ExtensionsTests: XCTestCase {
-    private var harmonize: Harmonize {
-        TestUtils.harmonize(atFixtures: "Extensions")
-    }
-    
+    private var harmonize = TestUtils.harmonize(at: "Fixtures/Extensions")
+
     func testAssertCanParseExtensions() throws {
         let extensions = harmonize.extensions()
         XCTAssertEqual(extensions.count, 2)

@@ -3,10 +3,8 @@ import Harmonize
 import XCTest
 
 final class PropertiesTests: XCTestCase {
-    private var harmonize: Harmonize {
-        TestUtils.harmonize(atFixtures: "Properties")
-    }
-    
+    private var harmonize = TestUtils.harmonize(at: "Fixtures/Properties")
+
     private var topLevelProperties: [Property] {
         harmonize.properties(includeNested: false)
     }
@@ -74,7 +72,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParseSingleLineMultipleProperties() throws {
-        let exampleClass = harmonize.classes().first { $0.name == "ExampleClass" }!
+        let exampleClass = harmonize.classes(includeNested: true).first { $0.name == "ExampleClass" }!
         let properties = exampleClass.properties
         
         XCTAssertEqual(
@@ -84,7 +82,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertSingleLineMultiplePropertiesAreOfTheSameType() throws {
-        let exampleClass = harmonize.classes().first { $0.name == "ExampleClass" }!
+        let exampleClass = harmonize.classes(includeNested: true).first { $0.name == "ExampleClass" }!
         let properties = exampleClass.properties
         
         XCTAssert(
@@ -93,7 +91,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParseCustomTypeProperties() throws {
-        let mainClass = harmonize.classes().first { $0.name == "Main" }!
+        let mainClass = harmonize.classes(includeNested: true).first { $0.name == "Main" }!
         let properties = mainClass.properties
         
         XCTAssertEqual(
@@ -103,7 +101,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParseCustomTypePropertiesInitializer() throws {
-        let mainClass = harmonize.classes().first { $0.name == "Main" }!
+        let mainClass = harmonize.classes(includeNested: true).first { $0.name == "Main" }!
         let properties = mainClass.properties
         
         XCTAssertEqual(
@@ -113,7 +111,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParsePropertiesModifiers() throws {
-        let properties = harmonize.properties()
+        let properties = harmonize.properties(includeNested: true)
             .filter { ($0.parent as? Class)?.name == "Properties" }
         
         let modifiers = properties.map { $0.modifiers }
@@ -138,7 +136,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParsePropertiesAttributes() throws {
-        let properties = harmonize.properties()
+        let properties = harmonize.properties(includeNested: true)
         let attributes = properties.flatMap { $0.attributes }
         
         let expectedAttributes: [Attribute] = [
@@ -155,7 +153,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParsePropertiesAccessorsBody() throws {
-        let properties = harmonize.properties()
+        let properties = harmonize.properties(includeNested: true)
         let accessors = properties.flatMap { $0.accessorBlocks }.map { $0.body }
         
         XCTAssertEqual(accessors.count, 3)
@@ -166,7 +164,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParsePropertiesAccessorsText() throws {
-        let properties = harmonize.properties()
+        let properties = harmonize.properties(includeNested: true)
         let accessors = properties.flatMap { $0.accessorBlocks }.map { $0.body }
         
         XCTAssertEqual(accessors.count, 3)
@@ -181,7 +179,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParsePropertiesAccessorsModifier() throws {
-        let properties = harmonize.properties()
+        let properties = harmonize.properties(includeNested: true)
         let accessors = properties.flatMap { $0.accessorBlocks }.map { $0.modifier }
         
         XCTAssertEqual(accessors.count, 3)
@@ -189,7 +187,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParsePropertiesWrapper() throws {
-        let properties = harmonize.properties()
+        let properties = harmonize.properties(includeNested: true)
             .filter { ($0.parent as? Class)?.name == "MyViewModel" }
         
         let attributes = properties.flatMap { $0.attributes }
@@ -205,7 +203,7 @@ final class PropertiesTests: XCTestCase {
     }
     
     func testAssertCanParsePropertiesAccessorsModifiers() throws {
-        let properties = harmonize.properties()
+        let properties = harmonize.properties(includeNested: true)
             .filter { ($0.parent as? Class)?.name == "MyViewModel" }
         
         let modifiers = properties.flatMap { $0.modifiers }.map { $0}

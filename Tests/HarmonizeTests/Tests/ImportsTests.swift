@@ -10,9 +10,7 @@ import Harmonize
 import XCTest
 
 final class ImportsTests: XCTestCase {
-    private var harmonize: Harmonize {
-        TestUtils.harmonize(atFixtures: "Imports")
-    }
+    private var harmonize = TestUtils.harmonize(at: "Fixtures/Imports")
     
     func testAssertCanParseImports() throws {
         let imports = harmonize.imports()

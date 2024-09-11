@@ -3,20 +3,18 @@ import Harmonize
 import XCTest
 
 final class StructsTests: XCTestCase {
-    private var harmonize: Harmonize {
-        TestUtils.harmonize(atFixtures: "Structs")
-    }
+    private var harmonize = TestUtils.harmonize(at: "Fixtures/Structs")
     
     func testAssertCanParseStructsIncludingNested() throws {
-        let structs = harmonize.structs()
+        let structs = harmonize.structs(includeNested: true)
         let structsNames = structs.map { $0.name }
         
         XCTAssertEqual(structs.count, 3)
         XCTAssertEqual(structsNames, ["MyStructItem", "MyStruct", "AttributedStruct"])
     }
     
-    func testAssertCanParseNestedClasses() throws {
-        let structs = harmonize.structs()
+    func testAssertCanParseNestedStructs() throws {
+        let structs = harmonize.structs(includeNested: true)
         let nestedStructs = structs.filter { $0.parent != nil }
         XCTAssertEqual(nestedStructs.count, 1)
         
@@ -51,7 +49,7 @@ final class StructsTests: XCTestCase {
     }
     
     func testAssertCanParseStructsAttributes() throws {
-        let structs = harmonize.structs()
+        let structs = harmonize.structs(includeNested: true)
         let attributes = structs.flatMap { $0.attributes }
         
         XCTAssertEqual(attributes.count, 1)
@@ -62,13 +60,10 @@ final class StructsTests: XCTestCase {
     }
     
     func testAssertCanParseStructsMemberFunctions() throws {
-        let function = structByName("MyStruct").functions.first!
+        let function = harmonize.structs(includeNested: true).first { $0.name == "MyStruct" }!.functions.first!
         
         XCTAssertEqual(function.name, "someFunction")
         XCTAssertEqual(function.body, "property2 + 2")
     }
-    
-    private func structByName(_ name: String) -> Struct {
-        harmonize.structs().first { $0.name == name }!
-    }
+
 }

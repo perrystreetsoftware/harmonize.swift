@@ -1,5 +1,5 @@
 //
-//  HarmonizeTests.swift
+//  DeclarationsTests.swift
 //  
 //
 //  Created by Lucas Cavalcante on 8/29/24.
@@ -8,13 +8,11 @@ import Foundation
 import Harmonize
 import XCTest
 
-final class HarmonizeTests: XCTestCase {
-    private var harmonize: Harmonize {
-        TestUtils.harmonize(atFixtures: "AnyDeclaration")
-    }
-    
+final class DeclarationsTests: XCTestCase {
+    private var harmonize = TestUtils.harmonize(at: "Fixtures/AnyDeclaration")
+
     func testAssertCanParseAllDeclarationsIncludingNested() throws {
-        let declarations = harmonize.declarations()
+        let declarations = harmonize.declarations(includeNested: true)
         XCTAssertEqual(declarations.count, 15)
     }
     
@@ -23,4 +21,3 @@ final class HarmonizeTests: XCTestCase {
         XCTAssertEqual(declarations.count, 5)
     }
 }
-

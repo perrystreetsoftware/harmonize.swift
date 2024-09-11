@@ -3,9 +3,7 @@ import Harmonize
 import XCTest
 
 final class FunctionsTests: XCTestCase {
-    private var harmonize: Harmonize {
-        TestUtils.harmonize(atFixtures: "Functions")
-    }
+    private var harmonize = TestUtils.harmonize(at: "Fixtures/Functions")
     
     func testAssertCanParseTopLevelFunctionsOnly() throws {
         let functions = harmonize.functions(includeNested: false)
@@ -61,7 +59,7 @@ final class FunctionsTests: XCTestCase {
     }
     
     func testAssertCanParseFunctionReturnClauses() throws {
-        let functions = harmonize.functions()
+        let functions = harmonize.functions(includeNested: true)
         let returnClauses = functions.map { $0.returnClause }
         
         XCTAssertEqual(
@@ -87,21 +85,21 @@ final class FunctionsTests: XCTestCase {
     }
     
     func testAssertCanParseFunctionParametersWithNoArgLabels() throws {
-        let function = funcByName("noArgLabelsFunction")
+        let function = named("noArgLabelsFunction")
         let parameters = function.parameters
         let labels = parameters.map { $0.label }
         XCTAssertEqual(labels, ["", ""])
     }
     
     func testAssertCanParseFunctionParametersWithArgLabels() throws {
-        let function = funcByName("argLabelsFunction")
+        let function = named("argLabelsFunction")
         let parameters = function.parameters
         let labels = parameters.map { $0.label }
         XCTAssertEqual(labels, ["p1", "p2"])
     }
     
     func testAssertCanParseFunctionParametersWithCustomArgLabels() throws {
-        let function = funcByName("customArgLabelsFunction")
+        let function = named("customArgLabelsFunction")
         let parameters = function.parameters
         
         let labels = parameters.map { $0.label }
@@ -112,7 +110,7 @@ final class FunctionsTests: XCTestCase {
     }
     
     func testAssertCanParseFunctionParametersWithMixedArgLabels() throws {
-        let function = funcByName("mixedLabeledArgsFunction")
+        let function = named("mixedLabeledArgsFunction")
         let parameters = function.parameters
         
         let labels = parameters.map { $0.label }
@@ -123,8 +121,8 @@ final class FunctionsTests: XCTestCase {
     }
     
     func testAssertCanParseVariadicFunctionParameters() throws {
-        let variadicArg = funcByName("variadic").parameters.first!
-        let noLabelVariadicArg = funcByName("noLabelVariadic").parameters.first!
+        let variadicArg = named("variadic").parameters.first!
+        let noLabelVariadicArg = named("noLabelVariadic").parameters.first!
         
         XCTAssertEqual(variadicArg.name, "args")
         XCTAssertEqual(variadicArg.label, "args")
@@ -134,48 +132,48 @@ final class FunctionsTests: XCTestCase {
     }
     
     func testAssertCanParseFunctionParametersWithNoNameAndLabels() throws {
-        let unnamedParam = funcByName("noLabelAtAll").parameters.first!
+        let unnamedParam = named("noLabelAtAll").parameters.first!
         XCTAssertEqual(unnamedParam.name, "_")
         XCTAssertEqual(unnamedParam.label, "")
         XCTAssertEqual(unnamedParam.typeAnnotation?.name, "String")
     }
     
     func testAssertCanParseFunctionParametersWithReturnClause() throws {
-        let returnClause = funcByName("withReturnClause").returnClause
+        let returnClause = named("withReturnClause").returnClause
         XCTAssertEqual(returnClause, .type("String"))
     }
     
     func testAssertCanParseFunctionParametersWithGenericClause() throws {
-        let genericClause = funcByName("withGenericVariance").genericClause
+        let genericClause = named("withGenericVariance").genericClause
         XCTAssertEqual(genericClause, "<T, R>")
     }
     
     func testAssertCanParseFunctionParametersWithWhereClause() throws {
-        let whereClause = funcByName("withWhereClause").whereClause
+        let whereClause = named("withWhereClause").whereClause
         XCTAssertEqual(whereClause, "where T: Sendable")
 
     }
     
     func testAssertCanParseFunctionParametersWithInitializer() throws {
-        let param = funcByName("withParametersInitializers").parameters.first!
+        let param = named("withParametersInitializers").parameters.first!
         XCTAssertEqual(param.initializerClause?.value, "Value")
     }
     
     func testAssertCanParseFunctionParametersWithAttributes() throws {
-        let attributedParam = funcByName("withParametersAttributes").parameters.first!
+        let attributedParam = named("withParametersAttributes").parameters.first!
         XCTAssertEqual(attributedParam.attributes, [Attribute(name: "autoclosure", annotation: .autoclosure)])
     }
     
     func testAssertCanParseFunctionModifiers() throws {
-        let asyncfunc = funcByName("fetchAllTheThings")
-        let privateFunc = funcByName("privateFunc")
+        let asyncfunc = named("fetchAllTheThings")
+        let privateFunc = named("privateFunc")
         
         XCTAssertEqual(asyncfunc.modifiers, [.public])
         XCTAssertEqual(privateFunc.modifiers, [.private])
     }
     
     func testAssertCanParseFunctionBody() throws {
-        let functionBody = funcByName("withReturnClause").body
+        let functionBody = named("withReturnClause").body
         let body = """
         let cal = "cal"
         noLabelAtAll(cal)
@@ -184,7 +182,7 @@ final class FunctionsTests: XCTestCase {
         XCTAssertEqual(functionBody, body)
     }
     
-    private func funcByName(_ name: String, includeNested: Bool = true) -> Function {
+    private func named(_ name: String, includeNested: Bool = true) -> Function {
         harmonize.functions(includeNested: includeNested).first {
             $0.name == name
         }!

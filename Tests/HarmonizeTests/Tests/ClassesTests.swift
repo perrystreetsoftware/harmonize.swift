@@ -3,12 +3,10 @@ import Harmonize
 import XCTest
 
 final class ClassesTests: XCTestCase {
-    private var harmonize: Harmonize {
-        TestUtils.harmonize(atFixtures: "Classes")
-    }
+    private var harmonize = TestUtils.harmonize(at: "Fixtures/Classes")
     
     func testAssertCanParseClassesIncludingNested() throws {
-        let classes = harmonize.classes()
+        let classes = harmonize.classes(includeNested: true)
         let classesNames = classes.map { $0.name }
         
         XCTAssertEqual(classes.count, 3)
@@ -16,8 +14,7 @@ final class ClassesTests: XCTestCase {
     }
     
     func testAssertCanParseNestedClasses() throws {
-        let classes = harmonize.classes()
-        
+        let classes = harmonize.classes(includeNested: true)
         let stateSample = classes.filter { $0.parent != nil }.first
         
         XCTAssertNotNil(stateSample)
@@ -42,7 +39,7 @@ final class ClassesTests: XCTestCase {
     }
     
     func testAssertCanParseClassesProperties() throws {
-        let classes = harmonize.classes()
+        let classes = harmonize.classes(includeNested: true)
         let properties = classes.flatMap { $0.properties }
         let names = properties.map { $0.name }
         let parent = properties.map { ($0.parent as? Class)?.name }
@@ -55,7 +52,7 @@ final class ClassesTests: XCTestCase {
     }
     
     func testAssertCanParseClassesAttributes() throws {
-        let classes = harmonize.classes()
+        let classes = harmonize.classes(includeNested: true)
         let attributes = classes.flatMap { $0.attributes }
         
         XCTAssertEqual(attributes.count, 2)
@@ -69,20 +66,18 @@ final class ClassesTests: XCTestCase {
     }
     
     func testAssertCanParseClassesMemberFunctions() throws {
-        let classFunctions = classByName("MyClass2").functions
-        XCTAssertEqual(classFunctions.count, 2)
-        XCTAssertEqual(classFunctions.map { $0.name }, ["first", "second"])
+        let functions = harmonize.classes(includeNested: true)
+            .first { $0.name == "MyClass2" }!.functions
+        
+        XCTAssertEqual(functions.count, 2)
+        XCTAssertEqual(functions.map { $0.name }, ["first", "second"])
         
         XCTAssertEqual(
-            classFunctions.map { $0.body },
+            functions.map { $0.body },
             [
                 "var _ = 42",
                 "var _ = 44"
             ]
         )
-    }
-    
-    private func classByName(_ name: String) -> Class {
-        harmonize.classes().first { $0.name == name }!
     }
 }

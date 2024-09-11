@@ -3,9 +3,7 @@ import Harmonize
 import XCTest
 
 final class InitializersTests: XCTestCase {
-    private var harmonize: Harmonize {
-        TestUtils.harmonize(atFixtures: "Initializers")
-    }
+    private var harmonize = TestUtils.harmonize(at: "Fixtures/Initializers")
     
     func testAssertCanParseInitializers() throws {
         let initializers = harmonize.initializers()
