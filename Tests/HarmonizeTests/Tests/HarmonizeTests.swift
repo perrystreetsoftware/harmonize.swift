@@ -12,7 +12,7 @@ import XCTest
 final class HarmonizeTests: XCTestCase {
     func testCreatesScopesWithProductionAndTestCode() throws {
         let scope = Harmonize.productionAndTestCode()
-            .on("Tests/Fixtures/SampleApp")
+            .on("Fixtures/SampleApp")
         
         let fileNames = scope.files().map { $0.fileName }
         let edgeCases = ["MathTests.swift", "UseCases.swift", "ModelsTests.swift"]
@@ -26,7 +26,7 @@ final class HarmonizeTests: XCTestCase {
     
     func testCreatesScopesWithProductionAndTestCodeExcludingFiles() throws {
         let scope = Harmonize.productionAndTestCode()
-            .on("Tests/Fixtures/SampleApp")
+            .on("Fixtures/SampleApp")
             .excluding("MathTests.swift", "UseCases.swift", "ModelsTests.swift")
         
         let fileNames = scope.files().map { $0.fileName }
@@ -40,7 +40,7 @@ final class HarmonizeTests: XCTestCase {
     
     func testCreatesScopesWithProductionAndTestCodeExcludingPath() throws {
         let scope = Harmonize.productionAndTestCode()
-            .on("Tests/Fixtures/SampleApp")
+            .on("Fixtures/SampleApp")
             .excluding("Tests")
         
         let fileNames = scope.files().map { $0.fileName }
@@ -54,7 +54,7 @@ final class HarmonizeTests: XCTestCase {
 
     func testCreatesScopesWithProductionCode() throws {
         let scope = Harmonize.productionCode()
-            .on("Tests/Fixtures/SampleApp")
+            .on("Fixtures/SampleApp")
         
         let fileNames = scope.files().map { $0.fileName }
     
@@ -64,7 +64,7 @@ final class HarmonizeTests: XCTestCase {
     
     func testCreatesScopesWithTestCode() throws {
         let scope = Harmonize.testCode()
-            .on("Tests/Fixtures/SampleApp")
+            .on("Fixtures/SampleApp")
         
         let fileNames = scope.files().map { $0.fileName }
     

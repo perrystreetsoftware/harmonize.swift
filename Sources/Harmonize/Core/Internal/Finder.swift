@@ -18,15 +18,15 @@ internal class Finder {
         var url = workingDirectory
         
         if let folder = folder, !folder.isEmpty {
-            if isSingleFolderName(folder: folder) {
+            url = workingDirectory.appendingPathComponent(folder).standardized
+            
+            if !pathExists(path: url.absoluteString) {
                 return self(
-                    folders: folders(named: folder, in: workingDirectory),
+                    folders: folders(containing: folder, in: workingDirectory),
                     inclusions: inclusions,
                     exclusions: exclusions
                 )
             }
-            
-            url = workingDirectory.appendingPathComponent(folder).standardized
         }
         
         return self(url: url, inclusions: inclusions, exclusions: exclusions)
@@ -65,19 +65,14 @@ internal class Finder {
         return files
     }
     
-    // We need to check if the target folder is a single folder or a compound path ("Path/To/Something").
-    // If it's a Single Folder (e.g: "ViewModels"), it's important for Harmonize to lookup the whole project
-    // and find every package/module named "ViewModels".
-    private func isSingleFolderName(folder: String) -> Bool {
-        if folder.isEmpty {
-            return false
-        }
-        
-        let components = folder.components(separatedBy: "/").filter { !$0.isEmpty }
-        
-        return components.count == 1
+    private func pathExists(path: String) -> Bool {
+        var isDirectory: ObjCBool = false
+        return FileManager.default.fileExists(
+            atPath: path,
+            isDirectory: &isDirectory
+        ) && isDirectory.boolValue
     }
-    
+        
     private func isSwiftFile(path: URL) -> Bool {
         !path.hasDirectoryPath && path.pathExtension == "swift"
     }
@@ -112,7 +107,7 @@ internal class Finder {
         return !fileOrParentIsContainedInArray(array: exclusions)
     }
     
-    private func folders(named folderName: String, in directory: URL) -> [URL] {
+    private func folders(containing pathComponent: String, in directory: URL) -> [URL] {
         guard let enumerator = FileManager.default.enumerator(
             at: directory,
             includingPropertiesForKeys: [.isDirectoryKey],
@@ -126,7 +121,7 @@ internal class Finder {
             let isDirectory = try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory
             
             if isDirectory ?? false {
-                if url.lastPathComponent == folderName {
+                if url.pathComponents.joined(separator: "/").contains(pathComponent) {
                     folders.append(url)
                     enumerator.skipDescendants()
                 }
