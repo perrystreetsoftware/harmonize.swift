@@ -32,7 +32,7 @@ final class StructsTests: XCTestCase {
     
     func testAssertCanParseInheritanceTypesNames() throws {
         let structs = harmonize.structs(includeNested: true)
-        let inheritanceTypes = structs.compactMap { $0.inheritanceTypesNames }.flatten()
+        let inheritanceTypes = structs.flatMap { $0.inheritanceTypesNames }
         
         XCTAssertEqual(inheritanceTypes, ["MyStructProtocol"])
     }
