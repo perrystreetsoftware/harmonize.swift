@@ -12,7 +12,7 @@ import Foundation
 ///
 /// We could seek for `Package.swift` but that would work only for SPM projects. As far as we know, there is no easy way to find the project
 /// working directory and we need to force the library's users to bundle their own `.harmonize.yaml` for this library to be able to find the project's working dir.
-class URLResolver {
+internal class URLResolver {
     private static let sourceFileURL = URL(fileURLWithPath: #file)
     
     private init() {}

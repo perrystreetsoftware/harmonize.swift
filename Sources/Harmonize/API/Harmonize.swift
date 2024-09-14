@@ -7,18 +7,25 @@
 
 import Foundation
 
-public struct Harmonize {    
+/// The entry point for creating HarmonizeScope.
+public struct Harmonize {
     private init() {}
     
-    public static func productionAndTestCode() -> Builder {
-        Harmonizer()
+    /// Static access for getting production and test code from the working directory. Allows `on` and `excludes` builders.
+    /// - returns: access to `on`, `excludes` builders but also `HarmonizeScope`.
+    public static func productionAndTestCode() -> On & Excluding {
+        HarmonizeScopeBuilder()
     }
     
-    public static func productionCode() -> Builder {
-        Harmonizer(exclusions: ["Tests", "Fixtures"])
+    /// Static access for getting production from the working directory. Allows `on` and `excludes` builders.
+    /// - returns: access to `on`, `excludes` builders but also `HarmonizeScope`.
+    public static func productionCode() -> On & Excluding {
+        HarmonizeScopeBuilder(exclusions: ["Tests", "Fixtures"])
     }
     
-    public static func testCode() -> Builder {
-        Harmonizer(includingOnly: ["Tests", "Fixtures"])
+    /// Static access for getting test code from the working directory. Allows `on` and `excludes` builders.
+    /// - returns: access to `on`, `excludes` builders but also `HarmonizeScope`.
+    public static func testCode() -> On & Excluding {
+        HarmonizeScopeBuilder(includingOnly: ["Tests", "Fixtures"])
     }
 }

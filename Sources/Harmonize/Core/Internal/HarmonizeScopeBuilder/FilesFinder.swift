@@ -1,5 +1,5 @@
 //
-//  Finder.swift
+//  FilesFinder.swift
 //
 //
 //  Created by Lucas Cavalcante on 9/9/24.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// The internal implementation responsible for Swift File lookup through the source.
-internal class Finder {
+internal class FilesFinder {
     internal func callAsFunction(
         workingDirectory: URL,
         folder: String?,

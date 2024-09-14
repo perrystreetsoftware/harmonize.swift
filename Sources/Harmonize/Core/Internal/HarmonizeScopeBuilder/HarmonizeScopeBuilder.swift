@@ -1,5 +1,5 @@
 //
-//  Harmonizer.swift
+//  HarmonizeScopeBuilder.swift
 //
 //
 //  Created by Lucas Cavalcante on 9/7/24.
@@ -9,8 +9,8 @@ import Foundation
 
 /// The default Harmonize scope builder implementation.
 /// Provides all declarations and files from a given path.
-internal struct Harmonizer: Harmonize.Builder {
-    private let find = Finder()
+internal struct HarmonizeScopeBuilder: On, Excluding {
+    private let findFiles = FilesFinder()
     
     private let workingDirectory: URL = try! URLResolver.resolveProjectRootPath()
     private let config: Config = makeDefaultConfig()
@@ -32,23 +32,10 @@ internal struct Harmonizer: Harmonize.Builder {
         self.filesHolder = make()
     }
     
-    /// A folder or path builder specifier to target Harmonize.
-    ///
-    /// - parameter folder: the target folder or path name as string.
-    /// - returns: the Builder allowing filtering with `excluding` or Harmonize scope.
-    ///
-    /// Calling Harmonize.on("path/to/code") will effectivelly allow the work on the given path that must be a directory of the working directory.
-    /// Additionally it is also possible to call Harmonize.on("Folder") and it will act on every directory it finds with the given name.
-    ///
-    func on(_ folder: String) -> Harmonize.FolderFilteringBuilder {
+    func on(_ folder: String) -> Excluding {
         return Self(folder: folder, includingOnly: includingOnly, exclusions: exclusions)
     }
     
-    /// Allow exclusion of paths or files of the current Harmonize scope.
-    ///
-    /// - parameter excludes: the target folder, file.
-    /// - returns: Harmonize scope.
-    ///
     func excluding(_ excludes: String...) -> HarmonizeScope {
         Self(folder: folder, includingOnly: includingOnly, exclusions: self.exclusions + excludes)
     }
@@ -98,7 +85,7 @@ internal struct Harmonizer: Harmonize.Builder {
     }
     
     private func make() -> HarmonizeFilesHolder {
-        let files = find(
+        let files = findFiles(
             workingDirectory: workingDirectory,
             folder: folder,
             inclusions: includingOnly,
