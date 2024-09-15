@@ -7,17 +7,41 @@
 
 import Foundation
 
-public protocol Extension: Declaration,
-                           ChildrenDeclarationProviding,
-                           FileSourceProviding,
-                           InheritanceProviding,
-                           PropertiesProviding,
-                           ModifiersProviding,
-                           AttributesProviding,
-                           FunctionsProviding,
-                           InitializersProviding {
-    /// The extension's target type name.
-    var extendedTypeName: String { get }
+public struct Extension: Declaration,
+                         ChildrenDeclarationProviding,
+                         FileSourceProviding,
+                         InheritanceProviding,
+                         PropertiesProviding,
+                         ModifiersProviding,
+                         AttributesProviding,
+                         FunctionsProviding,
+                         InitializersProviding {
+    public var text: String
     
-    var genericWhereClause: String? { get }
+    public var children: [Declaration] = []
+    
+    public var swiftFile: SwiftFile
+    
+    public var inheritanceTypesNames: [String]
+    
+    public var attributes: [Attribute]
+    
+    public var modifiers: [Modifier]
+    
+    /// The extension's target type name.
+    public var extendedTypeName: String
+    
+    public var genericWhereClause: String?
+    
+    public var properties: [Property] {
+        children.as(Property.self)
+    }
+    
+    public var functions: [Function] {
+        children.as(Function.self)
+    }
+    
+    public var initializers: [Initializer] {
+        children.as(Initializer.self)
+    }
 }

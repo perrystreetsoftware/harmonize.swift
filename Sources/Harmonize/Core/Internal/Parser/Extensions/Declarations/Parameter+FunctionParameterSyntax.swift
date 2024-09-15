@@ -1,5 +1,5 @@
 //
-//  ParameterSyntaxModel.swift
+//  Parameter+FunctionParameterSyntax.swift
 //
 //
 //  Created by Lucas Cavalcante on 9/1/24.
@@ -8,25 +8,7 @@
 import Foundation
 import SwiftSyntax
 
-struct ParameterSyntaxModel: Parameter {
-    var name: String
-    
-    var text: String
-    
-    var parent: Declaration? = nil
-        
-    var attributes: [Attribute]
-    
-    var modifiers: [Modifier]
-    
-    var typeAnnotation: TypeAnnotation?
-    
-    var label: String
-    
-    var initializerClause: InitializerClause?
-    
-    var isVariadic: Bool
-    
+extension Parameter {
     init(node: FunctionParameterSyntax, file: SwiftFile) {
         let firstName = node.firstName.text
         let secondName = node.secondName?.text

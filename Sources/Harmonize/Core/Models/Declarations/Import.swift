@@ -7,9 +7,17 @@
 
 import Foundation
 
-public protocol Import: Declaration,
-                        NamedDeclaration,
-                        FileSourceProviding,
-                        AttributesProviding {
-    var kind: ImportKind { get }
+public struct Import: Declaration,
+                      NamedDeclaration,
+                      FileSourceProviding,
+                      AttributesProviding {
+    public var text: String
+    
+    public var name: String
+    
+    public var kind: ImportKind
+    
+    public var swiftFile: SwiftFile
+    
+    public var attributes: [Attribute]
 }

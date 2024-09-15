@@ -1,5 +1,5 @@
 //
-//  PatternBindingListSyntax+Providers.swift
+//  PatternBindingListSyntax+Declarations.swift
 //
 //
 //  Created by Lucas Cavalcante on 8/25/24.

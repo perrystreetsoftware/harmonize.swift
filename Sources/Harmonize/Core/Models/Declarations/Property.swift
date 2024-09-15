@@ -1,18 +1,40 @@
 import Foundation
 
-public protocol Property: Declaration,
-                          NamedDeclaration,
-                          ParentDeclarationProviding,
-                          ModifiersProviding,
-                          AttributesProviding,
-                          AccessorBlocksProviding,
-                          TypeAnnotationProviding,
-                          InitializerClauseProviding {
-    var isOptional: Bool { get }
+public struct Property: Declaration,
+                        NamedDeclaration,
+                        ParentDeclarationProviding,
+                        ModifiersProviding,
+                        AttributesProviding,
+                        AccessorBlocksProviding,
+                        TypeAnnotationProviding,
+                        InitializerClauseProviding {
+    public var name: String
     
-    var isConstant: Bool { get }
+    public var text: String
     
-    var isVariable: Bool { get }
+    public var parent: Declaration?
+        
+    public var modifiers: [Modifier]
     
-    var isOfInferredType: Bool { get }
+    public var attributes: [Attribute]
+    
+    public var accessorBlocks: [AccessorBlock]
+    
+    public var typeAnnotation: TypeAnnotation?
+    
+    public var initializerClause: InitializerClause?
+    
+    public var isConstant: Bool
+    
+    public var isOptional: Bool {
+        typeAnnotation?.isOptional == true
+    }
+    
+    public var isVariable: Bool {
+        !isConstant
+    }
+    
+    public var isOfInferredType: Bool {
+        typeAnnotation == nil
+    }
 }

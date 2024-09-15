@@ -1,8 +1,15 @@
+//
+//  InheritanceClauseSyntax+String.swift
+//
+//
+//  Created by Lucas Cavalcante on 9/15/24.
+//
+
 import Foundation
 import SwiftSyntax
 
 extension InheritanceClauseSyntax {
-    func typesAsString() -> [String] {
+    func asString() -> [String] {
         inheritedTypes.compactMap {
             if let attributedType = $0.type.as(AttributedTypeSyntax.self) {
                 return attributedType.baseType.trimmedDescription

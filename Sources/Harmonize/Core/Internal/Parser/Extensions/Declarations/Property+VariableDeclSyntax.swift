@@ -1,5 +1,5 @@
 //
-//  VariableDeclSyntaxModel.swift
+//  Property+VariableDeclSyntax.swift
 //
 //
 //  Created by Lucas Cavalcante on 8/31/24.
@@ -8,38 +8,8 @@
 import Foundation
 import SwiftSyntax
 
-struct VariableDeclSyntaxModel: Property {
-    var name: String
-    
-    var text: String
-    
-    var parent: Declaration?
-        
-    var modifiers: [Modifier]
-    
-    var attributes: [Attribute]
-    
-    var accessorBlocks: [AccessorBlock]
-    
-    var typeAnnotation: TypeAnnotation?
-    
-    var initializerClause: InitializerClause?
-    
-    var isConstant: Bool
-    
-    var isOptional: Bool {
-        typeAnnotation?.isOptional == true
-    }
-    
-    var isVariable: Bool {
-        !isConstant
-    }
-    
-    var isOfInferredType: Bool {
-        typeAnnotation == nil
-    }
-    
-    static func create(from node: VariableDeclSyntax) -> [VariableDeclSyntaxModel] {
+extension Property {
+    static func create(from node: VariableDeclSyntax) -> [Property] {
         let identifiers = node.bindings.names
         let annotations = node.bindings.typeAnnotations
         let initializers = node.bindings.initializerClauses
@@ -48,13 +18,13 @@ struct VariableDeclSyntaxModel: Property {
         let modifiers = node.modifiers.modifiers
         let attributes = node.attributes.attributes
         
-        var properties: [VariableDeclSyntaxModel] = []
+        var properties: [Property] = []
         
         for (index, identifier) in identifiers.enumerated() {
             let annotation = index < annotations.count ? annotations[index] : annotations.last
             let initializer = index < initializers.count ? initializers[index] : nil
             
-            let variable = VariableDeclSyntaxModel(
+            let variable = Property(
                 name: identifier,
                 text: node.trimmedDescription,
                 modifiers: modifiers,

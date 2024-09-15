@@ -7,6 +7,10 @@
 
 import Foundation
 
-public protocol EnumCaseParameter: Declaration, TypeAnnotationProviding {
-    var label: String? { get }
+public struct EnumCaseParameter: Declaration, TypeAnnotationProviding {
+    public var text: String
+    
+    public var typeAnnotation: TypeAnnotation?
+    
+    public var label: String?
 }

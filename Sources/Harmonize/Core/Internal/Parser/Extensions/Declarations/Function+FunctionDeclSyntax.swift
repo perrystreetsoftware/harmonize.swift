@@ -1,6 +1,6 @@
 //
-//  FunctionDeclSyntaxModel.swift
-//  
+//  Function+FunctionDeclSyntaxModel.swift
+//
 //
 //  Created by Lucas Cavalcante on 9/1/24.
 //
@@ -8,35 +8,7 @@
 import Foundation
 import SwiftSyntax
 
-struct FunctionDeclSyntaxModel: Function {
-    var name: String
-    
-    var text: String
-    
-    var parent: Declaration? = nil
-    
-    var children: [Declaration] = []
-    
-    var swiftFile: SwiftFile
-    
-    var modifiers: [Modifier]
-    
-    var functions: [Function] {
-        children.as(Function.self)
-    }
-    
-    var parameters: [Parameter] {
-        children.as(Parameter.self)
-    }
-    
-    let returnClause: ReturnClause
-    
-    let genericClause: String?
-    
-    let whereClause: String?
-    
-    let body: String?
-    
+extension Function {
     init(node: FunctionDeclSyntax, file: SwiftFile) {
         self.name = node.name.text
         self.text = node.trimmedDescription

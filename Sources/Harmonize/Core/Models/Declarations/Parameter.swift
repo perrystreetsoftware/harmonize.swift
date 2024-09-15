@@ -7,15 +7,29 @@
 
 import Foundation
 
-public protocol Parameter: Declaration,
-                           NamedDeclaration,
-                           ParentDeclarationProviding,
-                           AttributesProviding,
-                           InitializerClauseProviding,
-                           ModifiersProviding,
-                           TypeAnnotationProviding {
-    var label: String { get }
+public struct Parameter: Declaration,
+                         NamedDeclaration,
+                         ParentDeclarationProviding,
+                         AttributesProviding,
+                         InitializerClauseProviding,
+                         ModifiersProviding,
+                         TypeAnnotationProviding {
+    public var name: String
     
+    public var text: String
+    
+    public var parent: Declaration? = nil
+        
+    public var attributes: [Attribute]
+    
+    public var modifiers: [Modifier]
+    
+    public var typeAnnotation: TypeAnnotation?
+    
+    public var label: String
+    
+    public var initializerClause: InitializerClause?
+        
     /// Returns true if the parameter ends with ellipsis (variadic).
-    var isVariadic: Bool { get }
+    public var isVariadic: Bool
 }

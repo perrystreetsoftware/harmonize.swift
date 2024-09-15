@@ -11,61 +11,61 @@ class DeclarationFactory {
     }
     
     func create(_ node: ClassDeclSyntax) -> Class {
-        var model = ClassDeclSyntaxModel(node: node, file: file)
+        var model = Class(node: node, file: file)
         model.children = withUpdatedChildrenParent(parent: model)
         return model
     }
     
     func create(_ node: FunctionDeclSyntax) -> Function {
-        var model = FunctionDeclSyntaxModel(node: node, file: file)
+        var model = Function(node: node, file: file)
         model.children = withUpdatedChildrenParent(parent: model)
         return model
     }
     
     func create(_ node: FunctionParameterSyntax) -> Parameter {
-        ParameterSyntaxModel(node: node, file: file)
+        Parameter(node: node, file: file)
     }
     
     func create(_ node: StructDeclSyntax) -> Struct {
-        var model = StructDeclSyntaxModel(node: node, file: file)
+        var model = Struct(node: node, file: file)
         model.children = withUpdatedChildrenParent(parent: model)
         return model
     }
     
     func create(_ node: VariableDeclSyntax) -> [Property] {
-        VariableDeclSyntaxModel.create(from: node)
+        Property.create(from: node)
     }
     
     func create(_ node: ProtocolDeclSyntax) -> ProtocolDeclaration {
-        var model = ProtocolDeclSyntaxModel(node: node, file: file)
+        var model = ProtocolDeclaration(node: node, file: file)
         model.children = withUpdatedChildrenParent(parent: model)
         return model
     }
     
     func create(_ node: InitializerDeclSyntax) -> Initializer {
-        var model = InitializerDeclSyntaxModel(node: node, file: file)
+        var model = Initializer(node: node, file: file)
         model.children = withUpdatedChildrenParent(parent: model)
         return model
     }
     
     func create(_ node: EnumDeclSyntax) -> Enum {
-        var model = EnumDeclSyntaxModel(node: node, file: file)
+        var model = Enum(node: node, file: file)
         model.children = withUpdatedChildrenParent(parent: model)
         return model
     }
     
     func create(_ node: EnumCaseDeclSyntax) -> [EnumCase] {
-        EnumCaseDeclSyntaxModel.create(from: node)
+        EnumCase.create(from: node)
     }
     
     func create(_ node: ExtensionDeclSyntax) -> Extension {
-        var model = ExtensionDeclSyntaxModel(node: node, file: file)
+        var model = Extension(node: node, file: file)
         model.children = withUpdatedChildrenParent(parent: model)
         return model
     }
     
     func create(_ node: ImportDeclSyntax) -> Import {
-        ImportDeclSyntaxModel(node, file)
+        Import(node, file)
     }
     
     private func withUpdatedChildrenParent(parent: Declaration) -> [Declaration] {
