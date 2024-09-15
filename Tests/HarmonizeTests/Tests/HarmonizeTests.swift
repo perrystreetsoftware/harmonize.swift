@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable import Harmonize
+import Harmonize
 import XCTest
 
 final class HarmonizeTests: XCTestCase {
