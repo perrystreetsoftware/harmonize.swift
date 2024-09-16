@@ -6,36 +6,56 @@
 //
 
 import Foundation
-import Harmonize
+@testable import Harmonize
 import XCTest
 
 final class FiltersTests: XCTestCase {
-    let scope = Harmonize.productionCode()
-        .on("Fixtures/SampleApp")
     
     func testNamedDeclarationsFilters() throws {
-        scope.classes(includeNested: true)
-            .withSuffix("UseCase")
-            .assertCount(count: 2)
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/NamedDeclarations")
         
         scope.classes(includeNested: true)
-            .withoutSuffix("UseCase")
-            .assertCount(count: 1)
-        
-        scope.classes(includeNested: true)
-            .withPrefix("Fetch")
-            .assertCount(count: 2)
-        
-        scope.classes(includeNested: true)
-            .withoutPrefix("Fetch")
-            .assertCount(count: 1)
-        
-        scope.classes(includeNested: true)
-            .withNameContaining("User", "Converter")
+            .withSuffix("ViewModel")
             .assertCount(count: 3)
         
         scope.classes(includeNested: true)
-            .withoutNameContaining("User", "Converter")
+            .withoutSuffix("ViewModel")
             .assertEmpty()
+        
+        scope.classes(includeNested: true)
+            .withPrefix("Base")
+            .assertCount(count: 1)
+        
+        scope.classes(includeNested: true)
+            .withoutPrefix("Base")
+            .assertCount(count: 2)
+        
+        scope.classes(includeNested: true)
+            .withNameContaining("Base", "ViewModel")
+            .assertCount(count: 3)
+        
+        scope.classes(includeNested: true)
+            .withoutNameContaining("Base", "ViewModel")
+            .assertEmpty()
+    }
+    
+    func testInheritanceProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Inheritance")
+
+        scope.classes(includeNested: true)
+            .inheriting(BaseUseCase.self)
+            .assertCount(count: 1)
+        
+        scope.classes(includeNested: true)
+            .inheriting(name: "BaseUseCase")
+            .assertCount(count: 1)
+        
+        scope.structs(includeNested: true)
+            .conforming(AgedUserModel.self)
+            .assertCount(count: 1)
+        
+        scope.structs(includeNested: true)
+            .conforming(names: "AgedUserModel")
+            .assertCount(count: 1)
     }
 }
