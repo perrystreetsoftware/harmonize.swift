@@ -9,8 +9,15 @@ import Foundation
 
 /// The internal implementation responsible for Swift File lookup through the source.
 internal class FilesFinder {
+    private let workingDirectory: URL
+    private let config: Config
+
+    init(_ file: StaticString) {
+        self.workingDirectory = try! URLResolver.resolveProjectRootPath(file)
+        self.config = Config(file: file)
+    }
+    
     internal func callAsFunction(
-        workingDirectory: URL,
         folder: String?,
         inclusions: [String],
         exclusions: [String]
@@ -57,7 +64,7 @@ internal class FilesFinder {
                 file: $0,
                 basePath: url,
                 inclusions: inclusions,
-                exclusions: exclusions
+                exclusions: config.excludePaths + exclusions
             )
         }
         .compactMap(makeAsSwiftFile) ?? []

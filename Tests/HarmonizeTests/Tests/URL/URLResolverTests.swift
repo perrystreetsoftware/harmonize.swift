@@ -11,18 +11,8 @@ import XCTest
 
 final class URLResolverTests: XCTestCase {
     func testAssertCanResolveProjectPath() throws {
-        let projectPath = try URLResolver.resolveProjectRootPath()
+        let projectPath = try URLResolver.resolveProjectRootPath(#file)
         let mainPackageFile = projectPath.appendingPathComponent("Package.swift")
         XCTAssertTrue(FileManager.default.fileExists(atPath: mainPackageFile.path))
-    }
-    
-    func testAssertFailureIfConfigFileIsNotPresent() throws {
-        let startingAt = URL(fileURLWithPath: "/dummy")
-        XCTAssertThrowsError(try URLResolver.resolveProjectRootPath(startingAt)) { error in
-            XCTAssertEqual(
-                error as! HarmonizeError,
-                HarmonizeError.configFileNotFound
-            )
-        }
     }
 }

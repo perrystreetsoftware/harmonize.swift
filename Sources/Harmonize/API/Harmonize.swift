@@ -13,19 +13,19 @@ public struct Harmonize {
     
     /// Static access for getting production and test code from the working directory. Allows `on` and `excludes` builders.
     /// - returns: access to `on`, `excludes` builders but also `HarmonizeScope`.
-    public static func productionAndTestCode() -> On & Excluding {
-        HarmonizeScopeBuilder()
+    public static func productionAndTestCode(_ file: StaticString = #file) -> On & Excluding {
+        HarmonizeScopeBuilder(file: file)
     }
     
     /// Static access for getting production from the working directory. Allows `on` and `excludes` builders.
     /// - returns: access to `on`, `excludes` builders but also `HarmonizeScope`.
-    public static func productionCode() -> On & Excluding {
-        HarmonizeScopeBuilder(exclusions: ["Tests", "Fixtures"])
+    public static func productionCode(_ file: StaticString = #file) -> On & Excluding {
+        HarmonizeScopeBuilder(file: file, exclusions: ["Tests", "Fixtures"])
     }
     
     /// Static access for getting test code from the working directory. Allows `on` and `excludes` builders.
     /// - returns: access to `on`, `excludes` builders but also `HarmonizeScope`.
-    public static func testCode() -> On & Excluding {
-        HarmonizeScopeBuilder(includingOnly: ["Tests", "Fixtures"])
+    public static func testCode(_ file: StaticString = #file) -> On & Excluding {
+        HarmonizeScopeBuilder(file: file, includingOnly: ["Tests", "Fixtures"])
     }
 }

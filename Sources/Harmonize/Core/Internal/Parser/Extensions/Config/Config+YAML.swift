@@ -14,6 +14,12 @@ extension Config: Decodable {
         case excludes
     }
     
+    init(file: StaticString) {
+        let configFilePath = try! URLResolver.resolveConfigFilePath(file)
+        let content = try! String(contentsOfFile: configFilePath.path)
+        try! self.init(content)
+    }
+    
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let excludes = try? values.decode([String].self, forKey: .excludes)
