@@ -33,4 +33,10 @@ final class AssertionsTests: XCTestCase {
             .files()
             .assertFalse { !$0.fileName.hasSuffix("Tests") }
     }
+    
+    func testAssertCount() throws {
+        Harmonize.productionCode().on("Fixtures/SampleApp")
+            .files()
+            .assertCount(count: 2)
+    }
 }
