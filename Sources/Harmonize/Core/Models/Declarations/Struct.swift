@@ -8,6 +8,7 @@ public struct Struct: Declaration,
                       InheritanceProviding,
                       PropertiesProviding,
                       AttributesProviding,
+                      ModifiersProviding,
                       FunctionsProviding,
                       InitializersProviding {
     public var name: String
@@ -23,6 +24,8 @@ public struct Struct: Declaration,
     public var inheritanceTypesNames: [String]
     
     public var attributes: [Attribute]
+    
+    public var modifiers: [Modifier]
     
     public var properties: [Property] {
         children.as(Property.self)

@@ -9,6 +9,7 @@ public struct ProtocolDeclaration: Declaration,
                                    PropertiesProviding,
                                    AttributesProviding,
                                    FunctionsProviding,
+                                   ModifiersProviding,
                                    InitializersProviding {
     public var name: String
     
@@ -23,6 +24,8 @@ public struct ProtocolDeclaration: Declaration,
     public var inheritanceTypesNames: [String]
     
     public var attributes: [Attribute]
+    
+    public var modifiers: [Modifier]
     
     public var properties: [Property] {
         children.as(Property.self)

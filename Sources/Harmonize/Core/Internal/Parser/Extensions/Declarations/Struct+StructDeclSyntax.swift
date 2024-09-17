@@ -15,5 +15,6 @@ extension Struct {
         self.swiftFile = file
         self.inheritanceTypesNames = node.inheritanceClause?.asString() ?? []
         self.attributes = node.attributes.attributes
+        self.modifiers = node.modifiers.modifiers
     }
 }

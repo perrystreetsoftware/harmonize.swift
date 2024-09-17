@@ -123,11 +123,19 @@ final class FiltersTests: XCTestCase {
             .assertNotEmpty()
     }
     
-    func testDeclarationFilters() throws {
-        let scope = Harmonize.productionCode().on("Fixtures/Filters/Body")
+    func testModifiersProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Modifiers")
         
         scope.classes(includeNested: true)
-            .withText { $0.contains("func testing()") }
+            .withModifier(.final, .public)
+            .assertCount(count: 1)
+        
+        scope.properties(includeNested: true)
+            .withModifier(.public, .privateSet)
+            .assertCount(count: 2)
+        
+        scope.properties(includeNested: true)
+            .withoutModifier(.public)
             .assertCount(count: 1)
     }
 }
