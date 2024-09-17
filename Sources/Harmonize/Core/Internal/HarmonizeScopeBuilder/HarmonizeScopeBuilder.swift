@@ -9,7 +9,7 @@ import Foundation
 
 /// The default Harmonize scope builder implementation.
 /// Provides all declarations and files from a given path.
-internal struct HarmonizeScopeBuilder: On, Excluding {
+internal class HarmonizeScopeBuilder: On, Excluding {
     private let file: StaticString
     private let findFiles: FilesFinder
     
@@ -17,7 +17,7 @@ internal struct HarmonizeScopeBuilder: On, Excluding {
     private var includingOnly: [String] = []
     private var exclusions: [String] = []
     
-    private var filesHolder = HarmonizeFilesHolder()
+    private lazy var filesHolder = { make() }()
     
     internal init(
         file: StaticString,
@@ -30,17 +30,22 @@ internal struct HarmonizeScopeBuilder: On, Excluding {
         self.folder = folder
         self.includingOnly = includingOnly
         self.exclusions = exclusions
-        self.filesHolder = make()
     }
     
+    // MARK: Builders
     func on(_ folder: String) -> Excluding {
-        Self(file: file, folder: folder, includingOnly: includingOnly, exclusions: exclusions)
+        self.folder = folder
+        return self
     }
     
     func excluding(_ excludes: String...) -> HarmonizeScope {
-        Self(file: file, folder: folder, includingOnly: includingOnly, exclusions: exclusions + excludes)
+        self.exclusions = excludes + exclusions
+        return self
     }
     
+    // MARK: -
+    
+    // MARK: Harmonize Scope
     func classes(includeNested: Bool) -> [Class] {
         declarations(includeNested: includeNested).as(Class.self)
     }
@@ -84,6 +89,8 @@ internal struct HarmonizeScopeBuilder: On, Excluding {
     func structs(includeNested: Bool) -> [Struct] {
         declarations(includeNested: includeNested).as(Struct.self)
     }
+    
+    // MARK: -
     
     private func make() -> HarmonizeFilesHolder {
         let files = findFiles(
