@@ -138,4 +138,20 @@ final class FiltersTests: XCTestCase {
             .withoutModifier(.public)
             .assertCount(count: 1)
     }
+    
+    func testAccessorBlocksProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Accessors")
+        let properties = scope.properties(includeNested: true)
+        
+        AccessorBlock.Modifier.allCases.forEach {
+            properties.withAcessorBlockBody($0)
+                .assertCount(count: 1)
+        }
+        
+        properties.withGetter { $0?.contains("getter") ?? false }.assertNotEmpty()
+        properties.withGet { $0?.contains("that's a get") ?? false }.assertNotEmpty()
+        properties.withSet { $0?.contains("newValue") ?? false }.assertNotEmpty()
+        properties.withDidSet { $0?.contains("didset") ?? false }.assertNotEmpty()
+        properties.withWillSet { $0?.contains("willset") ?? false }.assertNotEmpty()
+    }
 }
