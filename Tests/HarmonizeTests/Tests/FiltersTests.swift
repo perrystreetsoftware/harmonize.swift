@@ -58,4 +58,28 @@ final class FiltersTests: XCTestCase {
             .conforming(names: "AgedUserModel")
             .assertCount(count: 1)
     }
+    
+    func testAttributesProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Attributes")
+        
+        scope.properties(includeNested: true)
+            .withPropertyWrapper(Published<Int>.self)
+            .assertCount(count: 2)
+        
+        scope.properties(includeNested: true)
+            .withAttribute { $0.name == "@objc" }
+            .assertEmpty()
+        
+        scope.properties(includeNested: true)
+            .withAttribute(named: "@objc")
+            .assertEmpty()
+        
+        scope.properties(includeNested: true)
+            .withAttribute(named: "@Published")
+            .assertCount(count: 2)
+        
+        scope.properties(includeNested: true)
+            .withAttribute(annotation: .published)
+            .assertCount(count: 2)
+    }
 }
