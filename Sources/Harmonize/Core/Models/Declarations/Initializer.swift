@@ -10,6 +10,7 @@ import Foundation
 public struct Initializer: Declaration,
                            ParentDeclarationProviding,
                            ChildrenDeclarationProviding,
+                           FileSourceProviding,
                            BodyProviding,
                            ModifiersProviding,
                            AttributesProviding,

@@ -33,7 +33,7 @@ class DeclarationFactory {
     }
     
     func create(_ node: VariableDeclSyntax) -> [Property] {
-        Property.create(from: node)
+        Property.create(from: node, file: file)
     }
     
     func create(_ node: ProtocolDeclSyntax) -> ProtocolDeclaration {
@@ -55,7 +55,7 @@ class DeclarationFactory {
     }
     
     func create(_ node: EnumCaseDeclSyntax) -> [EnumCase] {
-        EnumCase.create(from: node)
+        EnumCase.create(from: node, file: file)
     }
     
     func create(_ node: ExtensionDeclSyntax) -> Extension {

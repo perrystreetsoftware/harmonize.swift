@@ -3,6 +3,7 @@ import Foundation
 public struct Property: Declaration,
                         NamedDeclaration,
                         ParentDeclarationProviding,
+                        FileSourceProviding,
                         ModifiersProviding,
                         AttributesProviding,
                         AccessorBlocksProviding,
@@ -13,6 +14,8 @@ public struct Property: Declaration,
     public var text: String
     
     public var parent: Declaration?
+    
+    public var swiftFile: SwiftFile
         
     public var modifiers: [Modifier]
     

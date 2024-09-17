@@ -7,10 +7,14 @@
 
 import Foundation
 
-public struct EnumCaseParameter: Declaration, TypeAnnotationProviding {
+public struct EnumCaseParameter: Declaration,
+                                 TypeAnnotationProviding,
+                                 FileSourceProviding {
     public var text: String
     
     public var typeAnnotation: TypeAnnotation?
     
     public var label: String?
+    
+    public var swiftFile: SwiftFile
 }

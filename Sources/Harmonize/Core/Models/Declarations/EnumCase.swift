@@ -10,6 +10,7 @@ import Foundation
 public struct EnumCase: Declaration,
                         NamedDeclaration,
                         ParentDeclarationProviding,
+                        FileSourceProviding,
                         AttributesProviding,
                         ModifiersProviding,
                         InitializerClauseProviding {
@@ -18,6 +19,8 @@ public struct EnumCase: Declaration,
     public var text: String
     
     public var parent: Declaration?
+    
+    public var swiftFile: SwiftFile
             
     public var attributes: [Attribute]
     

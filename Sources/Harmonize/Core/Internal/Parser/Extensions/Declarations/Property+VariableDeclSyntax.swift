@@ -9,7 +9,7 @@ import Foundation
 import SwiftSyntax
 
 extension Property {
-    static func create(from node: VariableDeclSyntax) -> [Property] {
+    static func create(from node: VariableDeclSyntax, file: SwiftFile) -> [Property] {
         let identifiers = node.bindings.names
         let annotations = node.bindings.typeAnnotations
         let initializers = node.bindings.initializerClauses
@@ -27,6 +27,7 @@ extension Property {
             let variable = Property(
                 name: identifier,
                 text: node.trimmedDescription,
+                swiftFile: file, 
                 modifiers: modifiers,
                 attributes: attributes,
                 accessorBlocks: accessors,

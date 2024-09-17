@@ -32,6 +32,7 @@ extension Parameter {
         self.text = node.trimmedDescription.replacingOccurrences(of: ",", with: "")
         self.modifiers = modifiers
         self.attributes = attributes
+        self.swiftFile = file
         self.label = label
         self.typeAnnotation = type
         self.isVariadic = node.ellipsis != nil

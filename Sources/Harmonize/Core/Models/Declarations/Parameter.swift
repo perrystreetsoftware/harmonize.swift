@@ -10,6 +10,7 @@ import Foundation
 public struct Parameter: Declaration,
                          NamedDeclaration,
                          ParentDeclarationProviding,
+                         FileSourceProviding,
                          AttributesProviding,
                          InitializerClauseProviding,
                          ModifiersProviding,
@@ -19,7 +20,9 @@ public struct Parameter: Declaration,
     public var text: String
     
     public var parent: Declaration? = nil
-        
+    
+    public var swiftFile: SwiftFile
+
     public var attributes: [Attribute]
     
     public var modifiers: [Modifier]

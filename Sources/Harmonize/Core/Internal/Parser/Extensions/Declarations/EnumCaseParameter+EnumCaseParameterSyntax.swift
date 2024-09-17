@@ -9,7 +9,7 @@ import Foundation
 import SwiftSyntax
 
 extension EnumCaseParameter {    
-    init(node: EnumCaseParameterSyntax) {
+    init(node: EnumCaseParameterSyntax, file: SwiftFile) {
         let label = [node.firstName?.text, node.secondName?.text]
             .compactMap { $0 }
             .joined(separator: " ")
@@ -17,5 +17,6 @@ extension EnumCaseParameter {
         self.label = label.isEmpty ? nil : label
         self.typeAnnotation = node.type.typeAnnotation
         self.text = node.trimmedDescription
+        self.swiftFile = file
     }
 }

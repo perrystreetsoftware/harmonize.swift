@@ -9,7 +9,7 @@ import Foundation
 import SwiftSyntax
 
 extension EnumCase {
-    static func create(from node: EnumCaseDeclSyntax) -> [EnumCase] {
+    static func create(from node: EnumCaseDeclSyntax, file: SwiftFile) -> [EnumCase] {
         let attributes = node.attributes.attributes
         let modifiers = node.modifiers.modifiers
         
@@ -17,11 +17,12 @@ extension EnumCase {
             EnumCase(
                 name: element.name.text,
                 text: element.trimmedDescription,
+                swiftFile: file,
                 attributes: attributes,
                 modifiers: modifiers,
                 initializerClause: element.rawValue?.initializerClause,
                 parameters: element.parameterClause?.parameters.map {
-                    EnumCaseParameter(node: $0)
+                    EnumCaseParameter(node: $0, file: file)
                 } ?? []
             )
         }
