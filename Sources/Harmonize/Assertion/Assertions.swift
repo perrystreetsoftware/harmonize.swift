@@ -64,4 +64,18 @@ public extension Array {
             )
         }
     }
+    
+    package func assertCount(
+        count: Int,
+        message: String? = nil,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard self.count != count else { return }
+        XCTFail(
+            message ?? "expected count \(count), got \(self.count)",
+            file: file,
+            line: line
+        )
+    }
 }

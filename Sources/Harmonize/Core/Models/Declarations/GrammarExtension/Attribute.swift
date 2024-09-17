@@ -7,8 +7,7 @@
 
 import Foundation
 
-/// TODO: investigate if it's worth it to make `args` to be type-safe.
-
+// TODO: investigate if it's worth it to make `args` to be type-safe.
 public struct Attribute: Equatable {
     public let name: String
     public let annotation: Annotation

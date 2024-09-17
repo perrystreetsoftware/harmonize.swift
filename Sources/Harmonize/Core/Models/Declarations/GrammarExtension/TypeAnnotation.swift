@@ -6,6 +6,10 @@ public struct TypeAnnotation: Equatable {
     
     public let isOptional: Bool
     
+    public var annotation: String {
+        isOptional ? "Optional<\(name.replacingOccurrences(of: "?", with: ""))>" : name
+    }
+    
     public init(name: String, isOptional: Bool) {
         self.name = name
         self.isOptional = isOptional
