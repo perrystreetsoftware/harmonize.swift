@@ -154,4 +154,53 @@ final class FiltersTests: XCTestCase {
         properties.withDidSet { $0?.contains("didset") ?? false }.assertNotEmpty()
         properties.withWillSet { $0?.contains("willset") ?? false }.assertNotEmpty()
     }
+    
+    func testFileSourceProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/")
+        scope.classes(includeNested: true)
+            .withFileSource { $0.filePath.pathComponents.contains("NamedDeclarations") }
+            .assertCount(count: 3)
+    }
+    
+    func testFunctionsProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Functions")
+        scope.classes(includeNested: true)
+            .withFunctions { $0.modifiers.contains(.private) }
+            .assertCount(count: 1)
+    }
+    
+    func testInitializeClauseProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/InitializerClauses")
+        scope.properties(includeNested: true)
+            .withInitializerClause { $0.value.contains("42") }
+            .assertCount(count: 2)
+    }
+    
+    func testInitializersProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Initializers")
+        
+        scope.structs(includeNested: true)
+            .withInitializers { $0.parameters.isEmpty }
+            .assertCount(count: 1)
+        
+        scope.extensions()
+            .withInitializers { !$0.parameters.isEmpty }
+            .assertCount(count: 1)
+    }
+    
+    func testParametersProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Properties")
+        
+        scope.initializers()
+            .withParameters { $0.name == "parameter" }
+            .assertCount(count: 1)
+    }
+    
+    func testPropertiesProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Properties")
+        
+        scope.initializers()
+            .withProperties { $0.name == "variable" }
+            .assertCount(count: 1)
+    }
 }
