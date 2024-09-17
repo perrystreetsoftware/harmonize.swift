@@ -82,4 +82,32 @@ final class FiltersTests: XCTestCase {
             .withAttribute(annotation: .published)
             .assertCount(count: 2)
     }
+    
+    func testTypeAnnotationProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Types")
+        
+        scope.properties(includeNested: true)
+            .withType(Int.self)
+            .assertCount(count: 1)
+        
+        scope.properties(includeNested: true)
+            .withInferredType()
+            .assertCount(count: 1)
+        
+        scope.properties(includeNested: true)
+            .withType(named: "AppMainViewModel")
+            .assertCount(count: 1)
+        
+        scope.properties(includeNested: true)
+            .withType(AppMainViewModel.self)
+            .assertCount(count: 1)
+        
+        scope.properties(includeNested: true)
+            .withType(String?.self)
+            .assertCount(count: 1)
+        
+        scope.properties(includeNested: true)
+            .withType { $0 == String?.self }
+            .assertCount(count: 1)
+    }
 }
