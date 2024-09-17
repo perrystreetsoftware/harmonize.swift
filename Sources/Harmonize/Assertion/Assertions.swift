@@ -65,7 +65,7 @@ public extension Array {
         }
     }
     
-    func assertCount(
+    package func assertCount(
         count: Int,
         message: String? = nil,
         file: StaticString = #filePath,
