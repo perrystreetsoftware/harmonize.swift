@@ -110,4 +110,24 @@ final class FiltersTests: XCTestCase {
             .withType { $0 == String?.self }
             .assertCount(count: 1)
     }
+    
+    func testBodyProvidingFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Body")
+        
+        scope.functions(includeNested: true)
+            .withBody { $0.contains("makeACall()") }
+            .assertCount(count: 1)
+        
+        scope.functions(includeNested: true)
+            .withoutBody { $0.contains("makeACall()") }
+            .assertNotEmpty()
+    }
+    
+    func testDeclarationFilters() throws {
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Body")
+        
+        scope.classes(includeNested: true)
+            .withText { $0.contains("func testing()") }
+            .assertCount(count: 1)
+    }
 }
