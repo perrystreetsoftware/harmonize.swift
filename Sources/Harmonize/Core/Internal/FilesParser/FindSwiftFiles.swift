@@ -8,13 +8,15 @@
 import Foundation
 
 /// The internal implementation responsible for Swift File lookup through the source.
-internal class FilesFinder {
+internal class FindSwiftFiles {
     private let workingDirectory: URL
     private let config: Config
+    private let findParseableFolders: FindParseableFolders
 
     init(_ file: StaticString) {
-        self.workingDirectory = try! URLResolver.resolveProjectRootPath(file)
+        self.workingDirectory = try! ResolveProjectWorkingDirectory()(file)
         self.config = Config(file: file)
+        self.findParseableFolders = FindParseableFolders()
     }
     
     internal func callAsFunction(
@@ -28,26 +30,28 @@ internal class FilesFinder {
             url = workingDirectory.appendingPathComponent(folder).standardized
             
             if !pathExists(path: url.absoluteString) {
-                return self(
-                    folders: folders(containing: folder, in: workingDirectory),
+                return findSwiftFilesFromFolders(
+                    folders: findParseableFolders(containing: folder, in: workingDirectory),
                     inclusions: inclusions,
                     exclusions: exclusions
                 )
             }
         }
         
-        return self(url: url, inclusions: inclusions, exclusions: exclusions)
+        return findSwiftFiles(url: url, inclusions: inclusions, exclusions: exclusions)
     }
     
-    private func callAsFunction(
+    private func findSwiftFilesFromFolders(
         folders: [URL],
         inclusions: [String],
         exclusions: [String]
     ) -> [SwiftFile] {
-        folders.flatMap { self(url: $0, inclusions: inclusions, exclusions: exclusions) }
+        folders.flatMap {
+            findSwiftFiles(url: $0, inclusions: inclusions, exclusions: exclusions)
+        }
     }
     
-    private func callAsFunction(
+    private func findSwiftFiles(
         url: URL,
         inclusions: [String],
         exclusions: [String]
@@ -112,29 +116,5 @@ internal class FilesFinder {
         }
         
         return !fileOrParentIsContainedInArray(array: exclusions)
-    }
-    
-    private func folders(containing pathComponent: String, in directory: URL) -> [URL] {
-        guard let enumerator = FileManager.default.enumerator(
-            at: directory,
-            includingPropertiesForKeys: [.isDirectoryKey],
-            options: [.skipsHiddenFiles]
-        )
-        else { return [] }
-        
-        var folders = [URL]()
-        
-        for case let url as URL in enumerator {
-            let isDirectory = try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory
-            
-            if isDirectory ?? false {
-                if url.pathComponents.joined(separator: "/").contains(pathComponent) {
-                    folders.append(url)
-                    enumerator.skipDescendants()
-                }
-            }
-        }
-        
-        return folders
     }
 }

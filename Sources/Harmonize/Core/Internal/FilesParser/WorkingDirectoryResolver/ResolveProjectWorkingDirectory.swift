@@ -1,5 +1,5 @@
 //
-//  URLResolver.swift
+//  ResolveProjectWorkingDirectory.swift
 //
 //
 //  Created by Lucas Cavalcante on 9/6/24.
@@ -12,10 +12,8 @@ import Foundation
 ///
 /// We could seek for `Package.swift` but that would work only for SPM projects. As far as we know, there is no easy way to find the project
 /// working directory and we need to force the library's users to bundle their own `.harmonize.yaml` for this library to be able to find the project's working dir.
-internal class URLResolver {
-    private init() {}
-    
-    static func resolveProjectRootPath(_ file: StaticString) throws -> URL {
+internal final class ResolveProjectWorkingDirectory {
+    func callAsFunction(_ file: StaticString) throws -> URL {
         let currentFile = file.withUTF8Buffer {
             String(decoding: $0, as: UTF8.self)
         }
@@ -26,7 +24,7 @@ internal class URLResolver {
             startingDirectory.appendPathComponent("..")
             startingDirectory.standardize()
 
-            if startingDirectory.configFileExists {
+            if configFileExists(at: startingDirectory) {
                 return startingDirectory
             }
         } while startingDirectory.path != "/"
@@ -34,15 +32,9 @@ internal class URLResolver {
         throw HarmonizeError.configFileNotFound
     }
     
-    static func resolveConfigFilePath(_ file: StaticString) throws -> URL {
-        try resolveProjectRootPath(file).appendingPathComponent(".harmonize.yaml")
-    }
-}
-
-fileprivate extension URL {
-    var configFileExists: Bool {
+    private func configFileExists(at url: URL) -> Bool {
         FileManager.default.fileExists(
-            atPath: self.appendingPathComponent(".harmonize.yaml").path
+            atPath: url.appendingPathComponent(".harmonize.yaml").path
         )
     }
 }

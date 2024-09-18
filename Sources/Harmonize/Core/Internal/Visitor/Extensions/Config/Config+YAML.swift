@@ -15,8 +15,8 @@ extension Config: Decodable {
     }
     
     init(file: StaticString) {
-        let configFilePath = try! URLResolver.resolveConfigFilePath(file)
-        let content = try! String(contentsOfFile: configFilePath.path)
+        let resolveProjectConfigFilePath = ResolveProjectConfigFilePath()
+        let content = try! String(contentsOfFile: resolveProjectConfigFilePath(file).path)
         try! self.init(content)
     }
     

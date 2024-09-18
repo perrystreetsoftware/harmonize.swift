@@ -11,7 +11,7 @@ import Foundation
 /// Provides all declarations and files from a given path.
 internal class HarmonizeScopeBuilder: On, Excluding {
     private let file: StaticString
-    private let findFiles: FilesFinder
+    private let findSwiftFiles: FindSwiftFiles
     
     private var folder: String?
     private var includingOnly: [String] = []
@@ -26,7 +26,7 @@ internal class HarmonizeScopeBuilder: On, Excluding {
         exclusions: [String] = []
     ) {
         self.file = file
-        self.findFiles = FilesFinder(file)
+        self.findSwiftFiles = FindSwiftFiles(file)
         self.folder = folder
         self.includingOnly = includingOnly
         self.exclusions = exclusions
@@ -93,7 +93,7 @@ internal class HarmonizeScopeBuilder: On, Excluding {
     // MARK: -
     
     private func make() -> HarmonizeFilesHolder {
-        let files = findFiles(
+        let files = findSwiftFiles(
             folder: folder,
             inclusions: includingOnly,
             exclusions: exclusions
