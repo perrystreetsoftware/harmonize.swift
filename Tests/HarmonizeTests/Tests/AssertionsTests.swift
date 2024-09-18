@@ -10,33 +10,26 @@ import XCTest
 import Harmonize
 
 final class AssertionsTests: XCTestCase {
+    let productionCode = Harmonize.productionCode().on("SampleApp")
+    let testCode = Harmonize.testCode().on("SampleApp")
+    
     func testAssertEmpty() throws {
-        Harmonize.productionCode().on("Tests")
-            .files()
-            .assertEmpty()
+        productionCode.files().filter { $0.fileName.contains("Tests") }.assertEmpty()
     }
     
     func testAssertNotEmpty() throws {
-        Harmonize.testCode().on("Tests")
-            .files()
-            .assertNotEmpty()
+       testCode.files().assertNotEmpty()
     }
     
     func testAssertTrue() throws {
-        Harmonize.testCode().on("Tests")
-            .files()
-            .assertTrue { $0.fileName.hasSuffix("Tests") }
+        testCode.files().assertTrue { $0.fileName.hasSuffix("Tests") }
     }
     
     func testAssertFalse() throws {
-        Harmonize.testCode().on("Tests")
-            .files()
-            .assertFalse { !$0.fileName.hasSuffix("Tests") }
+        testCode.files().assertFalse { !$0.fileName.hasSuffix("Tests") }
     }
     
     func testAssertCount() throws {
-        Harmonize.productionCode().on("Fixtures/SampleApp")
-            .files()
-            .assertCount(count: 2)
+        productionCode.files().assertCount(count: 2)
     }
 }

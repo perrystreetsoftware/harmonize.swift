@@ -10,10 +10,17 @@ import Harmonize
 import XCTest
 
 final class HarmonizeTests: XCTestCase {
+    private let productionAndTestCode = Harmonize.productionAndTestCode()
+        .on("Fixtures/SampleApp")
+    
+    private let productionCode = Harmonize.productionCode()
+        .on("Fixtures/SampleApp")
+    
+    private let testCode = Harmonize.testCode()
+        .on("Fixtures/SampleApp")
+    
     func testCreatesScopesWithProductionAndTestCode() throws {
-        let scope = Harmonize.productionAndTestCode()
-            .on("Fixtures/SampleApp")
-        
+        let scope = productionAndTestCode
         let fileNames = scope.files().map { $0.fileName }
         let edgeCases = ["MathTests.swift", "UseCases.swift", "ModelsTests.swift"]
         
@@ -25,8 +32,7 @@ final class HarmonizeTests: XCTestCase {
     }
     
     func testCreatesScopesWithProductionAndTestCodeExcludingFiles() throws {
-        let scope = Harmonize.productionAndTestCode()
-            .on("Fixtures/SampleApp")
+        let scope = productionAndTestCode
             .excluding("MathTests.swift", "UseCases.swift", "ModelsTests.swift")
         
         let fileNames = scope.files().map { $0.fileName }
@@ -39,10 +45,7 @@ final class HarmonizeTests: XCTestCase {
     }
     
     func testCreatesScopesWithProductionAndTestCodeExcludingPath() throws {
-        let scope = Harmonize.productionAndTestCode()
-            .on("Fixtures/SampleApp")
-            .excluding("Tests")
-        
+        let scope = productionAndTestCode.excluding("Tests")
         let fileNames = scope.files().map { $0.fileName }
         
         XCTAssertEqual(scope.files().count, 2)
@@ -53,9 +56,7 @@ final class HarmonizeTests: XCTestCase {
     }
 
     func testCreatesScopesWithProductionCode() throws {
-        let scope = Harmonize.productionCode()
-            .on("Fixtures/SampleApp")
-        
+        let scope = productionCode
         let fileNames = scope.files().map { $0.fileName }
     
         XCTAssertEqual(scope.files().count, 2)
@@ -63,9 +64,7 @@ final class HarmonizeTests: XCTestCase {
     }
     
     func testCreatesScopesWithTestCode() throws {
-        let scope = Harmonize.testCode()
-            .on("Fixtures/SampleApp")
-        
+        let scope = testCode
         let fileNames = scope.files().map { $0.fileName }
     
         XCTAssertEqual(scope.files().count, 3)
