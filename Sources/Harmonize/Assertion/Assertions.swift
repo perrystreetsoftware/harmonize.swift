@@ -63,9 +63,14 @@ public extension Array {
         file: StaticString = #filePath,
         line: UInt = #line
     ) where Element == SwiftFile {
-        for element in self where condition(element) {
+        for element in self where !condition(element) {
+            let fallback = """
+            Expected true but got false on: \(element.fileName)
+            at path: \(element.filePath.absoluteString)
+            """
+            
             XCTFail(
-                message ?? "expected true got false on element: \(element)",
+                message ?? fallback,
                 file: file,
                 line: line
             )
@@ -78,7 +83,7 @@ public extension Array {
         file: StaticString = #filePath,
         line: UInt = #line
     ) where Element: Declaration & FileSourceProviding {
-        for element in self where condition(element) {
+        for element in self where !condition(element) {
             let name = (element as? NamedDeclaration)?.name ?? ""
             let fallback = """
             Expected true but got false on: \(type(of: element)) \(name)
@@ -99,7 +104,7 @@ public extension Array {
         file: StaticString = #filePath,
         line: UInt = #line
     ) where Element == SwiftFile {
-        for element in self where !condition(element) {
+        for element in self where condition(element) {
             XCTFail(
                 message ?? "expected false got true on element: \(element)",
                 file: file,
@@ -114,7 +119,7 @@ public extension Array {
         file: StaticString = #filePath,
         line: UInt = #line
     ) where Element: Declaration & FileSourceProviding {
-        for element in self where !condition(element) {
+        for element in self where condition(element) {
             let name = (element as? NamedDeclaration)?.name ?? ""
             let fallback = """
             Expected false but got true on: \(type(of: element)) \(name)

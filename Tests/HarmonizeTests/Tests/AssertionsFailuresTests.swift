@@ -18,23 +18,27 @@ final class AssertionsFailuresTests: XCTestCase {
     private let productionCode = Harmonize.productionCode().on("SampleApp")
     
     func testAssertEmptyFailure() throws {
-        testCode.files().assertEmpty()
+        ["Test"].assertEmpty()
     }
     
     func testAssertNotEmptyFailure() throws {
-        productionCode.files().filter { $0.fileName.contains("Tests") }.assertNotEmpty()
+        [].assertNotEmpty()
     }
     
     func testAssertTrueFailure() throws {
-        testCode.files().assertTrue { !$0.fileName.hasSuffix("Tests") }
+        testCode.files().assertTrue { _ in
+            false
+        }
     }
     
     func testAssertFalseFailure() throws {
-       testCode.files().assertFalse { $0.fileName.hasSuffix("Tests") }
+        testCode.files().assertFalse { _ in
+            true
+        }
     }
     
     func testAssertCountFailure() throws {
-        productionCode.files().assertCount(count: 3)
+        [].assertCount(count: 3)
     }
 }
 

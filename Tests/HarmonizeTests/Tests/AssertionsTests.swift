@@ -22,11 +22,15 @@ final class AssertionsTests: XCTestCase {
     }
     
     func testAssertTrue() throws {
-        testCode.files().assertTrue { $0.fileName.hasSuffix("Tests") }
+        testCode.files().assertTrue { _ in
+            true
+        }
     }
     
     func testAssertFalse() throws {
-        testCode.files().assertFalse { !$0.fileName.hasSuffix("Tests") }
+        testCode.files().assertFalse { _ in
+            false
+        }
     }
     
     func testAssertCount() throws {
