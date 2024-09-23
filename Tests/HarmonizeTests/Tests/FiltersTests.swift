@@ -37,6 +37,14 @@ final class FiltersTests: XCTestCase {
         scope.classes(includeNested: true)
             .withoutNameContaining("Base", "ViewModel")
             .assertEmpty()
+        
+        scope.classes(includeNested: true)
+            .withoutName(["BaseViewModel", "AppMainViewModel"])
+            .assertCount(count: 1)
+        
+        scope.classes(includeNested: true)
+            .withName(["BaseViewModel"])
+            .assertCount(count: 1)
     }
     
     func testInheritanceProvidingFilters() throws {
