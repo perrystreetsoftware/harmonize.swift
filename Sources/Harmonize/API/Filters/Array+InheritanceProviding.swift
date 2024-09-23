@@ -8,23 +8,23 @@
 import Foundation
 
 public extension Array where Element: InheritanceProviding {
-    func withInheritanceType(_ predicate: (String) -> Bool) -> [Element] {
-        filter { $0.inheritanceTypesNames.contains(where: predicate) }
-    }
-    
     func inheriting(_ anyClass: AnyObject.Type) -> [Element] {
-        inheriting(name: String(describing: anyClass.self))
+        filter { $0.inherits(from: anyClass) }
     }
     
-    func inheriting(name: String) -> [Element] {
-        withInheritanceType { $0 == name }
+    func inheriting(from name: String) -> [Element] {
+        filter { $0.inherits(from: name) }
     }
     
-    func conforming<T>(_ type: T.Type) -> [Element] {
-        conforming(names: String(describing: type.self))
+    func conforming<T>(to proto: T.Type) -> [Element] {
+        filter { $0.conforms(to: proto) }
     }
     
-    func conforming(names: String...) -> [Element] {
-        withInheritanceType { names.contains($0) }
+    func conforming(to names: String...) -> [Element] {
+        filter { $0.conforms(to: names) }
+    }
+    
+    func conforming(to names: [String]) -> [Element] {
+        filter { $0.conforms(to: names) }
     }
 }

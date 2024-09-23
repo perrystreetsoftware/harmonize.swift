@@ -55,16 +55,20 @@ final class FiltersTests: XCTestCase {
             .assertCount(count: 1)
         
         scope.classes(includeNested: true)
-            .inheriting(name: "BaseUseCase")
+            .inheriting(from: "BaseUseCase")
             .assertCount(count: 1)
         
         scope.structs(includeNested: true)
-            .conforming(AgedUserModel.self)
+            .conforming(to: AgedUserModel.self)
             .assertCount(count: 1)
         
         scope.structs(includeNested: true)
-            .conforming(names: "AgedUserModel")
+            .conforming(to: "AgedUserModel")
             .assertCount(count: 1)
+        
+        scope.classes(includeNested: true)
+            .inheriting(from: "BaseUseCase")
+            .assertTrue { $0.inherits(from: BaseUseCase.self) }
     }
     
     func testAttributesProvidingFilters() throws {
