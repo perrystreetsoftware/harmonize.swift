@@ -18,8 +18,5 @@ extension Function {
         self.whereClause = node.genericWhereClause?.trimmedDescription
         self.body = node.body?.statements.asString()
         self.returnClause = ReturnClause.from(node.signature.returnClause?.type.trimmedDescription)
-        self.functionCalls = node.body?.statements.compactMap {
-            $0.item.as(FunctionCallExprSyntax.self)
-        }.map { $0.calledExpression.trimmedDescription } ?? []
     }
 }

@@ -1,13 +1,11 @@
 //
-//  Function.swift
+//  Closure.swift
+//  Harmonize
 //
-//
-//  Created by Lucas Cavalcante on 8/26/24.
+//  Created by Lucas Cavalcante on 10/1/24.
 //
 
-import Foundation
-
-public struct Function: Declaration,
+public struct Closure: Declaration,
                         NamedDeclaration,
                         ParentDeclarationProviding,
                         ChildDeclarationsProviding,
@@ -56,32 +54,10 @@ public struct Function: Declaration,
         children.as(Parameter.self)
     }
     
-    public let returnClause: ReturnClause
-    
-    public let genericClause: String?
-    
-    public let whereClause: String?
-    
     public let body: String?
     
-    /// The list of function calls happening in this function, including calls from nested functions or closures.
-    ///
-    /// Given this function:
-    ///
-    /// ```swift
-    /// func sampleCode() {
-    ///     closure {
-    ///         functionCall()
-    ///     }
-    ///
-    ///     functionCall()
-    /// }
-    /// ```
-    ///
-    /// calling this will return: `["closure", "functionCall", "functionCall"]`.
-    public var functionCalls: [String] {
-        children.as(FunctionCall.self).map { $0.text }
-    }
+    /// All others functions reference this function's body invokes.
+    public let functionCalls: [String]
     
     public func invokes(_ function: String) -> Bool {
         functionCalls.contains(function)

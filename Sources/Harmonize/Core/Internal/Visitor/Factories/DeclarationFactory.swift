@@ -26,6 +26,10 @@ class DeclarationFactory {
         Parameter(node: node, file: file)
     }
     
+    func create(_ node: FunctionCallExprSyntax) -> [FunctionCall] {
+        [FunctionCall(text: node.calledExpression.trimmedDescription)] + children.as(FunctionCall.self)
+    }
+    
     func create(_ node: StructDeclSyntax) -> Struct {
         var model = Struct(node: node, file: file)
         model.children = withUpdatedChildrenParent(parent: model)
