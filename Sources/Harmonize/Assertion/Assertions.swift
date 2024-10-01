@@ -58,10 +58,10 @@ public extension Array {
     }
 
     func assertTrue(
-        condition: (Element) -> Bool,
         message: String? = nil,
         file: StaticString = #filePath,
-        line: UInt = #line
+        line: UInt = #line,
+        condition: (Element) -> Bool
     ) where Element == SwiftFile {
         for element in self where !condition(element) {
             let fallback = """
@@ -78,10 +78,10 @@ public extension Array {
     }
     
     func assertTrue(
-        condition: (Element) -> Bool,
         message: String? = nil,
         file: StaticString = #filePath,
-        line: UInt = #line
+        line: UInt = #line,
+        condition: (Element) -> Bool
     ) where Element: Declaration & FileSourceProviding {
         for element in self where !condition(element) {
             let name = (element as? NamedDeclaration)?.name ?? ""
@@ -99,10 +99,10 @@ public extension Array {
     }
 
     func assertFalse(
-        condition: (Element) -> Bool,
         message: String? = nil,
         file: StaticString = #filePath,
-        line: UInt = #line
+        line: UInt = #line,
+        condition: (Element) -> Bool
     ) where Element == SwiftFile {
         for element in self where condition(element) {
             XCTFail(
@@ -114,10 +114,10 @@ public extension Array {
     }
     
     func assertFalse(
-        condition: (Element) -> Bool,
         message: String? = nil,
         file: StaticString = #filePath,
-        line: UInt = #line
+        line: UInt = #line,
+        condition: (Element) -> Bool
     ) where Element: Declaration & FileSourceProviding {
         for element in self where condition(element) {
             let name = (element as? NamedDeclaration)?.name ?? ""
