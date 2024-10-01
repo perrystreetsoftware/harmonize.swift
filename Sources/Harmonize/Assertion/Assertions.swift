@@ -78,7 +78,7 @@ public extension Array {
     }
     
     func assertTrue(
-        message: String? = nil,
+        message: ((Element) -> String)? = nil,
         file: StaticString = #filePath,
         line: UInt = #line,
         condition: (Element) -> Bool
@@ -91,7 +91,7 @@ public extension Array {
             """
             
             XCTFail(
-                message ?? fallback,
+                message?(element) ?? fallback,
                 file: file,
                 line: line
             )
@@ -114,7 +114,7 @@ public extension Array {
     }
     
     func assertFalse(
-        message: String? = nil,
+        message: ((Element) -> String)? = nil,
         file: StaticString = #filePath,
         line: UInt = #line,
         condition: (Element) -> Bool
@@ -127,7 +127,7 @@ public extension Array {
             """
             
             XCTFail(
-                message ?? fallback,
+                message?(element) ?? fallback,
                 file: file,
                 line: line
             )
