@@ -50,12 +50,24 @@ internal class HarmonizeScopeBuilder: On, Excluding {
         declarations(includeNested: includeNested).as(Class.self)
     }
     
+    func classes() -> [Class] {
+        classes(includeNested: false)
+    }
+    
     func declarations(includeNested: Bool) -> [Declaration] {
         includeNested ? filesHolder.declarations : filesHolder.rootDeclarations
     }
     
+    func declarations() -> [Declaration] {
+        declarations(includeNested: false)
+    }
+    
     func enums(includeNested: Bool) -> [Enum] {
         declarations(includeNested: includeNested).as(Enum.self)
+    }
+    
+    func enums() -> [Enum] {
+        enums(includeNested: false)
     }
     
     func extensions() -> [Extension] {
@@ -70,6 +82,10 @@ internal class HarmonizeScopeBuilder: On, Excluding {
         declarations(includeNested: includeNested).as(Function.self)
     }
     
+    func functions() -> [Function] {
+        functions(includeNested: false)
+    }
+    
     func imports() -> [Import] {
         declarations(includeNested: false).as(Import.self)
     }
@@ -82,12 +98,24 @@ internal class HarmonizeScopeBuilder: On, Excluding {
         declarations(includeNested: includeNested).as(Variable.self)
     }
     
+    func variables() -> [Variable] {
+        variables(includeNested: false)
+    }
+    
     func protocols(includeNested: Bool) -> [ProtocolDeclaration] {
         declarations(includeNested: includeNested).as(ProtocolDeclaration.self)
     }
     
+    func protocols() -> [ProtocolDeclaration] {
+        protocols(includeNested: false)
+    }
+    
     func structs(includeNested: Bool) -> [Struct] {
         declarations(includeNested: includeNested).as(Struct.self)
+    }
+    
+    func structs() -> [Struct] {
+        structs(includeNested: false)
     }
     
     // MARK: -
