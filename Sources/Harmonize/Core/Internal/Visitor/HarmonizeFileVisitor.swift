@@ -14,11 +14,11 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
         rootNode.declarations
     }
     
-    public init(sourceFile: SwiftFile) throws {
+    public init(sourceFile: SwiftFile) {
         self.sourceFile = sourceFile
         super.init(viewMode: .fixedUp)
         
-        let source = try Parser.parse(source: String(contentsOf: sourceFile.filePath))
+        let source = Parser.parse(source: sourceFile.sourceText ?? "")
         walk(source)
         declarations.append(contentsOf: rootDeclarations)
     }

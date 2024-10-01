@@ -19,6 +19,12 @@ internal class FindSwiftFiles {
         self.findParseableFolders = FindParseableFolders()
     }
     
+    init(_ workingDirectory: URL) {
+        self.workingDirectory = workingDirectory
+        self.config = Config(excludePaths: [])
+        self.findParseableFolders = FindParseableFolders()
+    }
+    
     internal func callAsFunction(
         folder: String?,
         inclusions: [String],
@@ -56,7 +62,7 @@ internal class FindSwiftFiles {
         inclusions: [String],
         exclusions: [String]
     ) -> [SwiftFile] {
-        let files = FileManager.default.enumerator(
+        let urls = FileManager.default.enumerator(
             at: url,
             includingPropertiesForKeys: nil,
             options: [.skipsHiddenFiles]
@@ -70,8 +76,17 @@ internal class FindSwiftFiles {
                 inclusions: inclusions,
                 exclusions: config.excludePaths + exclusions
             )
+        } ?? []
+        
+        guard !urls.isEmpty else { return [] }
+        
+        var files = [SwiftFile]()
+        
+        DispatchQueue.concurrentPerform(iterations: urls.count) { index in
+            if let file = try? SwiftFile(url: urls[index]) {
+                files.append(file)
+            }
         }
-        .compactMap(makeAsSwiftFile) ?? []
 
         return files
     }
