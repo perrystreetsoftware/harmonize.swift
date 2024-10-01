@@ -182,6 +182,11 @@ final class FunctionsTests: XCTestCase {
         XCTAssertEqual(functionBody, body)
     }
     
+    func testAssertCanParseFunctionBodyFunctionCalls() throws {
+        let function = named("withReturnClause")
+        XCTAssertEqual(function.invokes("noLabelAtAll"), true)
+    }
+    
     private func named(_ name: String, includeNested: Bool = true) -> Function {
         harmonize.functions(includeNested: includeNested).first {
             $0.name == name

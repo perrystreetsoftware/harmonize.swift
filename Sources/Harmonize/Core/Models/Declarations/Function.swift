@@ -63,4 +63,11 @@ public struct Function: Declaration,
     public let whereClause: String?
     
     public let body: String?
+    
+    /// All others functions reference this function's body invokes.
+    public let functionCalls: [String]
+    
+    public func invokes(_ function: String) -> Bool {
+        functionCalls.contains(function)
+    }
 }
