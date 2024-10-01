@@ -16,12 +16,20 @@ public extension Array where Element: NamedDeclaration {
         filter { predicate($0.name) }
     }
     
-    /// Filters the array to include only elements whose names satifies the given predicate.
+    /// Filters the array to include only elements whose names are in the given names.
     ///
-    /// - Parameter predicate: names to match condition.
+    /// - Parameter names: names to match condition.
     /// - Returns: An array containing the elements satisfying the given predicate.
     func withName(_ names: [String]) -> [Element] {
         withName(names.contains)
+    }
+    
+    /// Filters the array to include only elements whose names satifies the given name.
+    ///
+    /// - Parameter name: name to match condition.
+    /// - Returns: An array containing the elements satisfying the given predicate.
+    func withName(_ name: String) -> [Element] {
+        withName([name])
     }
     
     /// Filters the array to exclude elements whose names satifies the given predicate.
@@ -32,7 +40,7 @@ public extension Array where Element: NamedDeclaration {
         filter { !predicate($0.name) }
     }
     
-    /// Filters the array to exclude elements whose names satifies the given predicate.
+    /// Filters the array to exclude elements whose names are in the given names.
     ///
     /// - Parameter names: names to exclude.
     /// - Returns: An array containing the elements satisfying the given predicate.

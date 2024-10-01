@@ -137,7 +137,7 @@ public class HarmonizeFileVisitor: SyntaxVisitor {
     }
     
     private func appendingChildrenFrom(_ declarations: [Declaration]) {
-        let childrenProviding = declarations as? [ChildrenDeclarationProviding] ?? []
+        let childrenProviding = declarations as? [ChildDeclarationsProviding] ?? []
         let children = childrenProviding.flatMap { $0.children }
         self.declarations.append(contentsOf: children)
     }

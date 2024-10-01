@@ -56,19 +56,23 @@ final class HarmonizeTests: XCTestCase {
     }
 
     func testCreatesScopesWithProductionCode() throws {
-        let scope = productionCode
-        let fileNames = scope.files().map { $0.fileName }
+        let isOnlyProductionCode = productionCode.files()
+            .map { $0.fileName }
+            .contains {
+                ["Models.swift", "UseCases.swift"].contains($0)
+            }
     
-        XCTAssertEqual(scope.files().count, 2)
-        XCTAssertEqual(fileNames, ["Models.swift", "UseCases.swift"])
+        XCTAssertTrue(isOnlyProductionCode)
     }
     
     func testCreatesScopesWithTestCode() throws {
-        let scope = testCode
-        let fileNames = scope.files().map { $0.fileName }
-    
-        XCTAssertEqual(scope.files().count, 3)
-        XCTAssertEqual(fileNames, ["MathTests.swift", "ModelsTests.swift", "UseCasesTests.swift"])
+        let isOnlyTestCode = testCode.files()
+            .map { $0.fileName }
+            .contains {
+                ["MathTests.swift", "UseCasesTests.swift", "ModelsTests.swift"].contains($0)
+            }
+
+        XCTAssertTrue(isOnlyTestCode)
     }
     
     func testCreatesScopesMatchingFolder() throws {

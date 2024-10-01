@@ -8,10 +8,14 @@
 import Foundation
 
 public struct Extension: Declaration,
-                         ChildrenDeclarationProviding,
+                         ChildDeclarationsProviding,
+                         ClassesProviding,
+                         ProtocolsProviding,
+                         EnumsProviding,
+                         StructsProviding,
                          FileSourceProviding,
                          InheritanceProviding,
-                         PropertiesProviding,
+                         VariablesProviding,
                          ModifiersProviding,
                          AttributesProviding,
                          FunctionsProviding,
@@ -33,8 +37,24 @@ public struct Extension: Declaration,
     
     public var genericWhereClause: String?
     
-    public var properties: [Property] {
-        children.as(Property.self)
+    public var classes: [Class] {
+        children.as(Class.self)
+    }
+    
+    public var enums: [Enum] {
+        children.as(Enum.self)
+    }
+    
+    public var structs: [Struct] {
+        children.as(Struct.self)
+    }
+    
+    public var protocols: [ProtocolDeclaration] {
+        children.as(ProtocolDeclaration.self)
+    }
+    
+    public var variables: [Variable] {
+        children.as(Variable.self)
     }
     
     public var functions: [Function] {

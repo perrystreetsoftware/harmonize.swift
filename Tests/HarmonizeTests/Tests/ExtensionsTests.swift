@@ -39,7 +39,7 @@ final class ExtensionsTests: XCTestCase {
     
     func testAssertCanParseExtensionsProperties() throws {
         let extensions = harmonize.extensions()
-        let properties = extensions.flatMap { $0.properties }
+        let properties = extensions.flatMap { $0.variables }
         
         XCTAssertEqual(properties.count, 1)
         XCTAssertEqual(properties.first?.name, "allCases")

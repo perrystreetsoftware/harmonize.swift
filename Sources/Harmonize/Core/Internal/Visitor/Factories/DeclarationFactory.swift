@@ -32,8 +32,8 @@ class DeclarationFactory {
         return model
     }
     
-    func create(_ node: VariableDeclSyntax) -> [Property] {
-        Property.create(from: node, file: file)
+    func create(_ node: VariableDeclSyntax) -> [Variable] {
+        Variable.create(from: node, file: file)
     }
     
     func create(_ node: ProtocolDeclSyntax) -> ProtocolDeclaration {

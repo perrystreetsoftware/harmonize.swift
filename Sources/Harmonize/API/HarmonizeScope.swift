@@ -41,7 +41,7 @@ public protocol HarmonizeScope {
     /// A collection of swift `var` and `let` declaration.
     /// - parameter includeNested: if true variable and constant declarations within another declaration are included, otherwise returns only top-levels declarations. Defaults to true.
     /// - returns: the variables and constants.
-    func properties(includeNested: Bool) -> [Property]
+    func variables(includeNested: Bool) -> [Variable]
     
     /// A collection of swift `protocol` declaration.
     /// - parameter includeNested: if true protocol declarations within another declaration are included. Defaults to true.

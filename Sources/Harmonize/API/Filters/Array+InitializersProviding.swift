@@ -11,4 +11,8 @@ public extension Array where Element: InitializersProviding {
     func withInitializers(_ predicate: (Initializer) -> Bool) -> [Element] {
         filter { $0.initializers.contains(where: predicate) }
     }
+    
+    func initializers() -> [Initializer] {
+        flatMap { $0.initializers }
+    }
 }

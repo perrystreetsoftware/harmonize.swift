@@ -39,7 +39,7 @@ final class StructsTests: XCTestCase {
     
     func testAssertCanParseStructsProperties() throws {
         let structs = harmonize.structs(includeNested: true)
-        let properties = structs.map { $0.properties }
+        let properties = structs.map { $0.variables }
         
         let names = properties.flatMap { $0.map { $0.name } }
         let types = properties.flatMap { $0.compactMap { $0.typeAnnotation } }.map { $0.name }

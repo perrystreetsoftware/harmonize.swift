@@ -1,6 +1,6 @@
 import Foundation
 
-/// Swift source file containing types such as classes, functions, properties etc.
+/// Swift source file containing types such as classes, functions, variables etc.
 public class SwiftFile {
     public let fileHandle: FileHandle
     

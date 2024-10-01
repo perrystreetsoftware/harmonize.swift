@@ -13,4 +13,8 @@ public extension Array where Element: FileSourceProviding {
     ) -> [Element] {
         filter { predicate(($0.fileName, $0.filePath)) }
     }
+    
+    func imports() -> [Import] {
+        flatMap { $0.swiftFile.declarations.as(Import.self) }
+    }
 }

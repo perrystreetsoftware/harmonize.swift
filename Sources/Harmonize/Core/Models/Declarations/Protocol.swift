@@ -3,10 +3,10 @@ import Foundation
 public struct ProtocolDeclaration: Declaration,
                                    NamedDeclaration,
                                    ParentDeclarationProviding,
-                                   ChildrenDeclarationProviding,
+                                   ChildDeclarationsProviding,
                                    FileSourceProviding,
                                    InheritanceProviding,
-                                   PropertiesProviding,
+                                   VariablesProviding,
                                    AttributesProviding,
                                    FunctionsProviding,
                                    ModifiersProviding,
@@ -27,8 +27,8 @@ public struct ProtocolDeclaration: Declaration,
     
     public var modifiers: [Modifier]
     
-    public var properties: [Property] {
-        children.as(Property.self)
+    public var variables: [Variable] {
+        children.as(Variable.self)
     }
     
     public var functions: [Function] {

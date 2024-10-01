@@ -1,5 +1,5 @@
 //
-//  PropertiesFixtures.swift
+//  VariablesFixtures.swift
 //
 //
 //  Created by Lucas Cavalcante on 9/17/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PropertiesFixtures {
+class VariablesFixtures {
     init(parameter: String) {
         let variable = 42
         print(variable)

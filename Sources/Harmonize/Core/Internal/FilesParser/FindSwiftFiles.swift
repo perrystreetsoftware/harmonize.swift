@@ -82,9 +82,13 @@ internal class FindSwiftFiles {
         
         var files = [SwiftFile]()
         
+        let queue = DispatchQueue(label: "files.sync")
+
         DispatchQueue.concurrentPerform(iterations: urls.count) { index in
             if let file = try? SwiftFile(url: urls[index]) {
-                files.append(file)
+                queue.sync {
+                    files.append(file)
+                }
             }
         }
 

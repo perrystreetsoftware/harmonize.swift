@@ -22,7 +22,7 @@ final class ProtocolTests: XCTestCase {
     
     func testAssertCanParseProtocolsProperties() throws {
         let protocols = harmonize.protocols(includeNested: true)
-        let properties = protocols.flatMap { $0.properties }
+        let properties = protocols.flatMap { $0.variables }
         
         XCTAssertEqual(properties.count, 3)
         XCTAssertEqual(properties.map { $0.name }, ["name", "name", "property"])

@@ -49,10 +49,10 @@ final class InitializersTests: XCTestCase {
     
     func testAssertCanParseInitializersProperties() throws {
         let initializers = harmonize.initializers()
-        let property = initializers.flatMap { $0.properties }.first
+        let variable = initializers.flatMap { $0.variables }.first
         
-        XCTAssertEqual(property?.name, "_")
-        XCTAssertEqual(property?.isOfInferredType, true)
-        XCTAssertEqual(property?.initializerClause?.value, "bar")
+        XCTAssertEqual(variable?.name, "_")
+        XCTAssertEqual(variable?.isOfInferredType, true)
+        XCTAssertEqual(variable?.initializerClause?.value, "bar")
     }
 }

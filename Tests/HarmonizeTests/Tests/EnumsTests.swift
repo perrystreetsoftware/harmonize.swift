@@ -33,7 +33,7 @@ final class EnumsTests: XCTestCase {
     
     func testAssertCanParseEnumsProperties() throws {
         let enums = harmonize.enums(includeNested: true)
-        let properties = enums.flatMap { $0.properties }
+        let properties = enums.flatMap { $0.variables }
         let names = properties.map { $0.name }
         let parent = properties.map { ($0.parent as? Enum)?.name }
         let accessor = properties.first?.accessorBlocks.first

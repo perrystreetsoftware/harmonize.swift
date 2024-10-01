@@ -10,7 +10,11 @@ import Foundation
 public struct Function: Declaration,
                         NamedDeclaration,
                         ParentDeclarationProviding,
-                        ChildrenDeclarationProviding,
+                        ChildDeclarationsProviding,
+                        ClassesProviding,
+                        ProtocolsProviding,
+                        EnumsProviding,
+                        StructsProviding,
                         FileSourceProviding,
                         BodyProviding,
                         ParametersProviding,
@@ -27,6 +31,22 @@ public struct Function: Declaration,
     public var swiftFile: SwiftFile
     
     public var modifiers: [Modifier]
+    
+    public var classes: [Class] {
+        children.as(Class.self)
+    }
+    
+    public var enums: [Enum] {
+        children.as(Enum.self)
+    }
+    
+    public var structs: [Struct] {
+        children.as(Struct.self)
+    }
+    
+    public var protocols: [ProtocolDeclaration] {
+        children.as(ProtocolDeclaration.self)
+    }
     
     public var functions: [Function] {
         children.as(Function.self)

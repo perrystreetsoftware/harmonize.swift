@@ -78,8 +78,8 @@ internal class HarmonizeScopeBuilder: On, Excluding {
         declarations(includeNested: true).as(Initializer.self)
     }
     
-    func properties(includeNested: Bool) -> [Property] {
-        declarations(includeNested: includeNested).as(Property.self)
+    func variables(includeNested: Bool) -> [Variable] {
+        declarations(includeNested: includeNested).as(Variable.self)
     }
     
     func protocols(includeNested: Bool) -> [ProtocolDeclaration] {

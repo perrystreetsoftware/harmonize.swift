@@ -40,7 +40,7 @@ final class ClassesTests: XCTestCase {
     
     func testAssertCanParseClassesProperties() throws {
         let classes = harmonize.classes(includeNested: true)
-        let properties = classes.flatMap { $0.properties }
+        let properties = classes.flatMap { $0.variables }
         let names = properties.map { $0.name }
         let parent = properties.map { ($0.parent as? Class)?.name }
         let values = properties.compactMap { $0.initializerClause }.map { $0.value }

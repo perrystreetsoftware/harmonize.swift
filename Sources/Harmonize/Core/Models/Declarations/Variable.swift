@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Property: Declaration,
+public struct Variable: Declaration,
                         NamedDeclaration,
                         ParentDeclarationProviding,
                         FileSourceProviding,

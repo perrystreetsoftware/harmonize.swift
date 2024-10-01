@@ -74,23 +74,23 @@ final class FiltersTests: XCTestCase {
     func testAttributesProvidingFilters() throws {
         let scope = Harmonize.productionCode().on("Fixtures/Filters/Attributes")
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withPropertyWrapper(Published<Int>.self)
             .assertCount(count: 2)
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withAttribute { $0.name == "@objc" }
             .assertEmpty()
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withAttribute(named: "@objc")
             .assertEmpty()
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withAttribute(named: "@Published")
             .assertCount(count: 2)
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withAttribute(annotation: .published)
             .assertCount(count: 2)
     }
@@ -98,27 +98,27 @@ final class FiltersTests: XCTestCase {
     func testTypeAnnotationProvidingFilters() throws {
         let scope = Harmonize.productionCode().on("Fixtures/Filters/Types")
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withType(Int.self)
             .assertCount(count: 1)
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withInferredType()
             .assertCount(count: 1)
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withType(named: "AppMainViewModel")
             .assertCount(count: 1)
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withType(AppMainViewModel.self)
             .assertCount(count: 1)
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withType(String?.self)
             .assertCount(count: 1)
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withType { $0 == String?.self }
             .assertCount(count: 1)
     }
@@ -142,18 +142,18 @@ final class FiltersTests: XCTestCase {
             .withModifier(.final, .public)
             .assertCount(count: 1)
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withModifier(.public, .privateSet)
             .assertCount(count: 2)
         
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withoutModifier(.public)
             .assertCount(count: 1)
     }
     
     func testAccessorBlocksProvidingFilters() throws {
         let scope = Harmonize.productionCode().on("Fixtures/Filters/Accessors")
-        let properties = scope.properties(includeNested: true)
+        let properties = scope.variables(includeNested: true)
         
         AccessorBlock.Modifier.allCases.forEach {
             properties.withAcessorBlockBody($0)
@@ -183,7 +183,7 @@ final class FiltersTests: XCTestCase {
     
     func testInitializeClauseProvidingFilters() throws {
         let scope = Harmonize.productionCode().on("Fixtures/Filters/InitializerClauses")
-        scope.properties(includeNested: true)
+        scope.variables(includeNested: true)
             .withInitializerClause { $0.value.contains("42") }
             .assertCount(count: 2)
     }
@@ -201,7 +201,7 @@ final class FiltersTests: XCTestCase {
     }
     
     func testParametersProvidingFilters() throws {
-        let scope = Harmonize.productionCode().on("Fixtures/Filters/Properties")
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Variables")
         
         scope.initializers()
             .withParameters { $0.name == "parameter" }
@@ -209,10 +209,10 @@ final class FiltersTests: XCTestCase {
     }
     
     func testPropertiesProvidingFilters() throws {
-        let scope = Harmonize.productionCode().on("Fixtures/Filters/Properties")
+        let scope = Harmonize.productionCode().on("Fixtures/Filters/Variables")
         
         scope.initializers()
-            .withProperties { $0.name == "variable" }
+            .withVariables { $0.name == "variable" }
             .assertCount(count: 1)
     }
 }

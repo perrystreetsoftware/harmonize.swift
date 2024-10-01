@@ -11,4 +11,8 @@ public extension Array where Element: FunctionsProviding {
     func withFunctions(_ predicate: (Function) -> Bool) -> [Element] {
         filter { $0.functions.contains(where: predicate) }
     }
+    
+    func functions() -> [Function] {
+        flatMap { $0.functions }
+    }
 }

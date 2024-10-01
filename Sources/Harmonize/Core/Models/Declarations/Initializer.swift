@@ -9,14 +9,14 @@ import Foundation
 
 public struct Initializer: Declaration,
                            ParentDeclarationProviding,
-                           ChildrenDeclarationProviding,
+                           ChildDeclarationsProviding,
                            FileSourceProviding,
                            BodyProviding,
                            ModifiersProviding,
                            AttributesProviding,
                            ParametersProviding,
                            FunctionsProviding,
-                           PropertiesProviding {
+                           VariablesProviding {
     public var text: String
     
     public var parent: Declaration? = nil
@@ -35,8 +35,8 @@ public struct Initializer: Declaration,
         children.as(Parameter.self)
     }
     
-    public var properties: [Property] {
-        children.as(Property.self)
+    public var variables: [Variable] {
+        children.as(Variable.self)
     }
     
     public var functions: [Function] {
