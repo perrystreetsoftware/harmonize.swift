@@ -21,17 +21,14 @@ let package = Package(
         .target(
             name: "Harmonize",
             dependencies: [
-                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftParser", package: "swift-syntax"),
                 "Yams"
             ]
         ),
         .testTarget(
             name: "HarmonizeTests",
-            dependencies: [
-                "Harmonize",
-                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
-            ]
+            dependencies: ["Harmonize"]
         )
     ]
 )
