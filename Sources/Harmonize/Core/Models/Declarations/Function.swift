@@ -83,11 +83,11 @@ public struct Function: Declaration,
         children.as(FunctionCall.self).map { $0.text }
     }
     
-    public func invokes(_ function: String) -> Bool {
-        functionCalls.contains(function)
+    public func hasCalls(to functions: [String]) -> Bool {
+        functionCalls.contains(where: functions.contains)
     }
     
-    public func invokes(_ predicate: (String) -> Bool) -> Bool {
-        functionCalls.contains(where: predicate)
+    public func hasCalls(to function: String) -> Bool {
+        hasCalls(to: [function])
     }
 }

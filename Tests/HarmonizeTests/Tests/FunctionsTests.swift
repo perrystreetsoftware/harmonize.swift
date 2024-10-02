@@ -184,7 +184,7 @@ final class FunctionsTests: XCTestCase {
     
     func testAssertCanParseFunctionBodyFunctionCalls() throws {
         let function = named("withReturnClause")
-        XCTAssertEqual(function.invokes("noLabelAtAll"), true)
+        XCTAssertEqual(function.hasCalls(to: "noLabelAtAll"), true)
     }
     
     private func named(_ name: String, includeNested: Bool = true) -> Function {
