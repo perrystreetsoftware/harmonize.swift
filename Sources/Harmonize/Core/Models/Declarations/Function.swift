@@ -86,4 +86,8 @@ public struct Function: Declaration,
     public func invokes(_ function: String) -> Bool {
         functionCalls.contains(function)
     }
+    
+    public func invokes(_ predicate: (String) -> Bool) -> Bool {
+        functionCalls.contains(where: predicate)
+    }
 }
