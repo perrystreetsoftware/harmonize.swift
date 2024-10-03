@@ -12,6 +12,7 @@ extension Extension {
     init(node: ExtensionDeclSyntax, file: SwiftFile) {
         self.extendedTypeName = node.extendedType.trimmedDescription
         self.genericWhereClause = node.genericWhereClause?.trimmedDescription
+        self.typeAnnotation = node.extendedType.typeAnnotation
         self.text = node.trimmedDescription
         self.swiftFile = file
         self.inheritanceTypesNames = node.inheritanceClause?.asString() ?? []

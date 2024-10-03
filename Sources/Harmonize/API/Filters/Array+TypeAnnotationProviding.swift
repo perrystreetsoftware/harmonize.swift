@@ -26,4 +26,12 @@ public extension Array where Element: TypeAnnotationProviding {
     func withInferredType() -> [Element] {
         filter { $0.typeAnnotation == nil }
     }
+    
+    func of<T>(_ type: T.Type) -> [Element] {
+        withType(type)
+    }
+    
+    func of(type: String) -> [Element] {
+        withType(named: type)
+    }
 }

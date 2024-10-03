@@ -19,7 +19,8 @@ public struct Extension: Declaration,
                          ModifiersProviding,
                          AttributesProviding,
                          FunctionsProviding,
-                         InitializersProviding {
+                         InitializersProviding,
+                         TypeAnnotationProviding {
     public var text: String
     
     public var children: [Declaration] = []
@@ -32,10 +33,9 @@ public struct Extension: Declaration,
     
     public var modifiers: [Modifier]
     
-    /// The extension's target type name.
-    public var extendedTypeName: String
-    
     public var genericWhereClause: String?
+    
+    public var typeAnnotation: TypeAnnotation?
     
     public var classes: [Class] {
         children.as(Class.self)
