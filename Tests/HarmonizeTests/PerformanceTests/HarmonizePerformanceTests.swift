@@ -1,8 +1,8 @@
 //
 //  HarmonizePerformanceTests.swift
+//  Harmonize
 //
-//
-//  Created by Lucas Cavalcante on 9/18/24.
+//  Copyright (c) Perry Street Software 2024. All Rights Reserved.
 //
 
 import Foundation
@@ -14,7 +14,7 @@ final class HarmonizePerformanceTests: XCTestCase {
     
     func testHarmonizePerformance() {
         self.measure {
-            scope.declarations(includeNested: true).assertNotEmpty()
+            scope.classes().assertNotEmpty()
         }
     }
 }

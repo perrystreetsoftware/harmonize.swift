@@ -8,10 +8,9 @@ let package = Package(
     name: "Harmonize",
     platforms: [.macOS(.v13)],
     products: [
-        .library(
-            name: "Harmonize",
-            targets: ["Harmonize"]
-        )
+        .library(name: "Harmonize", targets: ["Harmonize"]),
+        .library(name: "Semantics", targets: ["Semantics"]),
+        .library(name: "Utils", targets: ["Utils"])
     ],
     dependencies: [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "509.0.0"),
@@ -23,12 +22,20 @@ let package = Package(
             dependencies: [
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftParser", package: "swift-syntax"),
-                "Yams"
+                "Yams",
+                "Semantics",
+                "Utils"
             ]
         ),
-        .testTarget(
-            name: "HarmonizeTests",
-            dependencies: ["Harmonize"]
-        )
+        .target(
+            name: "Semantics",
+            dependencies: [
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftParser", package: "swift-syntax")
+            ]
+        ),
+        .target(name: "Utils"),
+        .testTarget(name: "HarmonizeTests", dependencies: ["Harmonize"]),
+        .testTarget(name: "SemanticsTests", dependencies: ["Semantics"])
     ]
 )

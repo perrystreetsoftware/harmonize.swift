@@ -1,8 +1,8 @@
 //
 //  AssertionsFailures.swift
+//  Harmonize
 //
-//
-//  Created by Lucas Cavalcante on 9/13/24.
+//  Copyright (c) Perry Street Software 2024. All Rights Reserved.
 //
 
 import Foundation
@@ -26,13 +26,13 @@ final class AssertionsFailuresTests: XCTestCase {
     }
     
     func testAssertTrueFailure() throws {
-        testCode.files().assertTrue { _ in
+        testCode.sources().assertTrue { _ in
             false
         }
     }
     
     func testAssertFalseFailure() throws {
-        testCode.files().assertFalse { _ in
+        testCode.sources().assertFalse { _ in
             true
         }
     }

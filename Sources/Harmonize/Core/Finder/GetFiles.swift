@@ -1,0 +1,155 @@
+//
+//  GetFiles.swift
+//  Harmonize
+//
+//  Copyright (c) Perry Street Software 2024. All Rights Reserved.
+//
+
+import Foundation
+
+/// The internal implementation responsible for Swift File lookup through the source.
+internal final class GetFiles {
+    private let workingDirectory: URL
+    private let config: Config
+
+    init(_ file: StaticString) {
+        self.workingDirectory = try! ResolveProjectWorkingDirectory()(file)
+        self.config = Config(file: file)
+    }
+    
+    init(_ workingDirectory: URL) {
+        self.workingDirectory = workingDirectory
+        self.config = Config(excludePaths: [])
+    }
+    
+    internal func callAsFunction(
+        folder: String?,
+        inclusions: [String],
+        exclusions: [String]
+    ) -> [SwiftSourceCode] {
+        var url = workingDirectory
+        
+        if let folder = folder, !folder.isEmpty {
+            url = workingDirectory.appendingPathComponent(folder).standardized
+            
+            var isDirectory: ObjCBool = false
+            
+            let pathExistsAndIsDirectory = FileManager.default.fileExists(
+                atPath: url.absoluteString,
+                isDirectory: &isDirectory
+            ) && isDirectory.boolValue
+            
+            if !pathExistsAndIsDirectory {
+                return getFolders(
+                    in: workingDirectory,
+                    containing: folder
+                )
+                .flatMap { folder in
+                    findSwiftFiles(
+                        url: folder,
+                        inclusions: inclusions,
+                        exclusions: exclusions
+                    )
+                }
+            }
+        }
+        
+        return findSwiftFiles(url: url, inclusions: inclusions, exclusions: exclusions)
+    }
+    
+    private func findSwiftFiles(
+        url: URL,
+        inclusions: [String],
+        exclusions: [String]
+    ) -> [SwiftSourceCode] {
+        let urls = FileManager.default.enumerator(
+            at: url,
+            includingPropertiesForKeys: nil,
+            options: [.skipsHiddenFiles]
+        )?
+        .compactMap { $0 as? URL }
+        .filter {
+            includes(
+                file: $0,
+                basePath: url,
+                inclusions: inclusions,
+                exclusions: config.excludePaths + exclusions
+            )
+        } ?? []
+        
+        guard !urls.isEmpty else { return [] }
+        
+        var files = [SwiftSourceCode]()
+        
+        let queue = DispatchQueue(label: "harmonize.files.sync")
+
+        DispatchQueue.concurrentPerform(iterations: urls.count) { index in
+            if let file = SwiftSourceCode(url: urls[index]) {
+                queue.sync {
+                    files.append(file)
+                }
+            }
+        }
+
+        return files
+    }
+    
+    private func includes(
+        file: URL,
+        basePath: URL,
+        inclusions: [String],
+        exclusions: [String]
+    ) -> Bool {
+        guard !file.hasDirectoryPath, file.pathExtension == "swift" else { return false }
+        
+        let parentUrlString = file.absoluteString.replacingOccurrences(of: basePath.absoluteString, with: "")
+        let parentUrl = URL(fileURLWithPath: parentUrlString)
+        
+        func fileOrParentIsContainedInArray(array: [String]) -> Bool {
+            array.contains { element in
+                if element.hasSuffix(".swift") {
+                    return element == file.lastPathComponent
+                }
+                
+                return parentUrl.pathComponents.contains { $0.hasSuffix(element) }
+            }
+        }
+        
+        if !inclusions.isEmpty {
+            return fileOrParentIsContainedInArray(array: inclusions)
+        }
+        
+        return !fileOrParentIsContainedInArray(array: exclusions)
+    }
+    
+    /// The class responsible for looking through a given directory URL
+    /// and finding all folders matching the given path component.
+    ///
+    /// Mostly useful for modularized projects aiming to lint specific repeating folders in different modules.
+    private func getFolders(
+        in directory: URL,
+        containing pathComponent: String
+    ) -> [URL] {
+        guard let enumerator = FileManager.default.enumerator(
+            at: directory,
+            includingPropertiesForKeys: [.isDirectoryKey],
+            options: [.skipsHiddenFiles]
+        )
+        else { return [] }
+        
+        var folders = [URL]()
+        
+        for case let url as URL in enumerator {
+            let isDirectory = try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory
+            
+            if isDirectory ?? false {
+                if url.pathComponents.joined(separator: "/").contains(pathComponent) {
+                    folders.append(url)
+                    enumerator.skipDescendants()
+                }
+            }
+        }
+        
+        return folders
+    }
+}

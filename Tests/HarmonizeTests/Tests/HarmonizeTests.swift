@@ -1,8 +1,8 @@
 //
 //  HarmonizeTests.swift
+//  Harmonize
 //
-//
-//  Created by Lucas Cavalcante on 9/5/24.
+//  Copyright (c) Perry Street Software 2024. All Rights Reserved.
 //
 
 import Foundation
@@ -21,10 +21,10 @@ final class HarmonizeTests: XCTestCase {
     
     func testCreatesScopesWithProductionAndTestCode() throws {
         let scope = productionAndTestCode
-        let fileNames = scope.files().map { $0.fileName }
+        let fileNames = scope.sources().map { $0.fileName }
         let edgeCases = ["MathTests.swift", "UseCases.swift", "ModelsTests.swift"]
         
-        XCTAssertEqual(scope.files().count, 5)
+        XCTAssertEqual(scope.sources().count, 5)
         
         for edgeCase in edgeCases {
             XCTAssert(fileNames.contains(edgeCase), "\(edgeCase) not found in \(fileNames)")
@@ -35,9 +35,9 @@ final class HarmonizeTests: XCTestCase {
         let scope = productionAndTestCode
             .excluding("MathTests.swift", "UseCases.swift", "ModelsTests.swift")
         
-        let fileNames = scope.files().map { $0.fileName }
+        let fileNames = scope.sources().map { $0.fileName }
         
-        XCTAssertEqual(scope.files().count, 2)
+        XCTAssertEqual(scope.sources().count, 2)
         
         for excluded in ["MathTests.swift", "UseCases.swift", "ModelsTests.swift"] {
             XCTAssert(!fileNames.contains(excluded), "\(excluded) found in \(fileNames)")
@@ -46,9 +46,9 @@ final class HarmonizeTests: XCTestCase {
     
     func testCreatesScopesWithProductionAndTestCodeExcludingPath() throws {
         let scope = productionAndTestCode.excluding("Tests")
-        let fileNames = scope.files().map { $0.fileName }
+        let fileNames = scope.sources().map { $0.fileName }
         
-        XCTAssertEqual(scope.files().count, 2)
+        XCTAssertEqual(scope.sources().count, 2)
         
         for excluded in ["MathTests.swift", "UseCasesTests.swift", "ModelsTests.swift"] {
             XCTAssert(!fileNames.contains(excluded), "\(excluded) found in \(fileNames)")
@@ -56,7 +56,7 @@ final class HarmonizeTests: XCTestCase {
     }
 
     func testCreatesScopesWithProductionCode() throws {
-        let isOnlyProductionCode = productionCode.files()
+        let isOnlyProductionCode = productionCode.sources()
             .map { $0.fileName }
             .contains {
                 ["Models.swift", "UseCases.swift"].contains($0)
@@ -66,7 +66,7 @@ final class HarmonizeTests: XCTestCase {
     }
     
     func testCreatesScopesWithTestCode() throws {
-        let isOnlyTestCode = testCode.files()
+        let isOnlyTestCode = testCode.sources()
             .map { $0.fileName }
             .contains {
                 ["MathTests.swift", "UseCasesTests.swift", "ModelsTests.swift"].contains($0)
@@ -86,8 +86,8 @@ final class HarmonizeTests: XCTestCase {
             .on("Sources")
         
         // Sources must have no test code
-        XCTAssertTrue(scope.files().isEmpty)
-        XCTAssertTrue(!prodScope.files().isEmpty)
-        XCTAssertTrue(prodScope.files().contains { !$0.fileName.hasSuffix("Tests") })
+        XCTAssertTrue(scope.sources().isEmpty)
+        XCTAssertTrue(!prodScope.sources().isEmpty)
+        XCTAssertTrue(prodScope.sources().contains { !($0.fileName?.hasSuffix("Tests") == true) })
     }
 }

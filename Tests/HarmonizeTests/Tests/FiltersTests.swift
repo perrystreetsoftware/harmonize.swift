@@ -1,16 +1,16 @@
 //
 //  FiltersTests.swift
-//  
+//  Harmonize
 //
-//  Created by Lucas Cavalcante on 9/15/24.
+//  Copyright (c) Perry Street Software 2024. All Rights Reserved.
 //
 
 import Foundation
-@testable import Harmonize
+import Semantics
+import Harmonize
 import XCTest
 
 final class FiltersTests: XCTestCase {
-    
     func testNamedDeclarationsFilters() throws {
         let scope = Harmonize.productionCode().on("Fixtures/Filters/NamedDeclarations")
         
@@ -49,17 +49,9 @@ final class FiltersTests: XCTestCase {
     
     func testInheritanceProvidingFilters() throws {
         let scope = Harmonize.productionCode().on("Fixtures/Filters/Inheritance")
-
-        scope.classes(includeNested: true)
-            .inheriting(BaseUseCase.self)
-            .assertCount(count: 1)
         
         scope.classes(includeNested: true)
             .inheriting(from: "BaseUseCase")
-            .assertCount(count: 1)
-        
-        scope.structs(includeNested: true)
-            .conforming(to: AgedUserModel.self)
             .assertCount(count: 1)
         
         scope.structs(includeNested: true)
@@ -68,14 +60,14 @@ final class FiltersTests: XCTestCase {
         
         scope.classes(includeNested: true)
             .inheriting(from: "BaseUseCase")
-            .assertTrue { $0.inherits(from: BaseUseCase.self) }
+            .assertTrue { $0.inherits(from: "BaseUseCase") }
     }
     
     func testAttributesProvidingFilters() throws {
         let scope = Harmonize.productionCode().on("Fixtures/Filters/Attributes")
         
         scope.variables(includeNested: true)
-            .withPropertyWrapper(Published<Int>.self)
+            .withAttribute(Published<Int>.self)
             .assertCount(count: 2)
         
         scope.variables(includeNested: true)
@@ -91,7 +83,7 @@ final class FiltersTests: XCTestCase {
             .assertCount(count: 2)
         
         scope.variables(includeNested: true)
-            .withAttribute(annotation: .published)
+            .withAttribute(annotatedWith: .published)
             .assertCount(count: 2)
     }
     
@@ -108,10 +100,6 @@ final class FiltersTests: XCTestCase {
         
         scope.variables(includeNested: true)
             .withType(named: "AppMainViewModel")
-            .assertCount(count: 1)
-        
-        scope.variables(includeNested: true)
-            .withType(AppMainViewModel.self)
             .assertCount(count: 1)
         
         scope.variables(includeNested: true)
@@ -153,25 +141,18 @@ final class FiltersTests: XCTestCase {
     
     func testAccessorBlocksProvidingFilters() throws {
         let scope = Harmonize.productionCode().on("Fixtures/Filters/Accessors")
-        let properties = scope.variables(includeNested: true)
+        let variables = scope.variables(includeNested: true)
         
         AccessorBlock.Modifier.allCases.forEach {
-            properties.withAcessorBlockBody($0)
+            variables.withAccessorBlockBody($0)
                 .assertCount(count: 1)
         }
         
-        properties.withGetter { $0?.contains("getter") ?? false }.assertNotEmpty()
-        properties.withGet { $0?.contains("that's a get") ?? false }.assertNotEmpty()
-        properties.withSet { $0?.contains("newValue") ?? false }.assertNotEmpty()
-        properties.withDidSet { $0?.contains("didset") ?? false }.assertNotEmpty()
-        properties.withWillSet { $0?.contains("willset") ?? false }.assertNotEmpty()
-    }
-    
-    func testFileSourceProvidingFilters() throws {
-        let scope = Harmonize.productionCode().on("Fixtures/Filters/")
-        scope.classes(includeNested: true)
-            .withFileSource { $0.filePath.pathComponents.contains("NamedDeclarations") }
-            .assertCount(count: 3)
+        variables.withGetter { $0?.contains("getter") ?? false }.assertNotEmpty()
+        variables.withGet { $0?.contains("that's a get") ?? false }.assertNotEmpty()
+        variables.withSet { $0?.contains("newValue") ?? false }.assertNotEmpty()
+        variables.withDidSet { $0?.contains("didset") ?? false }.assertNotEmpty()
+        variables.withWillSet { $0?.contains("willset") ?? false }.assertNotEmpty()
     }
     
     func testFunctionsProvidingFilters() throws {

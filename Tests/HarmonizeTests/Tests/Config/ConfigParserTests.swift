@@ -1,16 +1,16 @@
 //
 //  ConfigParserTests.swift
-//  
+//  Harmonize
 //
-//  Created by Lucas Cavalcante on 9/7/24.
+//  Copyright (c) Perry Street Software 2024. All Rights Reserved.
 //
 
 import Foundation
 import XCTest
-import Harmonize
+@testable import Harmonize
 
 final class ConfigParserTests: XCTestCase {
-    func testAssertCanParseConfig() throws {
+    func testParseConfig() throws {
         let source = """
         excludes:
           - Tests
@@ -22,7 +22,7 @@ final class ConfigParserTests: XCTestCase {
         )
     }
     
-    func testAssertCanParseConfigIfSourceIsEmpty() throws {
+    func testParseConfigIfSourceIsEmpty() throws {
         let source = """
         """
         
