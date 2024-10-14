@@ -9,7 +9,12 @@ import Foundation
 import SwiftSyntax
 import SwiftParser
 
-public final class DeclarationsCollector: SyntaxVisitor {
+/// A SyntaxVisitor implementation that collects top-level and nested declarations.
+/// Not focused in performance yet and its behavior may be changed in the future.
+package final class DeclarationsCollector: SyntaxVisitor {
+    /// The original source location either from a file or raw string.
+    private let sourceCodeLocation: SourceCodeLocation
+    
     /// Collection of top-level and nested declarations.
     public private(set) var declarations: [Declaration] = []
     
@@ -43,7 +48,8 @@ public final class DeclarationsCollector: SyntaxVisitor {
     /// Collection of top-level swift variable declarations.
     public private(set) var variables: [Variable] = []
 
-    public init() {
+    package init(sourceCodeLocation: SourceCodeLocation) {
+        self.sourceCodeLocation = sourceCodeLocation
         super.init(viewMode: .fixedUp)
     }
     
@@ -64,7 +70,9 @@ public final class DeclarationsCollector: SyntaxVisitor {
     }
     
     public override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
-        let `class` = startScopeWith(node) { Class(node: node, parent: parentDeclaration) }
+        let `class` = startScopeWith(node) {
+            Class(node: node, parent: parentDeclaration, sourceCodeLocation: sourceCodeLocation)
+        }
         classes.append(`class`)
         return .visitChildren
     }
@@ -74,7 +82,9 @@ public final class DeclarationsCollector: SyntaxVisitor {
     }
     
     public override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
-        let function = startScopeWith(node) { Function(node: node, parent: parentDeclaration) }
+        let function = startScopeWith(node) {
+            Function(node: node, parent: parentDeclaration, sourceCodeLocation: sourceCodeLocation)
+        }
         functions.append(function)
         return .visitChildren
     }
@@ -84,7 +94,9 @@ public final class DeclarationsCollector: SyntaxVisitor {
     }
     
     public override func visit(_ node: ProtocolDeclSyntax) -> SyntaxVisitorContinueKind {
-        let `protocol` = startScopeWith(node) { ProtocolDeclaration(node: node, parent: parentDeclaration) }
+        let `protocol` = startScopeWith(node) {
+            ProtocolDeclaration(node: node, parent: parentDeclaration, sourceCodeLocation: sourceCodeLocation)
+        }
         protocols.append(`protocol`)
         return .visitChildren
     }
@@ -94,7 +106,9 @@ public final class DeclarationsCollector: SyntaxVisitor {
     }
     
     public override func visit(_ node: StructDeclSyntax) -> SyntaxVisitorContinueKind {
-        let `struct` = startScopeWith(node) { Struct(node: node, parent: parentDeclaration) }
+        let `struct` = startScopeWith(node) {
+            Struct(node: node, parent: parentDeclaration, sourceCodeLocation: sourceCodeLocation)
+        }
         structs.append(`struct`)
         return .visitChildren
     }
@@ -104,7 +118,9 @@ public final class DeclarationsCollector: SyntaxVisitor {
     }
     
     public override func visit(_ node: InitializerDeclSyntax) -> SyntaxVisitorContinueKind {
-        let `initializer` = startScopeWith(node) { Initializer(node: node, parent: parentDeclaration) }
+        let `initializer` = startScopeWith(node) {
+            Initializer(node: node, parent: parentDeclaration, sourceCodeLocation: sourceCodeLocation)
+        }
         initializers.append(`initializer`)
         return .visitChildren
     }
@@ -114,7 +130,9 @@ public final class DeclarationsCollector: SyntaxVisitor {
     }
 
     public override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind {
-        let vars = startScopeWith(node) { Variable.variables(from: node, parent: parentDeclaration) }
+        let vars = startScopeWith(node) {
+            Variable.variables(from: node, parent: parentDeclaration, sourceCodeLocation: sourceCodeLocation)
+        }
         variables.append(contentsOf: vars)
         return .visitChildren
     }
@@ -124,7 +142,9 @@ public final class DeclarationsCollector: SyntaxVisitor {
     }
     
     public override func visit(_ node: EnumDeclSyntax) -> SyntaxVisitorContinueKind {
-        let `enum` = startScopeWith(node) { Enum(node: node, parent: parentDeclaration) }
+        let `enum` = startScopeWith(node) {
+            Enum(node: node, parent: parentDeclaration, sourceCodeLocation: sourceCodeLocation)
+        }
         enums.append(`enum`)
         return .visitChildren
     }
@@ -134,7 +154,9 @@ public final class DeclarationsCollector: SyntaxVisitor {
     }
     
     public override func visit(_ node: EnumCaseDeclSyntax) -> SyntaxVisitorContinueKind {
-        _ = startScopeWith(node) { EnumCase.cases(from: node, parent: parentDeclaration) }
+        _ = startScopeWith(node) {
+            EnumCase.cases(from: node, parent: parentDeclaration, sourceCodeLocation: sourceCodeLocation)
+        }
         return .visitChildren
     }
     
@@ -143,7 +165,9 @@ public final class DeclarationsCollector: SyntaxVisitor {
     }
     
     public override func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
-        let `extension` = startScopeWith(node) { Extension(node: node, parent: parentDeclaration) }
+        let `extension` = startScopeWith(node) {
+            Extension(node: node, parent: parentDeclaration, sourceCodeLocation: sourceCodeLocation)
+        }
         extensions.append(`extension`)
         return .visitChildren
     }
@@ -153,13 +177,13 @@ public final class DeclarationsCollector: SyntaxVisitor {
     }
     
     public override func visit(_ node: ImportDeclSyntax) -> SyntaxVisitorContinueKind {
-        imports.append(Import(node))
+        imports.append(Import(node: node, sourceCodeLocation: sourceCodeLocation))
         return .skipChildren
     }
     
     public override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
         _ = startScopeWith(node) {
-            FunctionCall(node: node, parent: parentDeclaration)
+            FunctionCall(node: node, parent: parentDeclaration, sourceCodeLocation: sourceCodeLocation)
         }
         
         return .visitChildren
@@ -167,22 +191,6 @@ public final class DeclarationsCollector: SyntaxVisitor {
     
     public override func visitPost(_ node: FunctionCallExprSyntax) {
         endScope(for: node)
-    }
-    
-    public func clearCollectedNodes() {
-        stack.removeAll()
-        nodes.removeAll()
-        declarations.removeAll()
-        rootDeclarations.removeAll()
-        classes.removeAll()
-        enums.removeAll()
-        extensions.removeAll()
-        functions.removeAll()
-        imports.removeAll()
-        initializers.removeAll()
-        protocols.removeAll()
-        structs.removeAll()
-        variables.removeAll()
     }
     
     private func startScopeWith<T: Declaration>(_ node: SyntaxProtocol, make: () -> [T]) -> [T] {

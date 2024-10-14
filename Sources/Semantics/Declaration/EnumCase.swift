@@ -7,26 +7,41 @@
 
 import SwiftSyntax
 
-public struct EnumCase: Declaration {
-    private var parentNode: EnumCaseDeclSyntax
+public struct EnumCase: Declaration, SyntaxNodeProviding {
+    internal let parentNode: EnumCaseDeclSyntax
     
-    internal var node: EnumCaseElementSyntax
+    public let node: EnumCaseElementSyntax
     
     public let parent: Declaration?
+    
+    public let sourceCodeLocation: SourceCodeLocation
     
     public var description: String {
         node.trimmedDescription
     }
+    
+    internal init(
+        parentNode: EnumCaseDeclSyntax,
+        node: EnumCaseElementSyntax,
+        parent: Declaration?,
+        sourceCodeLocation: SourceCodeLocation
+    ) {
+        self.parentNode = parentNode
+        self.node = node
+        self.parent = parent
+        self.sourceCodeLocation = sourceCodeLocation
+    }
 }
 
-// MARK: - Providers
+// MARK: - Capabilities Comformance
 
 extension EnumCase: NamedDeclaration,
                     AttributesProviding,
                     ModifiersProviding,
                     ParentDeclarationProviding,
                     InitializerClauseProviding,
-                    ParametersProviding {
+                    ParametersProviding,
+                    SourceCodeProviding {
     public var attributes: [Attribute] {
         parentNode.attributes.attributes
     }
@@ -45,32 +60,30 @@ extension EnumCase: NamedDeclaration,
     
     public var parameters: [Parameter] {
         node.parameterClause?.parameters.compactMap {
-            Parameter($0._syntaxNode, parent: parent)
+            Parameter(
+                node: $0._syntaxNode,
+                parent: parent,
+                sourceCodeLocation: sourceCodeLocation
+            )
         } ?? []
     }
 }
 
-// MARK: - SyntaxNodeProviding
+// MARK: - EnumCase Factory
 
-extension EnumCase: SyntaxNodeProviding {
-    init?(_ node: EnumCaseElementSyntax) {
-        self.init(node: node, parent: nil, parentNode: node.parentAs(EnumCaseDeclSyntax.self))
-    }
-    
-    init?(
-        node: EnumCaseElementSyntax,
+extension EnumCase {
+    static func cases(
+        from node: EnumCaseDeclSyntax,
         parent: Declaration?,
-        parentNode: EnumCaseDeclSyntax?
-    ) {
-        guard let parentNode = parentNode else { return nil }
-        self.node = node
-        self.parentNode = parentNode
-        self.parent = parent
-    }
-    
-    static func cases(from node: EnumCaseDeclSyntax, parent: Declaration?) -> [EnumCase] {
+        sourceCodeLocation: SourceCodeLocation
+    ) -> [EnumCase] {
         node.elements.compactMap {
-            Self(node: $0, parent: parent, parentNode: node)
+            Self(
+                parentNode: node,
+                node: $0,
+                parent: parent,
+                sourceCodeLocation: sourceCodeLocation
+            )
         }
     }
 }

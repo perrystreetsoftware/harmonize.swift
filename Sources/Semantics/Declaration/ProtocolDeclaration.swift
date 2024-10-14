@@ -7,17 +7,29 @@
 
 import SwiftSyntax
 
-public struct ProtocolDeclaration: Declaration {
-    internal var node: ProtocolDeclSyntax
+public struct ProtocolDeclaration: Declaration, SyntaxNodeProviding {
+    public let node: ProtocolDeclSyntax
     
     public let parent: Declaration?
+
+    public let sourceCodeLocation: SourceCodeLocation
     
     public var description: String {
         node.trimmedDescription
     }
+    
+    internal init(
+        node: ProtocolDeclSyntax,
+        parent: Declaration?,
+        sourceCodeLocation: SourceCodeLocation
+    ) {
+        self.node = node
+        self.parent = parent
+        self.sourceCodeLocation = sourceCodeLocation
+    }
 }
 
-// MARK: - Providers
+// MARK: - Capabilities Comformance
 
 extension ProtocolDeclaration: NamedDeclaration,
                                AttributesProviding,
@@ -27,7 +39,8 @@ extension ProtocolDeclaration: NamedDeclaration,
                                VariablesProviding,
                                FunctionsProviding,
                                InitializersProviding,
-                               InheritanceProviding {
+                               InheritanceProviding,
+                               SourceCodeProviding {
     public var attributes: [Attribute] {
         node.attributes.attributes
     }
@@ -58,13 +71,5 @@ extension ProtocolDeclaration: NamedDeclaration,
     
     public var inheritanceTypesNames: [String] {
         node.inheritanceClause?.toString() ?? []
-    }
-}
-
-// MARK: - SyntaxNodeProviding
-
-extension ProtocolDeclaration: SyntaxNodeProviding {
-    init(_ node: ProtocolDeclSyntax) {
-        self.init(node: node, parent: nil)
     }
 }

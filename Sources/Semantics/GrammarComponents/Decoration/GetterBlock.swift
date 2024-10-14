@@ -9,15 +9,25 @@ import Foundation
 import SwiftSyntax
 
 /// The representation of a computed-property getter block.
-public struct GetterBlock: DeclarationDecoration {
-    internal var node: CodeBlockItemListSyntax
+public struct GetterBlock: DeclarationDecoration, SyntaxNodeProviding {
+    /// The syntax node representing the getter block from a computed-property in the abstract syntax tree (AST).
+    public let node: CodeBlockItemListSyntax
     
     public var description: String {
         node.trimmedDescription
     }
+    
+    init(node: CodeBlockItemListSyntax) {
+        self.node = node
+    }
+    
+    init?(node: CodeBlockItemListSyntax?) {
+        guard let node = node else { return nil }
+        self.node = node
+    }
 }
 
-// MARK: - BodyProviding
+// MARK: - BodyProviding Comformance
 
 extension GetterBlock: BodyProviding {
     public var body: String? {
@@ -25,18 +35,9 @@ extension GetterBlock: BodyProviding {
     }
 }
 
-// MARK: - SyntaxNodeProviding
+// MARK: - Factory
 
-extension GetterBlock: SyntaxNodeProviding {
-    init?(_ node: CodeBlockItemListSyntax) {
-        self.node = node
-    }
-    
-    init?(_ node: CodeBlockItemListSyntax?) {
-        guard let node = node else { return nil }
-        self.node = node
-    }
-    
+extension GetterBlock {
     static func getter(_ node: AccessorBlockSyntax?) -> GetterBlock? {
         guard let node = node else { return nil }
         
@@ -44,7 +45,7 @@ extension GetterBlock: SyntaxNodeProviding {
         case .accessors(_):
             nil
         case .getter(let block):
-            self.init(block)
+            Self(node: block)
         }
     }
 }

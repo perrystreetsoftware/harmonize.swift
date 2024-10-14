@@ -9,9 +9,9 @@ import Foundation
 import SwiftSyntax
 
 /// A struct that represents an attribute in a Swift declaration.
-public struct Attribute: DeclarationDecoration {
+public struct Attribute: DeclarationDecoration, SyntaxNodeProviding {
     /// The syntax node representing the attribute in the abstract syntax tree (AST).
-    internal var node: AttributeSyntax
+    public let node: AttributeSyntax
     
     /// The name of the attribute as a `String`.
     ///
@@ -40,6 +40,15 @@ public struct Attribute: DeclarationDecoration {
     
     public var description: String {
         node.trimmedDescription
+    }
+    
+    internal init(node: AttributeSyntax) {
+        self.node = node
+    }
+    
+    internal init?(node: AttributeSyntax?) {
+        guard let node = node else { return nil }
+        self.node = node
     }
 }
 
@@ -202,17 +211,9 @@ public extension Attribute {
     }
 }
 
-// MARK: - SyntaxNodeProviding
-extension Attribute: SyntaxNodeProviding {
-    init?(_ node: AttributeSyntax) {
-        self.node = node
-    }
-    
-    init?(_ node: AttributeSyntax?) {
-        guard let node = node else { return nil }
-        self.node = node
-    }
-    
+// MARK: - Attributes Factory
+
+extension Attribute {
     static func attributes(from node: AttributeListSyntax) -> [Self] {
         node.compactMap {
             return switch $0 {

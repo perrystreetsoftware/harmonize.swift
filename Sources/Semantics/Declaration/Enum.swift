@@ -7,17 +7,29 @@
 
 import SwiftSyntax
 
-public struct Enum: Declaration {
-    internal var node: EnumDeclSyntax
+public struct Enum: Declaration, SyntaxNodeProviding {
+    public let node: EnumDeclSyntax
     
     public let parent: Declaration?
+    
+    public let sourceCodeLocation: SourceCodeLocation
     
     public var description: String {
         node.trimmedDescription
     }
+    
+    internal init(
+        node: EnumDeclSyntax,
+        parent: Declaration?,
+        sourceCodeLocation: SourceCodeLocation
+    ) {
+        self.node = node
+        self.parent = parent
+        self.sourceCodeLocation = sourceCodeLocation
+    }
 }
 
-// MARK: - Providers
+// MARK: - Capabilities Comformance
 
 extension Enum: NamedDeclaration,
                 AttributesProviding,
@@ -31,7 +43,8 @@ extension Enum: NamedDeclaration,
                 ProtocolsProviding,
                 VariablesProviding,
                 FunctionsProviding,
-                InitializersProviding {
+                InitializersProviding,
+                SourceCodeProviding {
     public var attributes: [Attribute] {
         node.attributes.attributes
     }
@@ -82,13 +95,5 @@ extension Enum: NamedDeclaration,
 
     public var initializers: [Initializer] {
         declarations.as(Initializer.self)
-    }
-}
-
-// MARK: - SyntaxNodeProviding
-
-extension Enum: SyntaxNodeProviding {
-    init(_ node: EnumDeclSyntax) {
-        self.init(node: node, parent: nil)
     }
 }

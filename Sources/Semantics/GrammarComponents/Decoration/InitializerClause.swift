@@ -10,9 +10,9 @@ import SwiftSyntax
 import SwiftParser
 
 /// The representation of a declaration's initializer clause.
-public struct InitializerClause: DeclarationDecoration {
+public struct InitializerClause: DeclarationDecoration, SyntaxNodeProviding {
     /// The syntax node representing the initializer clause in the abstract syntax tree (AST).
-    internal var node: InitializerClauseSyntax
+    public let node: InitializerClauseSyntax
     
     /// The value of the initializer clause, representing the content assigned after the `=` sign.
     ///
@@ -25,16 +25,12 @@ public struct InitializerClause: DeclarationDecoration {
     public var description: String {
         node.trimmedDescription
     }
-}
-
-// MARK: - SyntaxNodeProviding
-
-extension InitializerClause: SyntaxNodeProviding {
-    init?(_ node: InitializerClauseSyntax) {
+    
+    internal init(node: InitializerClauseSyntax) {
         self.node = node
     }
     
-    init?(_ node: InitializerClauseSyntax?) {
+    internal init?(node: InitializerClauseSyntax?) {
         guard let node = node else { return nil }
         self.node = node
     }

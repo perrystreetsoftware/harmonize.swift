@@ -70,7 +70,14 @@ final class VariablesTests: XCTestCase {
     }
     """.parsed()
     
-    private var visitor = DeclarationsCollector()
+    private lazy var visitor = {
+        DeclarationsCollector(
+            sourceCodeLocation: SourceCodeLocation(
+                sourceFilePath: nil,
+                sourceFileTree: sourceSyntax
+            )
+        )
+    }()
     
     override func setUp() {
         visitor.walk(sourceSyntax)

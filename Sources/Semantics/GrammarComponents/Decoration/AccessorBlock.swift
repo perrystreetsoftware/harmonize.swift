@@ -9,9 +9,9 @@ import Foundation
 import SwiftSyntax
 
 /// The representation of a declaration's `get`, `set`, `willSet` or `didSet` accessors.
-public struct AccessorBlock: DeclarationDecoration {
+public struct AccessorBlock: DeclarationDecoration, SyntaxNodeProviding {
     /// The syntax node representing the attribute in the abstract syntax tree (AST).
-    internal var node: AccessorDeclSyntax
+    public let node: AccessorDeclSyntax
     
     public var modifier: Modifier? {
         Modifier(rawValue: node.accessorSpecifier.text)
@@ -19,6 +19,15 @@ public struct AccessorBlock: DeclarationDecoration {
     
     public var description: String {
         node.trimmedDescription
+    }
+    
+    internal init(node: AccessorDeclSyntax) {
+        self.node = node
+    }
+    
+    internal init?(node: AccessorDeclSyntax?) {
+        guard let node = node else { return nil }
+        self.node = node
     }
 }
 
@@ -39,24 +48,15 @@ extension AccessorBlock: BodyProviding {
     }
 }
 
-// MARK: - SyntaxNodeProviding
+// MARK: - Accessors Factory
 
-extension AccessorBlock: SyntaxNodeProviding {
-    init?(_ node: AccessorDeclSyntax) {
-        self.node = node
-    }
-    
-    init?(_ node: AccessorDeclSyntax?) {
-        guard let node = node else { return nil }
-        self.node = node
-    }
-    
+extension AccessorBlock {
     static func accessors(_ node: AccessorBlockSyntax?) -> [AccessorBlock] {
         guard let node = node else { return [] }
         
         return switch node.accessors {
         case .accessors(let accessors):
-            accessors.compactMap { self.init($0) }
+            accessors.compactMap { AccessorBlock(node: $0) }
         case .getter(_):
             []
         }

@@ -12,7 +12,7 @@ import Foundation
 /// The dictionary uses a `DispatchQueue` with a barrier for writes, ensuring that data
 /// integrity is maintained during concurrent access.
 ///
-public class ConcurrentDictionary<Key: Hashable, Value> {
+package final class ConcurrentDictionary<Key: Hashable, Value> {
     private var elements: [Key: Value] = [:]
     private let queue = DispatchQueue(label: "harmonize.concurrentdic.queue", attributes: .concurrent)
     

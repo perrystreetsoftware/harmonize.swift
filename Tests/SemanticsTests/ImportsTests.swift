@@ -19,7 +19,14 @@ final class ImportsTests: XCTestCase {
     @testable import Harmonize
     """.parsed()
     
-    private var visitor = DeclarationsCollector()
+    private lazy var visitor = {
+        DeclarationsCollector(
+            sourceCodeLocation: SourceCodeLocation(
+                sourceFilePath: nil,
+                sourceFileTree: sourceSyntax
+            )
+        )
+    }()
     
     override func setUp() {
         visitor.walk(sourceSyntax)

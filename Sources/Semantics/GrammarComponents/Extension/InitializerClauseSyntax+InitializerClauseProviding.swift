@@ -10,6 +10,6 @@ import SwiftSyntax
 
 extension InitializerClauseSyntax: InitializerClauseProviding {
     public var initializerClause: InitializerClause? {
-        InitializerClause(self)
+        InitializerClause(node: self)
     }
 }

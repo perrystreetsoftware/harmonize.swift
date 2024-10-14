@@ -7,6 +7,7 @@
 
 import Foundation
 import XCTest
+import Semantics
 import Harmonize
 
 final class AssertionsFailuresTests: XCTestCase {
@@ -18,27 +19,38 @@ final class AssertionsFailuresTests: XCTestCase {
     private let productionCode = Harmonize.productionCode().on("SampleApp")
     
     func testAssertEmptyFailure() throws {
-        ["Test"].assertEmpty()
+        testCode.classes().assertEmpty()
+        testCode.sources().assertEmpty()
     }
     
     func testAssertNotEmptyFailure() throws {
-        [].assertNotEmpty()
+        [Class]().assertNotEmpty()
+        [SwiftSourceCode]().assertNotEmpty()
     }
     
     func testAssertTrueFailure() throws {
+        testCode.classes().assertTrue { _ in
+            false
+        }
+        
         testCode.sources().assertTrue { _ in
             false
         }
     }
     
     func testAssertFalseFailure() throws {
+        testCode.classes().assertFalse { _ in
+            true
+        }
+        
         testCode.sources().assertFalse { _ in
             true
         }
     }
     
     func testAssertCountFailure() throws {
-        [].assertCount(count: 3)
+        [Class]().assertCount(count: 3)
+        [SwiftSourceCode]().assertCount(count: 3)
     }
 }
 

@@ -7,17 +7,19 @@
 
 import SwiftSyntax
 
-public struct Function: Declaration {
-    internal var node: FunctionDeclSyntax
+public struct Function: Declaration, SyntaxNodeProviding {
+    public let node: FunctionDeclSyntax
     
     public let parent: Declaration?
+    
+    public let sourceCodeLocation: SourceCodeLocation
     
     public var description: String {
         node.trimmedDescription
     }
     
     public var returnClause: ReturnClause? {
-        ReturnClause(node.signature.returnClause)
+        ReturnClause(node: node.signature.returnClause)
     }
     
     public var genericClause: String? {
@@ -27,9 +29,19 @@ public struct Function: Declaration {
     public var whereClause: String? {
         node.genericWhereClause?.trimmedDescription
     }
+    
+    internal init(
+        node: FunctionDeclSyntax,
+        parent: Declaration?,
+        sourceCodeLocation: SourceCodeLocation
+    ) {
+        self.node = node
+        self.parent = parent
+        self.sourceCodeLocation = sourceCodeLocation
+    }
 }
 
-// MARK: - Providers
+// MARK: - Capabilities Comformance
 
 extension Function: NamedDeclaration,
                     AttributesProviding,
@@ -43,7 +55,8 @@ extension Function: NamedDeclaration,
                     BodyProviding,
                     ParametersProviding,
                     FunctionsProviding,
-                    FunctionCallsProviding {
+                    FunctionCallsProviding,
+                    SourceCodeProviding {
     public var attributes: [Attribute] {
         node.attributes.attributes
     }
@@ -82,7 +95,11 @@ extension Function: NamedDeclaration,
     
     public var parameters: [Parameter] {
         node.signature.parameterClause.parameters.compactMap {
-            Parameter($0._syntaxNode, parent: self)
+            Parameter(
+                node: $0._syntaxNode,
+                parent: self,
+                sourceCodeLocation: sourceCodeLocation
+            )
         }
     }
     
@@ -92,13 +109,5 @@ extension Function: NamedDeclaration,
     
     public var functionCalls: [FunctionCall] {
         declarations.as(FunctionCall.self)
-    }
-}
-
-// MARK: - SyntaxNodeProviding
-
-extension Function: SyntaxNodeProviding {
-    init(_ node: FunctionDeclSyntax) {
-        self.init(node: node, parent: nil)
     }
 }

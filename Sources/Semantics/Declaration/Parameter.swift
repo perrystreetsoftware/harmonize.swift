@@ -7,10 +7,12 @@
 
 import SwiftSyntax
 
-public struct Parameter: Declaration {
-    internal var node: Syntax
+public struct Parameter: Declaration, SyntaxNodeProviding {
+    public let node: Syntax
     
     public let parent: Declaration?
+    
+    public let sourceCodeLocation: SourceCodeLocation
     
     public var description: String {
         node.trimmedDescription
@@ -25,20 +27,37 @@ public struct Parameter: Declaration {
         functionParameter?.ellipsis != nil
     }
     
-    private init(node: Syntax, parent: Declaration?) {
-        self.node = node
+    internal init?(
+        node: Syntax,
+        parent: Declaration?,
+        sourceCodeLocation: SourceCodeLocation
+    ) {
         self.parent = parent
+        self.sourceCodeLocation = sourceCodeLocation
+        
+        if let node = node.as(FunctionParameterSyntax.self) {
+            self.node = node._syntaxNode
+            return
+        }
+        
+        if let node = node.as(EnumCaseParameterSyntax.self) {
+            self.node = node._syntaxNode
+            return
+        }
+        
+        return nil
     }
 }
 
-// MARK: - Providers
+// MARK: - Capabilities Comformance
 
 extension Parameter: NamedDeclaration,
                      AttributesProviding,
                      ModifiersProviding,
                      ParentDeclarationProviding,
                      TypeProviding,
-                     InitializerClauseProviding {
+                     InitializerClauseProviding,
+                     SourceCodeProviding {
     private var functionParameter: FunctionParameterSyntax? {
         node.as(FunctionParameterSyntax.self)
     }
@@ -64,7 +83,7 @@ extension Parameter: NamedDeclaration,
     }
     
     public var typeAnnotation: TypeAnnotation? {
-        TypeAnnotation(functionParameter?.type ?? enumCaseParameter?.type)
+        TypeAnnotation(node: functionParameter?.type ?? enumCaseParameter?.type)
     }
     
     public var initializerClause: InitializerClause? {
@@ -73,29 +92,7 @@ extension Parameter: NamedDeclaration,
     }
 }
 
-// MARK: - SyntaxNodeProviding
-
-extension Parameter: SyntaxNodeProviding {
-    init?(_ node: Syntax) {
-        self.init(node: node, parent: nil)
-    }
-    
-    init?(_ node: Syntax, parent: Declaration?) {
-        self.parent = parent
-        
-        if let node = node.as(FunctionParameterSyntax.self) {
-            self.node = node._syntaxNode
-            return
-        }
-        
-        if let node = node.as(EnumCaseParameterSyntax.self) {
-            self.node = node._syntaxNode
-            return
-        }
-        
-        return nil
-    }
-}
+// MARK: - Generic Syntax Capabilities
 
 fileprivate extension Syntax {
     var name: String {

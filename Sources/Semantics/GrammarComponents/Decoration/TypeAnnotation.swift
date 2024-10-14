@@ -10,9 +10,9 @@ import SwiftSyntax
 
 /// Represents a Swift type annotation, such as `String`, `Int`, `Bool`, or a created type.
 /// This also supports optional types and can provide a formatted annotation string for both optional and non-optional types.
-public struct TypeAnnotation: DeclarationDecoration {
+public struct TypeAnnotation: DeclarationDecoration, SyntaxNodeProviding {
     /// The syntax node representing the type annotation in the abstract syntax tree (AST).
-    internal var node: TypeSyntax
+    public let node: TypeSyntax
     
     /// The name of the Swift type. This could be a standard type like `String`, `Int`, or a created type.
     /// For optional types, the `?` is included in the name (e.g., `String?`).
@@ -35,16 +35,12 @@ public struct TypeAnnotation: DeclarationDecoration {
     public var description: String {
         node.trimmedDescription
     }
-}
-
-// MARK: - SyntaxNodeProviding
-
-extension TypeAnnotation: SyntaxNodeProviding {
-    init?(_ node: TypeSyntax) {
+    
+    internal init(node: TypeSyntax) {
         self.node = node
     }
     
-    init?(_ node: TypeSyntax?) {
+    internal init?(node: TypeSyntax?) {
         guard let node = node else { return nil }
         self.node = node
     }

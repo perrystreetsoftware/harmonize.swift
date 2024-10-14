@@ -6,12 +6,14 @@
 
 import SwiftSyntax
 
-public struct Variable: Declaration {
-    private var parentNode: VariableDeclSyntax
+public struct Variable: Declaration, SyntaxNodeProviding {
+    private let parentNode: VariableDeclSyntax
     
-    internal var node: PatternBindingSyntax
+    public let node: PatternBindingSyntax
     
     public let parent: Declaration?
+    
+    public let sourceCodeLocation: SourceCodeLocation
     
     public var description: String {
         node.trimmedDescription
@@ -40,9 +42,21 @@ public struct Variable: Declaration {
     public var isStored: Bool {
         !isComputed
     }
+    
+    internal init(
+        parentNode: VariableDeclSyntax,
+        node: PatternBindingSyntax,
+        parent: Declaration?,
+        sourceCodeLocation: SourceCodeLocation
+    ) {
+        self.parentNode = parentNode
+        self.node = node
+        self.parent = parent
+        self.sourceCodeLocation = sourceCodeLocation
+    }
 }
 
-// MARK: - Providers
+// MARK: - Capabilities Comformance
 
 extension Variable: NamedDeclaration,
                     AttributesProviding,
@@ -50,7 +64,8 @@ extension Variable: NamedDeclaration,
                     ParentDeclarationProviding,
                     AccessorBlocksProviding,
                     TypeProviding,
-                    InitializerClauseProviding {
+                    InitializerClauseProviding,
+                    SourceCodeProviding {
     public var attributes: [Attribute] {
         parentNode.attributes.attributes
     }
@@ -64,7 +79,8 @@ extension Variable: NamedDeclaration,
     }
         
     public var typeAnnotation: TypeAnnotation? {
-        TypeAnnotation(node.typeAnnotation?.type ?? parentNode.bindings.compactMap { $0.typeAnnotation?.type }.first)
+        let node = node.typeAnnotation?.type ?? parentNode.bindings.compactMap { $0.typeAnnotation?.type }.first
+        return TypeAnnotation(node: node)
     }
     
     public var initializerClause: InitializerClause? {
@@ -80,27 +96,21 @@ extension Variable: NamedDeclaration,
     }
 }
 
-// MARK: - SyntaxNodeProviding
+// MARK: - Variables Factory
 
-extension Variable: SyntaxNodeProviding {
-    init?(_ node: PatternBindingSyntax) {
-        self.init(node: node, parent: nil, parentNode: node.parentAs(VariableDeclSyntax.self))
-    }
-    
-    init?(
-        node: PatternBindingSyntax,
+extension Variable {
+    static func variables(
+        from node: VariableDeclSyntax,
         parent: Declaration?,
-        parentNode: VariableDeclSyntax?
-    ) {
-        guard let parentNode = parentNode else { return nil }
-        self.node = node
-        self.parentNode = parentNode
-        self.parent = parent
-    }
-    
-    static func variables(from node: VariableDeclSyntax, parent: Declaration?) -> [Variable] {
+        sourceCodeLocation: SourceCodeLocation
+    ) -> [Variable] {
         node.bindings.compactMap {
-            Variable(node: $0, parent: parent, parentNode: node)
+            Variable(
+                parentNode: node,
+                node: $0,
+                parent: parent,
+                sourceCodeLocation: sourceCodeLocation
+            )
         }
     }
 }

@@ -7,17 +7,29 @@
 
 import SwiftSyntax
 
-public struct Initializer: Declaration {
-    internal var node: InitializerDeclSyntax
+public struct Initializer: Declaration, SyntaxNodeProviding {
+    public let node: InitializerDeclSyntax
     
     public let parent: Declaration?
+    
+    public let sourceCodeLocation: SourceCodeLocation
     
     public var description: String {
         node.trimmedDescription
     }
+    
+    internal init(
+        node: InitializerDeclSyntax,
+        parent: Declaration?,
+        sourceCodeLocation: SourceCodeLocation
+    ) {
+        self.node = node
+        self.parent = parent
+        self.sourceCodeLocation = sourceCodeLocation
+    }
 }
 
-// MARK: - Providers
+// MARK: - Capabilities Comformance
 
 extension Initializer: AttributesProviding,
                        DeclarationsProviding,
@@ -25,7 +37,8 @@ extension Initializer: AttributesProviding,
                        ParentDeclarationProviding,
                        ParametersProviding,
                        VariablesProviding,
-                       FunctionsProviding {
+                       FunctionsProviding,
+                       SourceCodeProviding {
     public var attributes: [Attribute] {
         node.attributes.attributes
     }
@@ -40,7 +53,11 @@ extension Initializer: AttributesProviding,
     
     public var parameters: [Parameter] {
         node.signature.parameterClause.parameters.compactMap {
-            Parameter($0._syntaxNode, parent: self)
+            Parameter(
+                node: $0._syntaxNode,
+                parent: self,
+                sourceCodeLocation: sourceCodeLocation
+            )
         }
     }
     
@@ -50,13 +67,5 @@ extension Initializer: AttributesProviding,
     
     public var functions: [Function] {
         declarations.as(Function.self)
-    }
-}
-
-// MARK: - SyntaxNodeProviding
-
-extension Initializer: SyntaxNodeProviding {
-    init(_ node: InitializerDeclSyntax) {
-        self.init(node: node, parent: nil)
     }
 }

@@ -8,12 +8,11 @@
 import SwiftSyntax
 
 /// Protocol which provides the raw syntax node a declaration provides.
-internal protocol SyntaxNodeProviding: Equatable, Hashable {
+public protocol SyntaxNodeProviding: Equatable, Hashable {
     associatedtype Syntax: SyntaxProtocol
 
+    /// The syntax node representing the declaration in the abstract syntax tree (AST).
     var node: Syntax { get }
-    
-    init?(_ node: Syntax)
 }
 
 extension SyntaxNodeProviding {

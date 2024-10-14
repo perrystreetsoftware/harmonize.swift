@@ -9,16 +9,17 @@ import Foundation
 import SwiftSyntax
 import SwiftParser
 import Semantics
+import XCTest
 
 /// Represents a source of Swift code, which can either be loaded from a URL or provided as a raw string.
 /// This class offers lazy loading of the source text, resolving it from either the provided URL or raw string.
-public class SwiftSourceCode {
+public final class SwiftSourceCode {
     /// Transforms Swift Syntax into the Semantics Models.
-    private lazy var resolver: SourceFileSyntaxResolver = {
+    internal lazy var resolver: SourceFileSyntaxResolver = {
         // Not ideal as it will break lazy evaluation of the Source File Syntax.
         // 'Fine' for this initial release, but we must rework this when Harmonize
         // evolves to be a 'File Query' over swift files.
-        SourceFileSyntaxResolver(node: sourceFileSyntax)
+        SourceFileSyntaxResolver(source: self, node: sourceFileSyntax)
     }()
 
     /// The URL pointing to the Swift source file, if provided. Nil if `source` is provided directly as string.
@@ -131,7 +132,7 @@ public class SwiftSourceCode {
     }
 }
 
-// MARK: - Equatable + Hashable
+// MARK: - Equatable
 
 extension SwiftSourceCode: Equatable, Hashable  {
     public static func == (lhs: SwiftSourceCode, rhs: SwiftSourceCode) -> Bool {
@@ -145,7 +146,7 @@ extension SwiftSourceCode: Equatable, Hashable  {
 
 // MARK: - SyntaxSourceCache
 
-fileprivate extension SwiftSourceCode {
+internal extension SwiftSourceCode {
     var sourceFileSyntax: SourceFileSyntax {
         cachedSyntaxTree.get(self)
     }
@@ -153,20 +154,23 @@ fileprivate extension SwiftSourceCode {
 
 // MARK: - SourceFileSyntaxResolver
 
-fileprivate extension SwiftSourceCode {
-    class SourceFileSyntaxResolver {
+internal extension SwiftSourceCode {
+    final class SourceFileSyntaxResolver {
+        private let source: SwiftSourceCode
         private let node: SourceFileSyntax
         private let collector: DeclarationsCollector
         
-        init(node: SourceFileSyntax) {
+        init(source: SwiftSourceCode, node: SourceFileSyntax) {
+            self.source = source
             self.node = node
-            self.collector = DeclarationsCollector()
+            self.collector = DeclarationsCollector(
+                sourceCodeLocation: SourceCodeLocation(
+                    sourceFilePath: source.url,
+                    sourceFileTree: node
+                )
+            )
             
             collector.walk(node) // side-effect. Rework this when api is 'lazier'?
-        }
-        
-        func clear() {
-            collector.clearCollectedNodes()
         }
         
         func collection() -> DeclarationsCollector {

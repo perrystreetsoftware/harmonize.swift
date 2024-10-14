@@ -7,17 +7,29 @@
 
 import SwiftSyntax
 
-public struct Extension: Declaration {
-    internal var node: ExtensionDeclSyntax
+public struct Extension: Declaration, SyntaxNodeProviding {
+    public let node: ExtensionDeclSyntax
     
     public let parent: Declaration?
+    
+    public let sourceCodeLocation: SourceCodeLocation
     
     public var description: String {
         node.trimmedDescription
     }
+    
+    internal init(
+        node: ExtensionDeclSyntax,
+        parent: Declaration?,
+        sourceCodeLocation: SourceCodeLocation
+    ) {
+        self.node = node
+        self.parent = parent
+        self.sourceCodeLocation = sourceCodeLocation
+    }
 }
 
-// MARK: - Providers
+// MARK: - Capabilities Comformance
 
 extension Extension: AttributesProviding,
                      DeclarationsProviding,
@@ -31,7 +43,8 @@ extension Extension: AttributesProviding,
                      VariablesProviding,
                      FunctionsProviding,
                      InitializersProviding,
-                     TypeProviding {
+                     TypeProviding,
+                     SourceCodeProviding {
     public var attributes: [Attribute] {
         node.attributes.attributes
     }
@@ -45,7 +58,7 @@ extension Extension: AttributesProviding,
     }
     
     public var typeAnnotation: TypeAnnotation? {
-        TypeAnnotation(node.extendedType)
+        TypeAnnotation(node: node.extendedType)
     }
     
     public var declarations: [Declaration] {
@@ -78,13 +91,5 @@ extension Extension: AttributesProviding,
     
     public var initializers: [Initializer] {
         declarations.as(Initializer.self)
-    }
-}
-
-// MARK: - SyntaxNodeProviding
-
-extension Extension: SyntaxNodeProviding {
-    init(_ node: ExtensionDeclSyntax) {
-        self.init(node: node, parent: nil)
     }
 }

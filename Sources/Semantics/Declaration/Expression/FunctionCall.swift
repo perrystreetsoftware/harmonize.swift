@@ -8,9 +8,13 @@
 import SwiftSyntax
 
 /// A struct that represents a function call in Swift code.
-public struct FunctionCall: Declaration {
+public struct FunctionCall: Declaration, SyntaxNodeProviding {
     /// The syntax node representing the function call expression in the abstract syntax tree (AST).
-    internal var node: FunctionCallExprSyntax
+    public let node: FunctionCallExprSyntax
+    
+    public let parent: Declaration?
+    
+    public let sourceCodeLocation: SourceCodeLocation
     
     /// The name of the function or expression being called.
     ///
@@ -38,7 +42,15 @@ public struct FunctionCall: Declaration {
         node.trimmedDescription
     }
     
-    public let parent: Declaration?
+    internal init(
+        node: FunctionCallExprSyntax,
+        parent: Declaration?,
+        sourceCodeLocation: SourceCodeLocation
+    ) {
+        self.node = node
+        self.parent = parent
+        self.sourceCodeLocation = sourceCodeLocation
+    }
 }
 
 // MARK: - Argument
@@ -63,23 +75,17 @@ public extension FunctionCall {
     }
 }
 
-// MARK: Providers
+// MARK: Capabilities Comformance
 
-extension FunctionCall: DeclarationsProviding, FunctionCallsProviding, ParentDeclarationProviding {
+extension FunctionCall: DeclarationsProviding,
+                        FunctionCallsProviding,
+                        ParentDeclarationProviding,
+                        SourceCodeProviding {
     public var declarations: [Declaration] {
         DeclarationsCache.shared.declarations(from: node)
     }
     
     public var functionCalls: [FunctionCall] {
         declarations.as(FunctionCall.self)
-    }
-}
-
-// MARK: - SyntaxNodeProviding
-
-extension FunctionCall: SyntaxNodeProviding {
-    init?(_ node: FunctionCallExprSyntax) {
-        self.node = node
-        self.parent = nil
     }
 }

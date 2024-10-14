@@ -7,25 +7,37 @@
 
 import SwiftSyntax
 
-public struct Import: Declaration {
-    internal var node: ImportDeclSyntax
+public struct Import: Declaration, SyntaxNodeProviding {
+    public let node: ImportDeclSyntax
+    
+    public let sourceCodeLocation: SourceCodeLocation
     
     public var description: String {
         node.trimmedDescription
     }
+    
+    internal init(
+        node: ImportDeclSyntax,
+        sourceCodeLocation: SourceCodeLocation
+    ) {
+        self.node = node
+        self.sourceCodeLocation = sourceCodeLocation
+    }
 }
 
 // MARK: - ImportKind
+
 public extension Import {
     enum ImportKind: String {
         case `typealias`, `struct`, `class`, `enum`, `protocol`, `let`, `var`, `func`
     }
 }
 
-// MARK: - Providers
+// MARK: - Capabilities Comformance
 
 extension Import: NamedDeclaration,
-                  AttributesProviding {
+                  AttributesProviding,
+                  SourceCodeProviding {
     public var attributes: [Attribute] {
         node.attributes.attributes
     }
@@ -36,13 +48,5 @@ extension Import: NamedDeclaration,
     
     public var kind: ImportKind? {
         ImportKind(rawValue: node.importKindSpecifier?.text ?? "")
-    }
-}
-
-// MARK: - SyntaxNodeProviding
-
-extension Import: SyntaxNodeProviding {
-    init(_ node: ImportDeclSyntax) {
-        self.node = node
     }
 }
