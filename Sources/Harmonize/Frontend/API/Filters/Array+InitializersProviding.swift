@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Semantics
+import HarmonizeSemantics
 
 /// An extension for arrays where the elements conform to both `Declaration` and `InitializersProviding`,
 /// providing filtering functionality based on initializers.

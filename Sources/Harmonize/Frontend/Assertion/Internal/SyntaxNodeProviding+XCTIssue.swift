@@ -5,7 +5,7 @@
 //  Copyright (c) Perry Street Software 2024. All Rights Reserved.
 //
 
-import Semantics
+import HarmonizeSemantics
 import SwiftSyntax
 import XCTest
 

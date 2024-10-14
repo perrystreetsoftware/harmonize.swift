@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Semantics
+import HarmonizeSemantics
 
 /// Provides extension methods for filtering arrays of declarations based on key paths.
 public extension Array where Element: Declaration {

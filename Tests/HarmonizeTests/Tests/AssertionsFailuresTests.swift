@@ -7,7 +7,7 @@
 
 import Foundation
 import XCTest
-import Semantics
+import HarmonizeSemantics
 import Harmonize
 
 final class AssertionsFailuresTests: XCTestCase {

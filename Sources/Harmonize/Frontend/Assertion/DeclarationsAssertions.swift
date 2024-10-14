@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Semantics
+import HarmonizeSemantics
 import SwiftSyntax
 import XCTest
 import Testing

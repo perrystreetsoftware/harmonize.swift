@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Semantics
+import HarmonizeSemantics
 
 /// The default Harmonize scope builder implementation.
 /// Provides all declarations and files from a given path.

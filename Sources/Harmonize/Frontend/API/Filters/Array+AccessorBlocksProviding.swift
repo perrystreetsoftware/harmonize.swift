@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Semantics
+import HarmonizeSemantics
 
 /// Extension to filter an array of elements that conform to both `Declaration` and `AccessorBlocksProviding`
 /// protocols. This provides a convenient API for filtering declarations based on accessor blocks, getter blocks,

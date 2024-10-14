@@ -5,7 +5,7 @@
 //  Created by Lucas Cavalcante on 10/12/24.
 //
 
-import Semantics
+import HarmonizeSemantics
 
 public extension TypeAnnotation {
     /// Compares a `TypeAnnotation` instance with a given type to check for equality.

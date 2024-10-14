@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Semantics
+import HarmonizeSemantics
 import XCTest
 
 final class VariablesTests: XCTestCase {

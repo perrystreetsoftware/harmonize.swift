@@ -8,7 +8,7 @@
 import Foundation
 import SwiftSyntax
 import SwiftParser
-import Semantics
+import HarmonizeSemantics
 import XCTest
 
 /// Represents a source of Swift code, which can either be loaded from a URL or provided as a raw string.

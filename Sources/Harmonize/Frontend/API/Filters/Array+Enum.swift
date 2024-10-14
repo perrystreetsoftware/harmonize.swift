@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Semantics
+import HarmonizeSemantics
 
 /// Provides extension methods for filtering and retrieving cases from an array of enums.
 public extension Array where Element == Enum {

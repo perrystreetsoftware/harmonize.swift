@@ -8,7 +8,7 @@
 import Foundation
 import SwiftSyntax
 import SwiftParser
-import Utils
+import HarmonizeUtils
 
 internal class SyntaxSourceCache<Syntax: SyntaxProtocol> {
     private var elements: ConcurrentDictionary<UUID, Syntax> = ConcurrentDictionary()

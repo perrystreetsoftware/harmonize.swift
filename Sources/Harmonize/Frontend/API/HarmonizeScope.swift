@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Semantics
+import HarmonizeSemantics
 
 /// Represents a scope in which contains a bunch of files containing declarations to be harmonized.
 public protocol HarmonizeScope {

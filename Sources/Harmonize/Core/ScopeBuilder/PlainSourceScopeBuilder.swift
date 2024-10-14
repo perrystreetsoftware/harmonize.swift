@@ -5,7 +5,7 @@
 //  Created by Lucas Cavalcante on 10/11/24.
 //
 
-import Semantics
+import HarmonizeSemantics
 
 /// The Harmonize scope builder implementation that parses plain source code over `.swift` files.
 internal class PlainSourceScopeBuilder {
