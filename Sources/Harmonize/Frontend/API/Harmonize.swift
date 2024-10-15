@@ -37,7 +37,7 @@ public struct Harmonize {
     /// This method simplifies specifying a folder path within the production code scope.
     ///
     /// - returns: ``Excluding`` scope builder.
-    public static func on(folder: String, _ file: StaticString = #file) -> Excluding {
+    public static func on(_ folder: String, _ file: StaticString = #file) -> Excluding {
         productionCode(file).on(folder)
     }
     
@@ -55,14 +55,14 @@ public struct Harmonize {
     /// - Parameter source: A closure that returns the source code as a `String`.
     /// - Returns: ``HarmonizeScope`` built from the provided source.
     public static func on(source: () -> String) -> HarmonizeScope {
-        on(source())
+        on(source: source())
     }
 
     /// Creates a `HarmonizeScope` using the provided Swift source as string.
     ///
     /// - parameter source: The source code as a `String`.
     /// - returns: ``HarmonizeScope`` built from the provided source.
-    public static func on(_ source: String) -> HarmonizeScope {
+    public static func on(source: String) -> HarmonizeScope {
         PlainSourceScopeBuilder(source: source)
     }
 }
