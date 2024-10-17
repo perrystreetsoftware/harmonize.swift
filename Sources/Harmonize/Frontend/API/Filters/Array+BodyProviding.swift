@@ -27,8 +27,22 @@ public extension Array where Element: Declaration & BodyProviding {
     ///
     /// - parameter regex: A regex pattern to match against the body of the element.
     /// - returns: An array of elements whose body contains the specified regex pattern.
+    @available(iOS 16.0, macOS 13.0, *)
     func withBody(containing regex: some RegexComponent) -> [Element] {
         withBody { $0.contains(regex) }
+    }
+    
+    /// Filters the array to include only elements with a body that contains the specified regex pattern.
+    /// May return empty if regex pattern isn't valid.
+    ///
+    /// - parameter regex: A regex pattern to match against the body of the element.
+    /// - returns: An array of elements whose body contains the specified regex pattern.
+    func withBody(containing regex: String) -> [Element] {
+        withBody {
+            let range = NSRange(location: 0, length: $0.utf16.count)
+            let regex = try? NSRegularExpression(pattern: regex)
+            return regex?.firstMatch(in: $0, options: [], range: range) != nil
+        }
     }
     
     /// Filters the array to include only elements without a body that satisfies the given predicate.

@@ -49,8 +49,16 @@ public extension Array where Element: Declaration & AttributesProviding {
     /// - parameter type: the property wrapper type the elements should be attributed with.
     /// - returns: elements attributed with the given property wrapper.
     func withAttribute<T>(_ type: T.Type) -> [Element] {
-        let regexMatchingTypeValue = #/<[^>]+>/#
-        let typeName = String(describing: type).replacing(regexMatchingTypeValue, with: "")
-        return withAttribute { $0.name == typeName }
+        if #available(iOS 16.0, macOS 13.0, *) {
+            let regexMatchingTypeValue = #/<[^>]+>/#
+            let typeName = String(describing: type).replacing(regexMatchingTypeValue, with: "")
+            return withAttribute { $0.name == typeName }
+        } else {
+            let regex = try? NSRegularExpression(pattern: "<[^>]+>", options: [])
+            let typeName = String(describing: type)
+            let range = NSRange(location: 0, length: typeName.utf16.count)
+            let modifiedTypeName = regex?.stringByReplacingMatches(in: typeName, options: [], range: range, withTemplate: "") ?? typeName
+            return withAttribute { $0.name == modifiedTypeName }
+        }
     }
 }

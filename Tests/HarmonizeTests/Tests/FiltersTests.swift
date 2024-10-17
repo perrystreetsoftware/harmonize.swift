@@ -10,6 +10,10 @@ import HarmonizeSemantics
 import Harmonize
 import XCTest
 
+#if canImport(RegexBuilder)
+import RegexBuilder
+#endif
+
 final class FiltersTests: XCTestCase {
     func testNamedDeclarationsFilters() throws {
         let scope = Harmonize.productionCode().on("Fixtures/Filters/NamedDeclarations")
@@ -119,6 +123,26 @@ final class FiltersTests: XCTestCase {
             .assertCount(count: 1)
         
         scope.functions(includeNested: true)
+            .withBody(containing: "makeACall\\(\\)")
+            .assertCount(count: 1)
+        
+        if #available(iOS 16.0, macOS 13.0, *) {
+            scope.functions(includeNested: true)
+                .withBody(containing: Regex {
+                    "_"
+                    ZeroOrMore { .whitespace }
+                    "="
+                    ZeroOrMore { .whitespace }
+                    "\""
+                    Capture {
+                        OneOrMore { CharacterClass.any }
+                    }
+                    "\""
+                })
+                .assertCount(count: 1)
+        }
+        
+        scope.functions(includeNested: true)
             .withoutBody { $0.contains("makeACall()") }
             .assertNotEmpty()
     }
@@ -164,9 +188,26 @@ final class FiltersTests: XCTestCase {
     
     func testInitializeClauseProvidingFilters() throws {
         let scope = Harmonize.productionCode().on("Fixtures/Filters/InitializerClauses")
+        
         scope.variables(includeNested: true)
             .withInitializerClause { $0.value.contains("42") }
             .assertCount(count: 2)
+        
+        scope.variables(includeNested: true)
+            .withValue(containing: ":\\s*42")
+            .assertCount(count: 1)
+        
+        if #available(iOS 16.0, macOS 13.0, *) {
+            scope.variables(includeNested: true)
+                .withValue(containing: Regex {
+                    ":"
+                    ZeroOrMore {
+                        CharacterClass.whitespace
+                    }
+                    "42"
+                })
+                .assertCount(count: 1)
+        }
     }
     
     func testInitializersProvidingFilters() throws {
@@ -195,5 +236,17 @@ final class FiltersTests: XCTestCase {
         scope.initializers()
             .withVariables { $0.name == "variable" }
             .assertCount(count: 1)
+    }
+    
+    func testReturnsEmptyWhenRegexPatternIsNotValid() throws {        
+        Harmonize.productionCode().on("Fixtures/Filters/InitializerClauses")
+            .variables()
+            .withValue(containing: "wrong_regex")
+            .assertEmpty()
+        
+        Harmonize.productionCode().on("Fixtures/Filters/Body")
+            .functions()
+            .withBody(containing: "wrong_regex")
+            .assertEmpty()
     }
 }

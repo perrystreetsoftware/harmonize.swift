@@ -39,7 +39,20 @@ public extension Array where Element: Declaration & InitializerClauseProviding {
     ///
     /// - parameter regex: A regex component to check against the value of the initializer clause.
     /// - returns: An array of elements that have an initializer clause with a value containing the specified regex.
-    func withValue(containing regex: any RegexComponent) -> [Element] {
+    @available(iOS 16.0, macOS 13.0, *)
+    func withValue(containing regex: some RegexComponent) -> [Element] {
         withValue { $0.contains(regex) }
+    }
+    
+    /// Filters the array to include only elements that have an initializer clause with a value matching the specified regex.
+    ///
+    /// - parameter regex: A regex component to check against the value of the initializer clause.
+    /// - returns: An array of elements that have an initializer clause with a value containing the specified regex.
+    func withValue(containing regex: String) -> [Element] {
+        withValue {
+            let range = NSRange(location: 0, length: $0.utf16.count)
+            let regex = try? NSRegularExpression(pattern: regex)
+            return regex?.firstMatch(in: $0, options: [], range: range) != nil
+        }
     }
 }
