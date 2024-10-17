@@ -2,7 +2,7 @@
 //  MathTests.swift
 //
 //
-//  Created by Lucas Cavalcante on 9/10/24.
+//  Copyright (c) Perry Street Software 2024. All Rights Reserved.
 //
 
 import Foundation

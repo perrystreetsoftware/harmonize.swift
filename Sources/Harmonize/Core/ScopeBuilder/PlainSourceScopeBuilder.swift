@@ -2,7 +2,7 @@
 //  PlainSourceScopeBuilder.swift
 //  Harmonize
 //
-//  Created by Lucas Cavalcante on 10/11/24.
+//  Copyright (c) Perry Street Software 2024. All Rights Reserved.
 //
 
 import HarmonizeSemantics

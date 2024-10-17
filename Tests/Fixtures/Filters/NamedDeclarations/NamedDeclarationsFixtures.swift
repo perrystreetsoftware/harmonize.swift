@@ -2,7 +2,7 @@
 //  NamedDeclarationsFixtures.swift
 //
 //
-//  Created by Lucas Cavalcante on 9/16/24.
+//  Copyright (c) Perry Street Software 2024. All Rights Reserved.
 //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  TypeAnnotation.swift
 //  Harmonize
 //
-//  Created by Lucas Cavalcante on 10/12/24.
+//  Copyright (c) Perry Street Software 2024. All Rights Reserved.
 //
 
 import HarmonizeSemantics
