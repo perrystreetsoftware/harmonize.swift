@@ -32,6 +32,7 @@ public struct Initializer: Declaration, SyntaxNodeProviding {
 // MARK: - Capabilities Comformance
 
 extension Initializer: AttributesProviding,
+                       BodyProviding,
                        DeclarationsProviding,
                        ModifiersProviding,
                        ParentDeclarationProviding,
@@ -41,6 +42,10 @@ extension Initializer: AttributesProviding,
                        SourceCodeProviding {
     public var attributes: [Attribute] {
         node.attributes.attributes
+    }
+
+    public var body: String? {
+        node.body?.statements.toString()
     }
     
     public var modifiers: [Modifier] {
