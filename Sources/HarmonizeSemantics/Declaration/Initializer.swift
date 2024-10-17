@@ -68,4 +68,8 @@ extension Initializer: AttributesProviding,
     public var functions: [Function] {
         declarations.as(Function.self)
     }
+
+    public var body: String? {
+        node.body?.statements.toString()
+    }
 }
