@@ -31,27 +31,15 @@ public extension Array where Element: SyntaxNodeProviding {
         line: UInt = #line,
         condition: (Element) -> Bool
     ) {
-        var issues = [(String, XCTIssue)]()
-    
-        for element in self where !condition(element) {
-            let name = (element as? NamedDeclaration)?.name ?? ""
-            let defaultMessage = """
-            Expected true but got false on: \(type(of: element)) \(name)
-            """
-            
-            if let issue = element.issue(with: message ?? defaultMessage) {
-                issues.append((name, issue))
-            }
-        }
-        
+        let issues = elements(matching: { !condition($0) }).toXCTIssues(message: message)
         guard !issues.isEmpty else { return }
         
         fail(
-            with: issues,
-            message: message,
-            printAllIssues: showErrorAtSource,
-            originallyAt: file,
-            originallyIn: line
+            issues: issues,
+            testMessage: message ?? "Expected true but was false on \(issues.count) elements.",
+            showIssueAtSource: showErrorAtSource,
+            file: file,
+            line: line
         )
     }
     
@@ -72,43 +60,40 @@ public extension Array where Element: SyntaxNodeProviding {
         line: UInt = #line,
         condition: (Element) -> Bool
     ) {
-        var issues = [(String, XCTIssue)]()
-    
-        for element in self where condition(element) {
-            let name = (element as? NamedDeclaration)?.name ?? ""
-            let defaultMessage = """
-            Expected false but got true on: \(type(of: element)) \(name)
-            """
-            
-            if let issue = element.issue(with: message ?? defaultMessage) {
-                issues.append((name, issue))
-            }
-        }
-        
+        let issues = elements(matching: { condition($0) }).toXCTIssues(message: message)
         guard !issues.isEmpty else { return }
         
         fail(
-            with: issues,
-            message: message,
-            printAllIssues: showErrorAtSource,
-            originallyAt: file,
-            originallyIn: line
+            issues: issues,
+            testMessage: message ?? "Expected false but was true on \(issues.count) elements.",
+            showIssueAtSource: showErrorAtSource,
+            file: file,
+            line: line
         )
     }
     
     /// Asserts that the array is empty.
     ///
     /// - parameters:
+    ///   - message: An optional custom message to display on failure. If not provided, a default message will be used.
+    ///   - showErrorAtSource: Flag to indicate if the assertion should show the error in the original source code.
     ///   - file: The file path to use in the assertion. Defaults to the calling file.
     ///   - line: The line number to use in the assertion. Defaults to the calling line.
     /// - warning: This method is experimental and subject to change.
     func assertEmpty(
+        message: String? = nil,
+        showErrorAtSource: Bool = true,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
         guard !isEmpty else { return }
-        XCTFail(
-            "Assertion failed expecting empty collection, got 0 elements instead.",
+        
+        let issues = toXCTIssues(message: message)
+        
+        fail(
+            issues: issues,
+            testMessage: message ?? "Expected empty collection got \(issues.count) elements instead.",
+            showIssueAtSource: showErrorAtSource,
             file: file,
             line: line
         )
@@ -126,7 +111,7 @@ public extension Array where Element: SyntaxNodeProviding {
     ) {
         guard isEmpty else { return }
         XCTFail(
-            "Assertion failed expecting non empty collection, got empty instead.",
+            "Expected non empty collection got empty instead.",
             file: file,
             line: line
         )
@@ -145,10 +130,29 @@ public extension Array where Element: SyntaxNodeProviding {
         line: UInt = #line
     ) {
         guard self.count != count else { return }
+        
+        guard count > 0 else {
+            assertEmpty()
+            return
+        }
+        
         XCTFail(
-            "Assertion failed expecting count \(count), got \(self.count).",
+            "Assertion failed expecting count \(count) got \(self.count).",
             file: file,
             line: line
         )
+    }
+    
+    private func elements(matching: (Element) -> Bool) -> [Element] {
+        filter(matching)
+    }
+    
+    private func toXCTIssues(message: String? = nil) -> [(String, XCTIssue)] {
+        compactMap {
+            let name = ($0 as? NamedDeclaration)?.name ?? String(describing: $0)
+            guard let issue = $0.issue(with: message ?? "\(name) did not match a test requirement.") else { return nil }
+            
+            return (name, issue)
+        }
     }
 }

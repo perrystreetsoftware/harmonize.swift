@@ -18,39 +18,28 @@ final class AssertionsFailuresTests: XCTestCase {
     private let testCode = Harmonize.testCode().on("SampleApp")
     private let productionCode = Harmonize.productionCode().on("SampleApp")
     
-    func testAssertEmptyFailure() throws {
+    func testAssertEmptyFailsBecauseCollectionIsNotEmpty() throws {
         testCode.classes().assertEmpty()
-        testCode.sources().assertEmpty()
     }
     
-    func testAssertNotEmptyFailure() throws {
+    func testAssertNotEmptyFailsBecauseCollectionIsEmpty() throws {
         [Class]().assertNotEmpty()
-        [SwiftSourceCode]().assertNotEmpty()
     }
     
-    func testAssertTrueFailure() throws {
+    func testAssertTrueFailsBecauseConditionIsFalse() throws {
         testCode.classes().assertTrue { _ in
             false
         }
-        
-        testCode.sources().assertTrue { _ in
-            false
-        }
     }
     
-    func testAssertFalseFailure() throws {
+    func testAssertFalseFailsBecauseConditionIsTrue() throws {
         testCode.classes().assertFalse { _ in
             true
         }
-        
-        testCode.sources().assertFalse { _ in
-            true
-        }
     }
     
-    func testAssertCountFailure() throws {
+    func testAssertCountFailsBecauseCollectionIsEmpty() throws {
         [Class]().assertCount(count: 3)
-        [SwiftSourceCode]().assertCount(count: 3)
     }
 }
 

@@ -8,11 +8,11 @@
 import XCTest
 
 internal func fail(
-    with issues: [(String, XCTIssue)],
-    message: String? = nil,
-    printAllIssues: Bool = true,
-    originallyAt file: StaticString = #filePath,
-    originallyIn line: UInt = #line
+    issues: [(String, XCTIssue)],
+    testMessage: String,
+    showIssueAtSource: Bool = true,
+    file: StaticString = #filePath,
+    line: UInt = #line
 ) {
     let issuesLocation = issues.compactMap {
         if let location = $1.sourceCodeContext.location {
@@ -22,20 +22,21 @@ internal func fail(
         return nil
     }
     
-    let invalidDeclarations = issuesLocation
+    let violations = issuesLocation
         .map { "\($1.fileURL):\($1.lineNumber) (\($0))" }
         .joined(separator: "\n\n")
     
-    let detailedMessage = """
-    Assertion expecting true as violated \(issues.count) times.
-    \(message ?? "")
-    Invalid declarations:
-    \(invalidDeclarations))
+    let detailedTestMessage = """
+    \(testMessage)
+
+    Found \(issues.count) violations:
+    
+    \(violations))
     """
     
-    XCTFail(detailedMessage, file: file, line: line)
+    XCTFail(detailedTestMessage, file: file, line: line)
     
-    guard printAllIssues else { return }
+    guard showIssueAtSource else { return }
     
     issues.forEach { name, issue in
         if let location = issue.sourceCodeContext.location {
