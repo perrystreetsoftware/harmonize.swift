@@ -32,6 +32,7 @@ public struct Initializer: Declaration, SyntaxNodeProviding {
 // MARK: - Capabilities Comformance
 
 extension Initializer: AttributesProviding,
+                       BodyProviding,
                        DeclarationsProviding,
                        ModifiersProviding,
                        ParentDeclarationProviding,
